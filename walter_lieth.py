@@ -18,7 +18,7 @@ class WalterLieth:
             coordinates_box=True, yearly_means_box=True, extremes_box=True,
             legend_box=True
     ):
-        import errors
+        import cloudy.errors as errors
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
         from matplotlib import rcParams
@@ -170,7 +170,6 @@ class WalterLieth:
         x_minor_ticks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
         temp_yaxis_ticks = WalterLieth.get_temp_yticks(mean_temperature)
-        preci_yaxis_ticks_labels = WalterLieth.get_yticks_labels_for_precipitation(temp_yaxis_ticks)
         upper_axis_max_tick = WalterLieth.get_max_ytick_for_precipitation(precipitation)
 
         if freeze_rectangles:
@@ -218,7 +217,7 @@ class WalterLieth:
         temp_axis.set_yticks(temp_yaxis_ticks)
         temp_axis.set_ylim(min(temp_yaxis_ticks), max(temp_yaxis_ticks))
         temp_axis.tick_params(axis='y', which='major', length=6)
-        temp_axis.tick_params(axis='x', which='minor', length=10, direction='in')
+        temp_axis.tick_params(axis='x', which='minor', length=0)
         temp_axis.tick_params(axis='x', which='major', length=0)
 
         if freeze_rectangles and y_value_for_closing_bottom_rectangles is not None:
@@ -226,13 +225,17 @@ class WalterLieth:
                            [(k * 0) + y_value_for_closing_bottom_rectangles for k in range(0, 13)],
                            linewidth=1, color='k')
 
-        if preci_yaxis_ticks_labels[0] != 0:
+            for month in range(0, 13):
+                temp_axis.plot([month, month], [min(temp_yaxis_ticks), y_value_for_closing_bottom_rectangles],
+                               color='k', linestyle='solid', linewidth=1)
+
+        if min(mean_temperature) < 0:
             temp_axis.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], [k * 0 for k in range(0, 13)],
                            color=zero_linecolor, linewidth=1, linestyle=zero_linestyle)
 
         preci_axis = temp_axis.secondary_yaxis('right')
         preci_axis.set_yticks([tick for tick in temp_yaxis_ticks if tick >= 0])
-        preci_axis.set_yticklabels([tick*2 for tick in temp_yaxis_ticks if tick >= 0])
+        preci_axis.set_yticklabels([tick * 2 for tick in temp_yaxis_ticks if tick >= 0])
         preci_axis.tick_params(axis='both', which='major', length=6)
 
         divider = make_axes_locatable(temp_axis)
@@ -369,8 +372,8 @@ class WalterLieth:
             self, interval='monthly', stations_kind='synoptyczne',
             filtr_station=True, filtr_years=True
     ):
-        import functions as f
-        import errors
+        import cloudy.functions as f
+        import cloudy.errors as errors
 
         if interval == 'monthly':
             data = f.get_meteorological_data(
@@ -431,10 +434,10 @@ class WalterLieth:
 
         self.dataframe = data
 
-    def download_geographic_data(
+    def download_coordinates(
             self, latitude=True, longitude=True, elevation=True
     ):
-        import functions as f
+        import cloudy.functions as f
         cor_elev = f.get_coordinates_and_elevation(self.station_name)
 
         for key, value in cor_elev.items():
@@ -464,7 +467,7 @@ class WalterLieth:
                          filtr_years=True
                          ):
         from cloudy import read_global_df
-        import errors
+        import cloudy.errors as errors
 
         if isinstance(columns_order, list) and not isinstance(columns_order[0], int):
             raise errors.InvalidArgValue('cloudy.WalterLieth.import_global_df').invalid_arg(
@@ -534,7 +537,7 @@ class WalterLieth:
     def get_max_twm_and_min_tcm(
             mean_temperature, abs_max_temp, abs_min_temp
     ):
-        import errors
+        import cloudy.errors as errors
 
         the_highest_temp = mean_temperature.max()
         the_lowest_temp = mean_temperature.min()
@@ -580,7 +583,7 @@ class WalterLieth:
                 else:
                     temp_axis_ticks.append(avail_temp_tick)
         except IndexError:
-            import errors
+            import cloudy.errors as errors
             errors.InvalidDataInput('WalterLieth').invalid_structure_for_drawing(
                 """
                 If you have downloaded data on your own from IMGW database and set global dataframe, check if you have

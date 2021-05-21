@@ -15,7 +15,7 @@ concatenate_data(downloaded_files_names, file_formats, specific_columns,
                 keywords, optimize_memory_usage, years_range)
 """
 
-import errors
+import cloudy.errors
 
 
 class NoSuchDir(Exception):

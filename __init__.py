@@ -1,11 +1,11 @@
-import errors
+import cloudy.errors
 import pandas as pd
 import os
 from cycler import cycler
 from matplotlib.pyplot import *
 from matplotlib import rcParams
 
-from walter_lieth import WalterLieth
+from cloudy.walter_lieth import WalterLieth
 
 try:
     os.remove('global_df.csv')
