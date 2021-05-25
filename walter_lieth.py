@@ -18,15 +18,16 @@ class WalterLieth:
             coordinates_box=True, yearly_means_box=True, extremes_box=True,
             legend_box=True
     ):
-        import cloudy.errors as errors
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
         from matplotlib import rcParams
 
         if self.dataframe is None or self.dataframe.empty:
-            raise errors.NoDataError('cloudy.WalterLieth').for_drawing(
-                additional_info="Check 'cloudy.WalterLieth.dataframe'"
-            )
+            raise AttributeError(
+                """
+            No data in WalterLieth.dataframe. Input data on your own or use WalterLieth's methods: WalterLieth.download_data,
+            WalterLieth.import_global_df
+                """)
 
         ls_prop_cycle = rcParams['axes.prop_cycle'].by_key()['linestyle']
         color_prop_cycle = rcParams['axes.prop_cycle'].by_key()['color']
@@ -137,27 +138,25 @@ class WalterLieth:
             abs_max_temp = self.dataframe.groupby(self.dataframe.columns[1]).max().iloc[:, 3]
             abs_min_temp = self.dataframe.groupby(self.dataframe.columns[1]).min().iloc[:, 4]
         else:
-            raise errors.InvalidDataInput('cloudy.WalterLieth').invalid_structure_for_drawing(
-                additional_info=f"""
-                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe)} which is invalid. Input 5 or 6 columns
+            raise AttributeError(
+                f"""
+                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe)} columns which is invalid. Input 5 or 6 columns
                 depending on data interval.
-                """
-            )
+                """)
 
         if precipitation.min() < 0:
-            raise errors.InvalidDataInput('cloudy.WalterLieth').invalid_value_inside(
-                additional_info=f"""
-                Value below 0 mm occured in precipitation series. Terrible drought, do you need a bottle of water?
+            raise ValueError(
+                f"""
+                Value below 0 mm occured in precipitation series.
                 Invalid value: {precipitation.min()}
-                """
-            )
+                """)
+
         if mean_temperature.max() > 50:
-            raise errors.InvalidDataInput('cloudy.WalterLieth').invalid_value_inside(
-                additional_info=f"""
-                Monthly mean temperature exceded 50°C! I hope everybody is okay there.
+            raise ValueError(
+                f"""
+                Monthly mean temperature exceded 50°C!
                 Invalid value: {mean_temperature.max()}
-                """
-            )
+                """)
 
         annual_mean_temp = round(mean_temperature.mean(), 1)
         sum_preci = round(precipitation.sum(), 1)
@@ -225,9 +224,10 @@ class WalterLieth:
                            [(k * 0) + y_value_for_closing_bottom_rectangles for k in range(0, 13)],
                            linewidth=1, color='k')
 
-            for month in range(0, 13):
-                temp_axis.plot([month, month], [min(temp_yaxis_ticks), y_value_for_closing_bottom_rectangles],
-                               color='k', linestyle='solid', linewidth=1)
+        for month in range(0, 13):
+            temp_axis.plot([month, month],
+                           [min(temp_yaxis_ticks), y_value_for_closing_bottom_rectangles],
+                           color='k', linestyle='solid', linewidth=1)
 
         if min(mean_temperature) < 0:
             temp_axis.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], [k * 0 for k in range(0, 13)],
@@ -373,7 +373,6 @@ class WalterLieth:
             filtr_station=True, filtr_years=True
     ):
         import cloudy.functions as f
-        import cloudy.errors as errors
 
         if interval == 'monthly':
             data = f.get_meteorological_data(
@@ -395,19 +394,20 @@ class WalterLieth:
 
             data = data.drop(['Nazwa stacji', 'Rok'], axis=1)
             if data.empty:
-                raise errors.NoDataError('WalterLieth.download_data').no_data_scraped()
+                raise ValueError(
+                    """
+                    No data for specified parameters found. Check if input arguments in 'WalterLieth.download_data' method
+                    are valid.
+                    """)
 
         elif interval == 'daily':
             if not filtr_station:
-                errors.InvalidArgValue('cloudy.WalterLieth.download_data').invalid_arg(
-                    arg_name='filtr_station', valid_values=[True],
-                    additional_info=str(
+                raise AttributeError(
                         """
                         'cloudy.WalterLieth.download_data' does not support given combination: 
                         interval='daily', filtr_station=False. Use interval='monthly' instead 
                         or stick with daily interval and input filtr_station=True.
                         """)
-                )
 
             data = f.get_meteorological_data(
                 years_range=self.years_range, period=interval,
@@ -428,9 +428,17 @@ class WalterLieth:
 
             data = data.drop(['Nazwa stacji'], axis=1)
             if data.empty:
-                raise errors.NoDataError('WalterLieth.download_data()').no_data_scraped()
+                raise ValueError(
+                    """
+                    No data for specified parameters found. Check if input arguments in 'WalterLieth.download_data' method
+                    are valid.
+                    """)
         else:
-            raise errors.NoDataError('WalterLieth.download_data()').no_data_scraped('Interval may be incorrect.')
+            raise ValueError(
+                    """
+                    No data for specified parameters found. Check if input arguments in 'WalterLieth.download_data' method
+                    are valid. Check 'interval' argument.
+                    """)
 
         self.dataframe = data
 
@@ -467,29 +475,23 @@ class WalterLieth:
                          filtr_years=True
                          ):
         from cloudy import read_global_df
-        import cloudy.errors as errors
 
         if isinstance(columns_order, list) and not isinstance(columns_order[0], int):
-            raise errors.InvalidArgValue('cloudy.WalterLieth.import_global_df').invalid_arg(
-                arg_name='columns_order',
-                valid_values=['list of 5 or 6 ints', 'imgw_monthly', 'imgw_daily'],
-                additional_info="""
+            raise AttributeError(
+                """
                 1. Use list of ints to specify which columns from global pandas.DataFrame are necessary for drawing.
                 2. Remember that you can get accurate info about required data structure in cloudy.WalterLieth docs.
                 3. Alternatively, if your data's source is IMGW database you can use 'imgw_monthly' or 'imgw_daily' strings 
                 for your input.
-                """
-            )
+                """)
 
         if columns_order != 'imgw_monthly' and columns_order != 'imgw_daily' and not isinstance(columns_order, list):
-            raise errors.InvalidArgValue('cloudy.WalterLieth.import_global_df').invalid_arg(
-                arg_name='columns_order',
-                valid_values=['list of 5 or 6 ints', 'imgw_monthly', 'imgw_daily'],
-                additional_info="""
+            raise AttributeError(
+                """
+                Valid arguments 'columns_order': 'imgw_monthly', 'imgw_daily', [list of 5 or 6 ints]
                 If your data's source is IMGW database and default columns order of the dataframe is preserved,
                 you can input 'imgw_monthly' or 'imgw_daily' values for 'columns_order' argument (depending on data interval).
-                """
-            )
+                """)
 
         df = read_global_df()
 
@@ -502,8 +504,10 @@ class WalterLieth:
             if filtr_station:
                 df_for_object = df_for_object[df_for_object.iloc[:, 0] == self.station_name]
                 if df_for_object.empty:
-                    raise errors.NoDataError('cloudy.WalterLieth.import_global_df').filtered_and_empty(
-                        additional_info=f"""
+                    raise ValueError(
+                        """
+                        Dataframe has just been filtered and the output was empty. Check your inputs which may affect filtering.
+                        
                         1. It's possible that input for 'station_name' in 'cloudy.WalterLieth' is invalid.
                         2. You can also be looking for the station which is not available in global pandas.DataFrame.
                         3. If you have changed default column order from IMGW database the function will return this exception.
@@ -537,7 +541,6 @@ class WalterLieth:
     def get_max_twm_and_min_tcm(
             mean_temperature, abs_max_temp, abs_min_temp
     ):
-        import cloudy.errors as errors
 
         the_highest_temp = mean_temperature.max()
         the_lowest_temp = mean_temperature.min()
@@ -552,16 +555,17 @@ class WalterLieth:
         try:
             return abs_max_temp[the_warmest_month], abs_min_temp[the_coldest_month]
         except KeyError:
-            raise errors.InvalidDataInput('cloudy.WalterLieth').invalid_structure_for_drawing(
+            raise ValueError(
                 """
+                Invalid data structure in 'cloudy.WalterLieth.dataframe'. Check 'cloudy.WalterLieth' docs for more info.
+                
                 1. Check if you haven't mistaken column order in 'cloudy.WalterLieth.dataframe'. 
                 2. It's also possible that you have tried to pass daily interval and there's a lack of column/columns. 
                 Note that daily interval data must contain 6 columns - for more info about required data structure check 
                 'cloudy.WalterLieth' docs. If you have used 'cloudy.WalterLieth.import_global_df' method for data from IMGW
                 database, check values for argument 'columns_order' (if 'imgw_monthly' or 'imgw_daily' have been used properly,
                 depending on IMGW data interval).
-                """
-            )
+                """)
 
     @staticmethod
     def get_temp_yticks(
@@ -583,9 +587,10 @@ class WalterLieth:
                 else:
                     temp_axis_ticks.append(avail_temp_tick)
         except IndexError:
-            import cloudy.errors as errors
-            errors.InvalidDataInput('WalterLieth').invalid_structure_for_drawing(
+            raise ValueError(
                 """
+                Invalid data structure in 'cloudy.WalterLieth.dataframe'. Check 'cloudy.WalterLieth' docs for more info.
+                
                 If you have downloaded data on your own from IMGW database and set global dataframe, check if you have
                 chosen correct file format. Available file formats for 'cloudy.WalterLieth' from IMGW database are: 
                 ['s_m_d', 's_d'].
@@ -593,6 +598,7 @@ class WalterLieth:
                 cloudy.get_meteorological_data(..., file_format='s_m_d')
                 cloudy.get_meteorological_data(..., file_format='s_d')
                 """)
+
         if temp_axis_ticks[0] > 0:
             temp_axis_ticks = [0, 10, 20, 30, 40, 50]
 
