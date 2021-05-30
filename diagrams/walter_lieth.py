@@ -1,10 +1,49 @@
 class WalterLieth:
+    """
+    Create Walter-Lieth object where data for drawing can be downloaded, modified,
+    manually provided.
+
+    Keyword arguments:
+    station_name -- station name for which data will be drawn
+    years_range -- years range for which data will be drawn
+    dataframe -- data for drawing (default None)
+    lat -- latitude of the station (default None)
+    lon -- longitude of the station (default None)
+    elevation -- elevation of the station (default None)
+
+    ---------------DATA STRUCTURE---------------
+    Supported data structure for WalterLieth.dataframe is 5 or 6 columns of pandas.DataFrame
+    object, depending on the data interval. Supported data intervals are daily and monthly.
+
+    If data interval is monthly, then 5 columns are required: 1st column: months,
+    2nd column: average air temperature, 3rd column: average sum of precipitation,
+    4th column: absolute maximum air temperature, 5th column: absolute minimum air
+    temperature
+
+    If data interval is daily, then 6 columns are required: 1st column: years,
+    2nd column: months, 3rd column: average air temperature, 4th column: sum of
+    precipitation, 5th column: absoulte maximum air temperature, 5th column: absolute
+    minimum air temperature
+
+    Exemplary dataframe:
+    import pandas as pd
+    dataframe = pd.DataFrame({
+                            'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                            'temp': [-2, -1, 0, 7, 15, 18, 19, 20, 18, 14, 8, 3],
+                            'preci': [50, 25, 55, 60, 70, 80, 90, 80, 68, 50, 45, 49],
+                            'max_temp': [10, 15, 17, 18, 19, 20, 35, 34, 25, 20, 15, 10],
+                            'min_temp': [-36, -29, -20, -15, -5, -1, 1, 2, -1, -4, -18, -22]
+                            })
+
+    Note that data must be provided for every single month. In another case,
+    Walter-Lieth diagram is not possible to be drawn.
+    --------------------------------------------
+    """
 
     def __init__(
             self, station_name, years_range,
             dataframe=None, lat=False, lon=False, elevation=False
     ):
-
         self.dataframe = dataframe
         self.years_range = years_range
         self.station_name = station_name.upper()
@@ -18,6 +57,23 @@ class WalterLieth:
             coordinates_box=True, yearly_means_box=True, extremes_box=True,
             legend_box=True
     ):
+        """
+        Specify which elements have to be drawn and draw Walter-Lieth diagram.
+
+        Keyword arguments:
+        figsize -- figure size (default (7.74, 7.74))
+        language -- choose language (None, 'POL', 'ENG') (default None). If None,
+        then choose default language, which is 'ENG'
+        freeze_rectangles -- if bottom rectangles which show freeze periods have
+        to be drawn (default True)
+        title_text -- if station name has to be drawn (default True)
+        years_text -- if years range has to be drawn (default True)
+        coordinates_box -- if box with coordinates info has to be drawn (default True)
+        yearly_means_box -- if box with yearly means has to be drawn (default True)
+        extremes_box -- if box with extreme temperatures has to be drawn (default True)
+        legend_box -- if legend has to be drawn (default True)
+        """
+
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
         from matplotlib import rcParams
@@ -369,9 +425,31 @@ class WalterLieth:
             fig.legend(handles, labels, loc='lower center', ncol=NCOL, bbox_to_anchor=(0.52, 0))
 
     def download_data(
-            self, interval='monthly', stations_kind='synoptyczne',
-            filtr_station=True, filtr_years=True
+            self, interval='monthly', stations_kind='synop',
+            filtr_station=True, check_years=True
     ):
+        """
+        Download data for drawing from IMGW database.
+
+        Keyword arguments:
+        interval -- data interval ('monthly', 'daily', 'prompt') (default 'monthly')
+        stations_kind -- stations kind from IMGW database ('synop', 'climat',
+        'fall') (default 'synop')
+        filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name
+        (default True)
+        check_years -- check if years range in downloaded data matches years range
+        from WalterLieth.years_range. If not, change WalterLieth.years_range
+        depending on years range in downloaded data (default True)
+
+        ---------------NOTE THAT--------------
+        Note that 'download_data' method uses 'get_meteorological_data' function
+        from cloudy.scraping.imgw. All required arugments for the function which
+        are not required in this method are taken from WalterLieth object. Due to
+        this fact, WalterLieth.years_range has to be specified before running
+        'download_data' method.
+        --------------------------------------
+        """
+
         import cloudy.scraping.imgw as imgw_scraping
 
         if interval == 'monthly':
@@ -387,7 +465,7 @@ class WalterLieth:
             if filtr_station:
                 data = data[data['Nazwa stacji'] == self.station_name]
 
-            if filtr_years:
+            if check_years:
                 max_year = data.loc[:, 'Rok'].max()
                 min_year = data.loc[:, 'Rok'].min()
                 self.years_range = range(min_year, max_year + 1)
@@ -421,7 +499,7 @@ class WalterLieth:
             )
 
             data = data[data['Nazwa stacji'] == self.station_name]
-            if filtr_years:
+            if check_years:
                 max_year = data.loc[:, 'Rok'].max()
                 min_year = data.loc[:, 'Rok'].min()
                 self.years_range = range(min_year, max_year + 1)
@@ -445,7 +523,17 @@ class WalterLieth:
     def download_coordinates(
             self, latitude=True, longitude=True, elevation=True
     ):
+        """
+        Download coordinates for the specified station of IMGW database.
+
+        Keyword arguments:
+        latitude -- if WalterLieth.lat has to be updated (default True)
+        longitude -- if WalterLieth.lon has to be updated (default True)
+        elevation -- if WalterLieth.elv has to be updated (default True)
+        """
+
         import cloudy.scraping.imgw as imgw_scraping
+
         cor_elev = imgw_scraping.get_coordinates_and_elevation(self.station_name)
 
         for key, value in cor_elev.items():
@@ -472,8 +560,24 @@ class WalterLieth:
             self.elevation = cor_elev['elv']
 
     def import_global_df(self, columns_order, filtr_station=True,
-                         filtr_years=True
+                         check_years=True
                          ):
+        """
+        Import data for WalterLieth.dataframe from global data frame.
+
+        Keyword arguments:
+        columns_order -- specify which columns from global data frame have to be
+        taken (list of indexes, 'imgw_monthly', 'imgw_daily'). If global data frame
+        comes from IMGW database and it's structure has not been modified in any
+        way, then 'imgw_monthly' or 'imgw_daily' can be used - depending on data
+        interval
+        filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name
+        (default True)
+        check_years -- check if years range in downloaded data matches years range
+        from WalterLieth.years_range. If not, change WalterLieth.years_range
+        depending on years range in downloaded data (default True)
+        """
+
         from cloudy import read_global_df
 
         if isinstance(columns_order, list) and not isinstance(columns_order[0], int):
@@ -517,7 +621,7 @@ class WalterLieth:
                         """
                     )
 
-            if filtr_years:
+            if check_years:
                 max_year = df_for_object.iloc[:, 1].max()
                 min_year = df_for_object.iloc[:, 1].min()
                 self.years_range = range(min_year, max_year + 1)
