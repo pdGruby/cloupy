@@ -1,11 +1,10 @@
-import cloudy.errors
 import pandas as pd
 import os
 from cycler import cycler
 from matplotlib.pyplot import *
 from matplotlib import rcParams
 
-from cloudy.walter_lieth import WalterLieth
+from cloudy.diagrams.walter_lieth import WalterLieth
 
 try:
     os.remove('global_df.csv')
@@ -68,8 +67,8 @@ def choose_diagStyle(diag_style='default'):
         for retro_param, retro_value in retro_style.items():
             diagStyle[retro_param] = retro_value
     else:
-        raise errors.InvalidArgValue('cloudy.choose_diagStyle').invalid_arg(
-            arg_name='diag_style', valid_values=['default', 'retro']
+        raise AttributeError(
+            "Invalid 'diag_style' argument. Available arguments: 'default', 'retro'"
         )
 
 
@@ -81,12 +80,12 @@ def set_global_df(pd_DataFrame, file_format='csv'):
         pass
 
     if not isinstance(type(pd_DataFrame), type(pd.DataFrame)):
-        raise errors.InvalidArgValue('cloudy.set_global_df').invalid_arg(
-            arg_name='pd_DataFrame', valid_values='pandas.DataFrame()',
-            additional_info="""
+        raise AttributeError(
+            """
+            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame()'.
             More info about creating pandas.DataFrame() object is available here:
             'https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html'
-                            """
+            """
         )
 
     if file_format == 'csv':
@@ -94,22 +93,24 @@ def set_global_df(pd_DataFrame, file_format='csv'):
     elif file_format == 'json':
         pd_DataFrame.to_json('global_df.json')
     else:
-        raise errors.InvalidArgValue('cloudy.set_global_df').invalid_arg(
-            arg_name='file_format', valid_values=['csv', 'json']
+        raise AttributeError(
+            """
+            Invalid input for 'file_format'. Available inputs: 'csv', 'json'
+            """
         )
 
 
 def read_global_df():
     try:
         df = pd.read_csv('global_df.csv', index_col=0)
-        return df
     except FileNotFoundError:
         pass
+    else:
+        return df
 
     try:
         df = pd.read_json('global_df.json')
-        return df
     except ValueError:
-        raise errors.NoDataError('cloudy.read_global_df').no_global_df_set(
-            additional_info="""Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again."""
-        )
+        raise FileNotFoundError("Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again.")
+    else:
+        return df
