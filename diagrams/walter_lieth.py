@@ -1,7 +1,7 @@
 class WalterLieth:
     """
-    Create Walter-Lieth object where data for drawing can be downloaded, modified,
-    manually provided.
+    Create WalterLieth object where data for drawing Walter-Lieth diagram can be
+    downloaded, modified, manually provided.
 
     Keyword arguments:
     station_name -- station name for which data will be drawn
@@ -11,28 +11,41 @@ class WalterLieth:
     lon -- longitude of the station (default None)
     elevation -- elevation of the station (default None)
 
+    ---------------METHODS---------------
+    draw()
+    download_data()
+    download_coordinates()
+    import_global_df()
+    -------------------------------------
+
     ---------------DATA STRUCTURE---------------
-    Supported data structure for WalterLieth.dataframe is 5 or 6 columns of pandas.DataFrame
-    object, depending on the data interval. Supported data intervals are daily and monthly.
+    Supported data structure for WalterLieth.dataframe is 5 or 6 columns of
+    pandas.DataFrame object, depending on the data interval. Supported data
+    intervals are daily and monthly.
 
-    If data interval is monthly, then 5 columns are required: 1st column: months,
-    2nd column: average air temperature, 3rd column: average sum of precipitation,
-    4th column: absolute maximum air temperature, 5th column: absolute minimum air
-    temperature
+    If data interval is monthly, then 5 columns are required:
+    1st column: months,
+    2nd column: average air temperature,
+    3rd column: average sum of precipitation,
+    4th column: absolute maximum air temperature,
+    5th column: absolute minimum air temperature
 
-    If data interval is daily, then 6 columns are required: 1st column: years,
-    2nd column: months, 3rd column: average air temperature, 4th column: sum of
-    precipitation, 5th column: absoulte maximum air temperature, 5th column: absolute
-    minimum air temperature
+    If data interval is daily, then 6 columns are required:
+    1st column: years,
+    2nd column: months,
+    3rd column: average air temperature,
+    4th column: sum of precipitation,
+    5th column: absoulte maximum air temperature,
+    6th column: absolute minimum air temperature
 
     Exemplary dataframe:
     import pandas as pd
     dataframe = pd.DataFrame({
-                            'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                            'temp': [-2, -1, 0, 7, 15, 18, 19, 20, 18, 14, 8, 3],
-                            'preci': [50, 25, 55, 60, 70, 80, 90, 80, 68, 50, 45, 49],
-                            'max_temp': [10, 15, 17, 18, 19, 20, 35, 34, 25, 20, 15, 10],
-                            'min_temp': [-36, -29, -20, -15, -5, -1, 1, 2, -1, -4, -18, -22]
+                'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                'temp': [-2, -1, 0, 7, 15, 18, 19, 20, 18, 14, 8, 3],
+                'preci': [50, 25, 55, 60, 70, 80, 90, 80, 68, 50, 45, 49],
+                'max_temp': [10, 15, 17, 18, 19, 20, 35, 34, 25, 20, 15, 10],
+                'min_temp': [-36, -29, -20, -15, -5, -1, 1, 2, -1, -4, -18, -22]
                             })
 
     Note that data must be provided for every single month. In another case,
@@ -62,15 +75,18 @@ class WalterLieth:
 
         Keyword arguments:
         figsize -- figure size (default (7.74, 7.74))
-        language -- choose language (None, 'POL', 'ENG') (default None). If None,
-        then choose default language, which is 'ENG'
+        language -- choose language (None, 'POL', 'ENG') (default None). If
+        None, then choose default language, which is 'ENG'
         freeze_rectangles -- if bottom rectangles which show freeze periods have
         to be drawn (default True)
         title_text -- if station name has to be drawn (default True)
         years_text -- if years range has to be drawn (default True)
-        coordinates_box -- if box with coordinates info has to be drawn (default True)
-        yearly_means_box -- if box with yearly means has to be drawn (default True)
-        extremes_box -- if box with extreme temperatures has to be drawn (default True)
+        coordinates_box -- if box with coordinates info has to be drawn (default
+        True)
+        yearly_means_box -- if box with yearly means has to be drawn (default
+        True)
+        extremes_box -- if box with extreme temperatures has to be drawn
+        (default True)
         legend_box -- if legend has to be drawn (default True)
         """
 
@@ -432,20 +448,22 @@ class WalterLieth:
         Download data for drawing from IMGW database.
 
         Keyword arguments:
-        interval -- data interval ('monthly', 'daily', 'prompt') (default 'monthly')
+        interval -- data interval ('monthly', 'daily', 'prompt') (default
+        'monthly')
         stations_kind -- stations kind from IMGW database ('synop', 'climat',
         'fall') (default 'synop')
-        filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name
+        filtr_station -- if downloaded data has to be filtered by
+        WalterLieth.station_name (default True)
+        check_years -- check if years range in downloaded data matches years
+        range from WalterLieth.years_range. If not, change
+        WalterLieth.years_range depending on years range in downloaded data
         (default True)
-        check_years -- check if years range in downloaded data matches years range
-        from WalterLieth.years_range. If not, change WalterLieth.years_range
-        depending on years range in downloaded data (default True)
 
         ---------------NOTE THAT--------------
         Note that 'download_data' method uses 'get_meteorological_data' function
         from cloudy.scraping.imgw. All required arugments for the function which
-        are not required in this method are taken from WalterLieth object. Due to
-        this fact, WalterLieth.years_range has to be specified before running
+        are not required in this method are taken from WalterLieth object. Due
+        to this fact, WalterLieth.years_range has to be specified before running
         'download_data' method.
         --------------------------------------
         """
