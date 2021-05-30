@@ -15,13 +15,6 @@ concatenate_data(downloaded_files_names, file_formats, specific_columns,
                 keywords, optimize_memory_usage, years_range)
 """
 
-import cloudy.errors
-
-
-class NoSuchDir(Exception):
-    """Given directory does not exist on IMGW website"""
-    pass
-
 
 def get_file_formats(
         period, stations_kind, file_format_index
@@ -31,45 +24,45 @@ def get_file_formats(
 
     Keyword arguments:
     period -- period kind of IMGW's database ('monthly', 'daily', 'prompt')
-    stations_kind -- stations' kind ('synoptyczne', 'meteorologiczne', 'opadowe')
+    stations_kind -- stations' kind ('synop', 'climat', 'fall')
     file_format_index -- which element from the list will be returned ('all', 1, 2)
     """
 
     if period == 'monthly':
-        if stations_kind == 'synoptyczne':
+        if stations_kind == 'synop':
             available_files_formats = ['s_m_d', 's_m_t']
-        elif stations_kind == 'opadowe':
+        elif stations_kind == 'fall':
             available_files_formats = ['o_m']
-        elif stations_kind == 'klimatologiczne':
+        elif stations_kind == 'climat':
             available_files_formats = ['k_m_d', 'k_m_t']
         else:
-            raise Exception(
-                "Invalid 'stations_kind' input. Available inputs: 'synoptyczne', 'opadowe', 'klimatologiczne'.")
+            raise AttributeError(
+                "Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     elif period == 'daily':
-        if stations_kind == 'synoptyczne':
+        if stations_kind == 'synop':
             available_files_formats = ['s_d', 's_d_t']
-        elif stations_kind == 'opadowe':
+        elif stations_kind == 'fall':
             available_files_formats = ['o_d']
-        elif stations_kind == 'klimatologiczne':
+        elif stations_kind == 'climat':
             available_files_formats = ['k_d', 'k_d_t']
         else:
-            raise Exception(
-                "Invalid 'stations_kind' input. Available inputs: 'synoptyczne', 'opadowe', 'klimatologiczne'.")
+            raise AttributeError(
+                "Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     elif period == 'prompt':
-        if stations_kind == 'synoptyczne':
+        if stations_kind == 'synop':
             available_files_formats = ['s_t']
-        elif stations_kind == 'opadowe':
-            raise NoSuchDir("There's no '/dane_meteorologiczne/terminowe/opad/' directory.")
-        elif stations_kind == 'klimatologiczne':
+        elif stations_kind == 'fall':
+            raise NotADirectoryError("There's no '/dane_meteorologiczne/terminowe/opad/' directory in IMGW database.")
+        elif stations_kind == 'climat':
             available_files_formats = ['k_t']
         else:
-            raise Exception(
-                "Invalid 'stations_kind' input. Available inputs: 'synoptyczne', 'opadowe', 'klimatologiczne'.")
+            raise AttributeError(
+                "Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     else:
-        raise Exception("Invalid 'period' input. Available inputs: 'monthly', 'daily', 'prompt'.")
+        raise AttributeError("Invalid 'period' input. Available inputs: 'monthly', 'daily', 'prompt'.")
 
     if file_format_index == 'all':
         chosen_file_format = available_files_formats
@@ -82,9 +75,9 @@ def get_file_formats(
             else:
                 raise Exception("Something wrong with file format.")
     else:
-        raise Exception(
+        raise AttributeError(
             "{} file formats for given 'period' and 'stations_kind' available. Use index of the file format or 'all' "
-            "value (both file formats will be taken): {}".format(len(available_files_formats), available_files_formats))
+            "for 'file_format_index' (both file formats will be taken): {}".format(len(available_files_formats), available_files_formats))
     return chosen_file_format
 
 
@@ -264,18 +257,15 @@ def look_for_keywords_in_columns(
 
     if file_format is None:
         periods = ['monthly', 'daily', 'prompt']
-        stations_kinds = ['synoptyczne', 'klimatologiczne', 'opadowe']
+        stations_kinds = ['synop', 'climat', 'fall']
         if type(keywords) == str:
             keywords = [keywords]
 
         found_file_formats = {}
         for period in periods:
             for kind in stations_kinds:
-                try:
-                    file_formats = get_file_formats(period, kind, 'all')
-                    found_file_formats['period=' + str(period) + ', ' + 'stations_kind=' + str(kind)] = file_formats
-                except NoSuchDir:
-                    pass
+                file_formats = get_file_formats(period, kind, 'all')
+                found_file_formats['period=' + str(period) + ', ' + 'stations_kind=' + str(kind)] = file_formats
 
         keywords_in_files = {}
         if type(keywords) == list:
@@ -291,7 +281,7 @@ def look_for_keywords_in_columns(
                                 except KeyError:
                                     keywords_in_files[str(period_stkind) + ", " + "file_format=" + str(file)] = [name]
         else:
-            raise Exception("Invalid input for 'keywords'. Use list of strs or str.")
+            raise AttributeError("Invalid input for 'keywords'. Use list of strs or str.")
         return keywords_in_files
 
     else:
@@ -304,9 +294,9 @@ def look_for_keywords_in_columns(
                         if keyword in name:
                             keywords_in_columns.append(name)
                 else:
-                    raise Exception("Invalid input for 'keywords'. Use list of strs or str.")
+                    raise AttributeError("Invalid input for 'keywords'. Use list of strs or str.")
         else:
-            raise Exception("Invalid input for 'file_format'. Use single str.")
+            raise AttributeError("Invalid input for 'file_format'. Use single str.")
         return keywords_in_columns
 
 
@@ -319,7 +309,7 @@ def get_urls(
 
     Keyword arguments:
     period -- period kind of IMGW's database (monthly, daily, prompt)
-    stations_kind -- stations' kind (synoptyczne, meteorologiczne, opadowe)
+    stations_kind -- stations' kind (synop, climat, fall)
     years_range -- years range
     """
     if period == 'monthly':
@@ -328,19 +318,19 @@ def get_urls(
         period = 'dobowe/'
     elif period == 'prompt':
         period = 'terminowe/'
-        if stations_kind == 'opadowe':
-            raise NoSuchDir("There's no '/dane_meteorologiczne/terminowe/opad/' directory.")
+        if stations_kind == 'fall':
+            raise NotADirectoryError("There's no '/dane_meteorologiczne/terminowe/opad/' directory.")
     else:
-        raise Exception("Invalid 'period' input. Available inputs: 'monthly', 'daily', 'prompt'.")
+        raise AttributeError("Invalid 'period' input. Available inputs: 'monthly', 'daily', 'prompt'.")
 
-    if stations_kind == 'synoptyczne':
+    if stations_kind == 'synop':
         stations_kind = 'synop/'
-    elif stations_kind == 'opadowe':
+    elif stations_kind == 'fall':
         stations_kind = 'opad/'
-    elif stations_kind == 'klimatologiczne':
+    elif stations_kind == 'climat':
         stations_kind = 'klimat/'
     else:
-        raise Exception("Invalid 'stations_kind' input. Available inputs: 'synoptyczne', 'opadowe', 'klimatologiczne'.")
+        raise AttributeError("Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     years_endings = []
     for year in years_range:
@@ -370,7 +360,7 @@ def get_urls(
                 if years_endings.count('1960_1965/') == 0:
                     years_endings.append('1960_1965/')
             else:
-                raise Exception("No data for {}. Available years range: 1960-2021.".format(str(year)))
+                raise AttributeError("No data for {}. Available years range: 1960-2021.".format(str(year)))
         else:
             years_endings.append(str(year) + '/')
 
@@ -463,7 +453,7 @@ def concatenate_data(
                     if type(specific_columns) is list:
                         csv_DataFrame = csv_DataFrame[specific_columns]
                     else:
-                        raise Exception("Invalid 'specific_columns' type. Use list of strs or single str.")
+                        raise AttributeError("Invalid 'specific_columns' type. Use list of strs or single str.")
 
                 if keywords is not None and len(keywords_in_columns) == 0:
                     columns = get_column_names(file_format)
@@ -537,7 +527,7 @@ def concatenate_data(
 
 def get_meteorological_data(
         period, stations_kind, years_range,
-        file_format_index=1, file_format=None,
+        file_format_index=0, file_format=None,
         specific_columns=None, keywords=None,
         merge_splitted_stations=True, optimize_memory_usage=False
 ):
@@ -546,15 +536,16 @@ def get_meteorological_data(
 
     Keyword arguments:
     period -- period kind of IMGW's database ('monthly', 'daily', 'prompt')
-    stations_kind -- stations' kind ('synoptyczne', 'meteorologiczne', 'opadowe')
+    stations_kind -- stations' kind ('synop', 'climat', 'fall')
     years_range -- years range (eg. range(2010, 2021))
     file_format_index -- which element from the list of file formats will be
-    returned (default 1)
+    returned (default 0)
     file_format -- file format of IMGW's database (default None)
     specific_columns -- specified columns which will be taken to merge (default None)
     keywords -- words which have to be in a column name if a column
     has to be merged (default None)
-    merge_splitted_stations - merge stations which are the same but have different name
+    merge_splitted_stations - merge stations which are the same but have different
+    name (default True)
     optimize_memory_usage - reduce pd.DataFrame memory usage (default False)
     """
 
@@ -572,7 +563,7 @@ def get_meteorological_data(
         elif type(file_format) == list:
             file_formats = [format_ for format_ in file_format]
         else:
-            raise Exception("Invalid input for 'file_format'. Use str or list of strs.")
+            raise AttributeError("Invalid input for 'file_format'. Use str or list of strs.")
     else:
         file_formats = get_file_formats(period, stations_kind, file_format_index)
 
@@ -585,6 +576,7 @@ def get_meteorological_data(
         df = df[0]
     else:
         df = df
+        keywords_in_columns = None
 
     if len(file_formats) == 1:
         column_names = get_column_names(file_formats[0])
@@ -664,15 +656,14 @@ def get_coordinates_and_elevation(station_name):
                 break
 
     if href is None:
-        raise errors.NoElementFoundError('href').from_webscraping(
-            additional_info=
+        raise KeyError(
             """
+            No coordinates have been found for the 'station_name' argument.
             Check if input 'station_name' is correct and if it is available on the website: 
             'http://www.altitude-maps.com/country/170,Poland'
             If 'station_name' input is correct and it is not available on the website, you have to input data on your own.    
-            If 'station_name' input is correct and it is available on the website, then check the website structure (some
-            major changes could have been implemented and 'get_coordinates_and_elevation' function needs fixing).
             """)
+
     full_url = 'http://www.altitude-maps.com/' + href
 
     text = requests.get(full_url).text

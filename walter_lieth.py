@@ -372,10 +372,10 @@ class WalterLieth:
             self, interval='monthly', stations_kind='synoptyczne',
             filtr_station=True, filtr_years=True
     ):
-        import cloudy.functions as f
+        import cloudy.scraping.imgw as imgw_scraping
 
         if interval == 'monthly':
-            data = f.get_meteorological_data(
+            data = imgw_scraping.get_meteorological_data(
                 years_range=self.years_range, period=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
@@ -409,7 +409,7 @@ class WalterLieth:
                         or stick with daily interval and input filtr_station=True.
                         """)
 
-            data = f.get_meteorological_data(
+            data = imgw_scraping.get_meteorological_data(
                 years_range=self.years_range, period=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
@@ -445,8 +445,8 @@ class WalterLieth:
     def download_coordinates(
             self, latitude=True, longitude=True, elevation=True
     ):
-        import cloudy.functions as f
-        cor_elev = f.get_coordinates_and_elevation(self.station_name)
+        import cloudy.scraping.imgw as imgw_scraping
+        cor_elev = imgw_scraping.get_coordinates_and_elevation(self.station_name)
 
         for key, value in cor_elev.items():
 
