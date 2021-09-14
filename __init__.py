@@ -4,6 +4,8 @@ from cycler import cycler
 from matplotlib.pyplot import *
 from matplotlib import rcParams
 
+from cloudy.scraping.imgw import get_meteorological_data as d_imgw_data
+from cloudy.scraping.climex_scraping import download_meteo_data as d_wmo_data
 from cloudy.diagrams.walter_lieth import WalterLieth
 
 try:

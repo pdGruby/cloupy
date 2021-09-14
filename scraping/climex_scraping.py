@@ -5,8 +5,10 @@ def return_wmoid_or_coord(
 ):
     import pandas as pd
 
+    wmo_ids_path = str(__file__).replace('climex_scraping.py', 'wmo_ids_pop2.csv')
+
     station_name = station_name.upper()
-    ids_coords = pd.read_csv('wmo_ids_pop2.csv', dtype={3: 'object'}, sep=';', index_col=0)
+    ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
     if station_name.startswith('COU'):
         data = ids_coords[ids_coords['country'].str.contains(station_name.replace('COU', ''))]
     else:
