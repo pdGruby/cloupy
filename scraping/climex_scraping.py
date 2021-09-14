@@ -1,3 +1,9 @@
+def get_wmo_stations_info():
+    import pandas as pd
+
+    wmo_ids_path = str(__file__).replace('climex_scraping.py', 'wmo_ids_pop2.csv')
+    ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
+    return ids_coords
 
 
 def return_wmoid_or_coord(
