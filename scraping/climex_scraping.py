@@ -149,7 +149,7 @@ def concatenate_dfs(dfs):
     for df in dfs:
 
         if df[1] == [None, None, None]:
-            values_to_add = [None for k in concatenated_df['month']]
+            values_to_add = [None] * len(concatenated_df['month'])
             concatenated_df[df[0][2]] = values_to_add
         else:
             values_to_add = []
@@ -325,20 +325,21 @@ def download_meteo_data(
             data.append(downloaded_data)
 
         concatenated_df = concatenate_dfs(data)
-        station_series = []
-        for index in concatenated_df.index:
-            station_series.append(station)
+        station_series = [station] * len(concatenated_df.index)
         concatenated_df.insert(0, 'station', station_series)
 
         if return_coordinates:
             lat = return_wmoid_or_coord(station, 'lat', contains_station_name=False)[station]
             lon = return_wmoid_or_coord(station, 'lon', contains_station_name=False)[station]
+            elv = return_wmoid_or_coord(station, 'elv', contains_station_name=False)[station]
 
-            lat_series = [lat for index in concatenated_df.index]
-            lon_series = [lon for index in concatenated_df.index]
+            lat_series = [lat] * len(concatenated_df.index)
+            lon_series = [lon] * len(concatenated_df.index)
+            elv_series = [elv] * len(concatenated_df.index)
 
             concatenated_df['lat'] = lat_series
             concatenated_df['lon'] = lon_series
+            concatenated_df['elv'] = elv_series
 
         full_df = full_df.append(concatenated_df)
     print('Data downloaded.')

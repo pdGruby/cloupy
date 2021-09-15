@@ -57,7 +57,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631745791839</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix: Change the path to WMO stations data in a function.&#10;&#10;Function 'look_for_the_nearest_station' in climex_scraping.py looked for the file with WMO stations' data in the directory in which cloudy was imported. Now it looks for it in the main directory of cloudy.">
+      <created>1631746872952</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1631746872952</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -73,21 +80,22 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'." />
     <MESSAGE value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
+    <MESSAGE value="fix: Change the path to WMO stations data in a function.&#10;&#10;Function 'look_for_the_nearest_station' in climex_scraping.py looked for the file with WMO stations' data in the directory in which cloudy was imported. Now it looks for it in the main directory of cloudy." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: Change the path to WMO stations data in a function.&#10;&#10;Function 'look_for_the_nearest_station' in climex_scraping.py looked for the file with WMO stations' data in the directory in which cloudy was imported. Now it looks for it in the main directory of cloudy." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="411" y="107" key="CommitChangelistDialog2" timestamp="1631745912651">
+    <state x="411" y="107" key="CommitChangelistDialog2" timestamp="1631748440265">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="411" y="107" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745912651" />
+    <state x="411" y="107" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631748440265" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631745938371">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631748430029">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745938371" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631748430029" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1631744109961">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
