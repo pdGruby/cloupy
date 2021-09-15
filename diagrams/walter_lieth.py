@@ -440,7 +440,7 @@ class WalterLieth:
 
             fig.legend(handles, labels, loc='lower center', ncol=NCOL, bbox_to_anchor=(0.52, 0))
 
-    def download_data(
+    def d_imgw_data(
             self, interval='monthly', stations_kind='synop',
             filtr_station=True, check_years=True
     ):
@@ -460,7 +460,7 @@ class WalterLieth:
         (default True)
 
         ---------------NOTE THAT--------------
-        Note that 'download_data' method uses 'get_meteorological_data' function
+        Note that 'd_imgw_data' method uses 'get_meteorological_data' function
         from cloudy.scraping.imgw. All required arugments for the function which
         are not required in this method are taken from WalterLieth object. Due
         to this fact, WalterLieth.years_range has to be specified before running
@@ -492,15 +492,15 @@ class WalterLieth:
             if data.empty:
                 raise ValueError(
                     """
-                    No data for specified parameters found. Check if input arguments in 'WalterLieth.download_data' method
+                    No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
                     are valid.
                     """)
 
         elif interval == 'daily':
             if not filtr_station:
                 raise AttributeError(
-                        """
-                        'cloudy.WalterLieth.download_data' does not support given combination: 
+                    """
+                        'cloudy.WalterLieth.d_imgw_data' does not support given combination: 
                         interval='daily', filtr_station=False. Use interval='monthly' instead 
                         or stick with daily interval and input filtr_station=True.
                         """)
@@ -526,13 +526,13 @@ class WalterLieth:
             if data.empty:
                 raise ValueError(
                     """
-                    No data for specified parameters found. Check if input arguments in 'WalterLieth.download_data' method
+                    No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
                     are valid.
                     """)
         else:
             raise ValueError(
-                    """
-                    No data for specified parameters found. Check if input arguments in 'WalterLieth.download_data' method
+                """
+                    No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
                     are valid. Check 'interval' argument.
                     """)
 

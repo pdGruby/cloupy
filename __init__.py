@@ -76,9 +76,12 @@ def choose_diagStyle(diag_style='default'):
 
 
 def set_global_df(pd_DataFrame, file_format='csv'):
+
+    path = str(__file__).replace('__init__.py', '')
+
     try:
-        os.remove('global_df.csv')
-        os.remove('global_df.json')
+        os.remove(path + r'global_df.csv')
+        os.remove(path + r'global_df.json')
     except FileNotFoundError:
         pass
 
@@ -92,9 +95,9 @@ def set_global_df(pd_DataFrame, file_format='csv'):
         )
 
     if file_format == 'csv':
-        pd_DataFrame.to_csv('global_df.csv')
+        pd_DataFrame.to_csv(path + r'global_df.csv')
     elif file_format == 'json':
-        pd_DataFrame.to_json('global_df.json')
+        pd_DataFrame.to_json(path + r'global_df.json')
     else:
         raise AttributeError(
             """
@@ -104,15 +107,18 @@ def set_global_df(pd_DataFrame, file_format='csv'):
 
 
 def read_global_df():
+
+    path = str(__file__).replace('__init__.py', '')
+
     try:
-        df = pd.read_csv('global_df.csv', index_col=0)
+        df = pd.read_csv(path + r'global_df.csv', index_col=0)
     except FileNotFoundError:
         pass
     else:
         return df
 
     try:
-        df = pd.read_json('global_df.json')
+        df = pd.read_json(path + r'global_df.json')
     except ValueError:
         raise FileNotFoundError("Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again.")
     else:
