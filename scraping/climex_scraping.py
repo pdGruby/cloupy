@@ -206,8 +206,10 @@ def look_for_the_nearest_station(
 ):
     import pandas as pd
 
+    wmo_ids_path = str(__file__).replace('climex_scraping.py', 'wmo_ids_pop2.csv')
+
     degrees_range = 0.5
-    ids_coords = pd.read_csv('wmo_ids_pop2.csv', dtype={3: 'object'}, sep=';', index_col=0)
+    ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
 
     ids_coords = ids_coords[
         (ids_coords['lat'] < lat + degrees_range) &

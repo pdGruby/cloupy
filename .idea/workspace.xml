@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scraping/climex_scraping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/climex_scraping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,25 +50,51 @@
       <option name="project" value="LOCAL" />
       <updated>1631744553314</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'.">
+      <created>1631745791839</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1631745791839</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'." />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'." />
+    <MESSAGE value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="614" y="114" key="CommitChangelistDialog2" timestamp="1631744552261">
+    <state x="411" y="107" key="CommitChangelistDialog2" timestamp="1631745912651">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="614" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744552261" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631744572766">
+    <state x="411" y="107" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745912651" />
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744572766" />
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631745938371">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745938371" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1631744109961">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744109961" />
+    <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1631745804664">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745804664" />
   </component>
 </project>
