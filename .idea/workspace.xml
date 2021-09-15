@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,9 +42,29 @@
       <option name="presentableId" value="Default" />
       <updated>1620148632349</updated>
     </task>
+    <task id="LOCAL-00001" summary="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'.">
+      <created>1631744553314</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1631744553314</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'." />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'." />
+  </component>
   <component name="WindowStateProjectService">
+    <state x="614" y="114" key="CommitChangelistDialog2" timestamp="1631744552261">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="614" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744552261" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631744572766">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744572766" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1631744109961">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

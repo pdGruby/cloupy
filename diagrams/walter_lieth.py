@@ -538,7 +538,7 @@ class WalterLieth:
 
         self.dataframe = data
 
-    def download_coordinates(
+    def d_imgw_coordinates(
             self, latitude=True, longitude=True, elevation=True
     ):
         """
