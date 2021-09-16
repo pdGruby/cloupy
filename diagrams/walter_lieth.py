@@ -569,7 +569,7 @@ class WalterLieth:
                     raise AttributeError(
                         f"""
                         No essential data for '{element}' was downloaded - please, try again. If it does not fix the 
-                        problem, there's a high probability of required data lack in WMO website.
+                        problem, there's a high possibility of required data lack on the WMO website.
                         """
                     )
                 else:
@@ -577,6 +577,32 @@ class WalterLieth:
             else:
                 continue
 
+        for element in ['temp', 'preci', 'temp_max', 'temp_min']:
+            if data[element].isnull().all():
+                if element == 'temp' or element == 'preci':
+                    raise AttributeError(
+                        f"""
+                        No required data for '{element}'. It seems like the data was downloaded, but actually the column contains
+                        only None values.
+                        """
+                    )
+                elif element == 'temp_min':
+                    print(
+                        f"""
+                        WARNING: no data found for '{element}'. It is not required for drawing, but the box with extreme
+                        temperatures will show None value. The probability of freeze occurence neither can be calculated,
+                        so the rectangles will be blank. You can tell drawing function not to draw above elements:
+                        freeze_rectangles=False, extreme_box=False.
+                        """
+                    )
+                else:
+                    print(
+                        f"""
+                        WARNING: no data found for '{element}'. It is not required for drawing, but the box with extreme
+                        temperatures will show None value. You can tell drawing function not to draw box with extreme temperatures:
+                        extreme_box=False.
+                        """
+                    )
         self.dataframe = data
 
     def d_imgw_coordinates(
