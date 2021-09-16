@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'.">
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="fix: Fix the bug which occurs for specific stations with lack of data for temp_max and temp_min">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
     </list>
@@ -70,7 +70,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631749018764</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feat: Add new method for downloading meteorological data from WMO website in WalterLieth class.&#10;&#10;New method for WalterLieth class in walter_lieth.py added. Method is primal and has not been tested yet, so some bugs may occur.">
+      <created>1631751340346</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1631751340346</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -88,25 +95,27 @@
     <MESSAGE value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
     <MESSAGE value="fix: Change the path to WMO stations data in a function.&#10;&#10;Function 'look_for_the_nearest_station' in climex_scraping.py looked for the file with WMO stations' data in the directory in which cloudy was imported. Now it looks for it in the main directory of cloudy." />
     <MESSAGE value="refactor/feat: Use list comprehension in specific cases in climex_scraping.py/Return a station's elevation in d_wmo_data function&#10;&#10;The bad way of creating lists based on existing lists was applied (now list comprehension is applied)/Now d_wmo_data function returns also an elevation with latitude and longitude." />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor/feat: Use list comprehension in specific cases in climex_scraping.py/Return a station's elevation in d_wmo_data function&#10;&#10;The bad way of creating lists based on existing lists was applied (now list comprehension is applied)/Now d_wmo_data function returns also an elevation with latitude and longitude." />
+    <MESSAGE value="feat: Add new method for downloading meteorological data from WMO website in WalterLieth class.&#10;&#10;New method for WalterLieth class in walter_lieth.py added. Method is primal and has not been tested yet, so some bugs may occur." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add new method for downloading meteorological data from WMO website in WalterLieth class.&#10;&#10;New method for WalterLieth class in walter_lieth.py added. Method is primal and has not been tested yet, so some bugs may occur." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="332" y="166" key="CommitChangelistDialog2" timestamp="1631749018092">
+    <state x="332" y="166" key="CommitChangelistDialog2" timestamp="1631805968836">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="332" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631749018092" />
+    <state x="332" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631805968836" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631749027171">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631751349524">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631749027171" />
-    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1631744109961">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631751349524" />
+    <state x="2389" y="401" key="com.intellij.ide.util.TipDialog" timestamp="1631805091844">
+      <screen x="1920" y="0" width="1680" height="1010" />
     </state>
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744109961" />
+    <state x="2389" y="401" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1631805091844" />
     <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1631745804664">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

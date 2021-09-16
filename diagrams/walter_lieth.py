@@ -573,7 +573,7 @@ class WalterLieth:
                         """
                     )
                 else:
-                    data[element] = [None] * data.index
+                    data[element] = [None] * len(data.index)
             else:
                 continue
 
