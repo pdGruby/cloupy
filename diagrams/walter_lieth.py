@@ -212,7 +212,7 @@ class WalterLieth:
         else:
             raise AttributeError(
                 f"""
-                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe)} columns which is invalid. Input 5 or 6 columns
+                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe.index)} columns which is invalid. Input 5 or 6 columns
                 depending on data interval.
                 """)
 
@@ -226,7 +226,7 @@ class WalterLieth:
         if mean_temperature.max() > 50:
             raise ValueError(
                 f"""
-                Monthly mean temperature exceded 50°C!
+                Monthly mean temperature exceeded 50°C!
                 Invalid value: {mean_temperature.max()}
                 """)
 
@@ -535,6 +535,47 @@ class WalterLieth:
                     No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
                     are valid. Check 'interval' argument.
                     """)
+
+        self.dataframe = data
+
+    def d_wmo_data(
+            self, nearby_stations=True, return_coordinates=True
+    ):
+
+        import cloudy.scraping.climex_scraping as wmo_scraping
+
+        data = wmo_scraping.download_meteo_data(
+            self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'],
+            nearby_stations=nearby_stations, return_coordinates=return_coordinates
+        )
+        data = data.drop(['station', 'year'], axis=1)
+
+        if return_coordinates:
+            lat = data['lat'].mean()
+            lon = data['lon'].mean()
+            elv = data['elv'].mean()
+
+            self.lat = float(round(lat, 2))
+            self.lon = float(round(lon, 2))
+            self.elevation = int(round(elv))
+
+            data = data.drop(['lat', 'lon', 'elv'], axis=1)
+
+        for element in ['temp', 'preci', 'temp_max', 'temp_min']:
+            try:
+                data[element]
+            except KeyError:
+                if element == 'preci' or element == 'temp':
+                    raise AttributeError(
+                        f"""
+                        No essential data for '{element}' was downloaded - please, try again. If it does not fix the 
+                        problem, there's a high probability of required data lack in WMO website.
+                        """
+                    )
+                else:
+                    data[element] = [None] * data.index
+            else:
+                continue
 
         self.dataframe = data
 
