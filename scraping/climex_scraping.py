@@ -7,16 +7,20 @@ def get_wmo_stations_info():
 
 
 def return_wmoid_or_coord(
-        station_name, to_return, contains_station_name=True
+        station_name, to_return, contains_station_name=True,
+        station_name_is_wmo_id=False
 ):
     import pandas as pd
 
+    station_name = str(station_name)
     wmo_ids_path = str(__file__).replace('climex_scraping.py', 'wmo_ids_pop2.csv')
 
     station_name = station_name.upper()
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
     if station_name.startswith('COU'):
         data = ids_coords[ids_coords['country'].str.contains(station_name.replace('COU', ''))]
+    elif station_name_is_wmo_id:
+        data = ids_coords[ids_coords['wmo_id'] == station_name]
     else:
         if contains_station_name:
             data = ids_coords[ids_coords['station'].str.contains(station_name)]
@@ -267,8 +271,8 @@ def download_meteo_data(
                         """)
                     continue
                 else:
-                    lat = return_wmoid_or_coord(station, 'lat', contains_station_name=False)[station]
-                    lon = return_wmoid_or_coord(station, 'lon', contains_station_name=False)[station]
+                    lat = return_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
+                    lon = return_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
                     nearest_stations = look_for_the_nearest_station(lat, lon)
                     if nearest_stations.empty:
                         print(
@@ -329,9 +333,9 @@ def download_meteo_data(
         concatenated_df.insert(0, 'station', station_series)
 
         if return_coordinates:
-            lat = return_wmoid_or_coord(station, 'lat', contains_station_name=False)[station]
-            lon = return_wmoid_or_coord(station, 'lon', contains_station_name=False)[station]
-            elv = return_wmoid_or_coord(station, 'elv', contains_station_name=False)[station]
+            lat = return_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
+            lon = return_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
+            elv = return_wmoid_or_coord(wmo_id, 'elv', station_name_is_wmo_id=True)[station]
 
             lat_series = [lat] * len(concatenated_df.index)
             lon_series = [lon] * len(concatenated_df.index)

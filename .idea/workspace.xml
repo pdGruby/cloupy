@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scraping/climex_scraping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/climex_scraping.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +84,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631806483865</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is.">
+      <created>1631811493145</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1631811493145</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -97,6 +104,17 @@
       </list>
     </option>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactor: Change the directory of saving global DataFrame for cloudy and change the name of method in cloudy.WalterLieth class&#10;&#10;Global DataFrame for cloudy now is saved in the main cloudy's directory (it used to be saved in the directory where cloudy was imported). 'download_data' method in cloudy.WalterLieth diagram changes its name to 'd_imgw_data'." />
     <MESSAGE value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
@@ -104,21 +122,22 @@
     <MESSAGE value="refactor/feat: Use list comprehension in specific cases in climex_scraping.py/Return a station's elevation in d_wmo_data function&#10;&#10;The bad way of creating lists based on existing lists was applied (now list comprehension is applied)/Now d_wmo_data function returns also an elevation with latitude and longitude." />
     <MESSAGE value="feat: Add new method for downloading meteorological data from WMO website in WalterLieth class.&#10;&#10;New method for WalterLieth class in walter_lieth.py added. Method is primal and has not been tested yet, so some bugs may occur." />
     <MESSAGE value="fix: Fix the bug which occurs for specific stations with lack of data for temp_max and temp_min (in WalterLieth method for downloading WMO data)&#10;&#10;The section of the code which helps to handle with lack of unrequired data parameters (temp_max and temp_min) used to return errors. The problem was with creating a list of Nones values which length was the same as DataFrame columns - [None] should have been multiplied by LENGTH of the data.index, not data.index itself." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Fix the bug which occurs for specific stations with lack of data for temp_max and temp_min (in WalterLieth method for downloading WMO data)&#10;&#10;The section of the code which helps to handle with lack of unrequired data parameters (temp_max and temp_min) used to return errors. The problem was with creating a list of Nones values which length was the same as DataFrame columns - [None] should have been multiplied by LENGTH of the data.index, not data.index itself." />
+    <MESSAGE value="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="332" y="166" key="CommitChangelistDialog2" timestamp="1631806482927">
+    <state x="0" y="166" key="CommitChangelistDialog2" timestamp="1631811492422">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="332" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631806482927" />
+    <state x="0" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631811492422" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631806487281">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631811522749">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631806487281" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631811522749" />
     <state x="2389" y="401" key="com.intellij.ide.util.TipDialog" timestamp="1631805091844">
       <screen x="1920" y="0" width="1680" height="1010" />
     </state>
