@@ -651,7 +651,7 @@ class WalterLieth:
     def import_global_df(
             self, columns_order, filtr_station=True,
             check_years=True
-                         ):
+    ):
         """
         Import data for WalterLieth.dataframe from global data frame.
 
@@ -661,11 +661,13 @@ class WalterLieth:
         comes from IMGW database and it's structure has not been modified in any
         way, then 'imgw_monthly' or 'imgw_daily' can be used - depending on data
         interval
-        filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name
-        (default True)
+        filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name.
+        It makes a difference only if 'columns_order' argument is 'imgw_monthly'
+        or 'imgw_daily' (default True)
         check_years -- check if years range in global DataFrame matches WalterLieth.years_range.
         If not, change WalterLieth.years_range depending on years range in global DataFrame
-        data (default True)
+        data. It makes a difference only if 'columns_order' argument is 'imgw_monthly'
+        or 'imgw_daily' (default True)
         """
 
         from cloudy import read_global_df
@@ -705,7 +707,7 @@ class WalterLieth:
                         1. It's possible that input for 'station_name' in 'cloudy.WalterLieth' is invalid.
                         2. You can also be looking for the station which is not available in global pandas.DataFrame.
                         3. If you have changed default column order from IMGW database the function will return this exception.
-                        4. Check if your DataFrame does not contain any unnecessary column. It is possible that 'index_column=0'
+                        4. Check if your DataFrame does not contain any unnecessary column. It is possible that 'index_col=0'
                         argument will handle the problem if you have read csv file by pandas.read_csv() for setting the global
                         DataFrame.
                         5. If you're willing not to filtr data by 'station_name', you can set 'filtr_station' argument to
@@ -724,9 +726,14 @@ class WalterLieth:
                 df_for_object = df_for_object.drop(df_for_object.columns[0], axis=1)  # years
 
             self.dataframe = df_for_object
+        else:
+            df_for_object = df.iloc[:, columns_order]
+            self.dataframe = df_for_object
 
     @staticmethod
-    def check_cloudy_graphs_chosen_style(ls_prop_cycle, color_prop_cycle):
+    def check_cloudy_graphs_chosen_style(
+            ls_prop_cycle, color_prop_cycle
+    ):
         if ls_prop_cycle.count('-') == 10:
             return 'default'
         elif ls_prop_cycle.count('-') == 1 and color_prop_cycle.count('k') == 6:

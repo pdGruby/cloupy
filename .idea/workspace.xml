@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="fix: Delete global DataFrame file in the main cloudy directory every time user imports cloudy.&#10;&#10;The path for deleting file was not absolute, so __init__.py tried to delete file from local directory (where cloudy was imported). Now __init__.py deletes the global DataFrame file from the main cloudy directory.">
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -120,7 +119,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632178333214</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fix: Raise an exception when 'pd_DataFrame' argument in cloudy.set_global_df() function is not pandas.DataFrame object.&#10;&#10;if not isinstance(type(pd_DataFrame), type(pd.DataFrame)) was always True, so the exception couldn't be raised. The solution was to remove type() function.">
+      <created>1632180132744</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1632180132744</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -158,21 +164,22 @@
     <MESSAGE value="feat: Check years in downloaded data by 'd_wmo_data' method in WalterLieth class with the years in WalterLieth.years_range. If any difference, then change WalterLieth.years_range&#10;&#10;New argument in 'd_wmo_data' method allows to check years in downloaded data with years set in WalterLieth.years_range. New method is called 'check_years' and is set to True by default." />
     <MESSAGE value="feat: Do not require to set 'years_range' in WalterLieth class.&#10;&#10;Now 'years_range' is set to None by default, so it is not positional argument. If 'years_range' is None, then 'WalterLieth.draw' method will not draw years' text in the right top corner." />
     <MESSAGE value="fix: Delete global DataFrame file in the main cloudy directory every time user imports cloudy.&#10;&#10;The path for deleting file was not absolute, so __init__.py tried to delete file from local directory (where cloudy was imported). Now __init__.py deletes the global DataFrame file from the main cloudy directory." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Delete global DataFrame file in the main cloudy directory every time user imports cloudy.&#10;&#10;The path for deleting file was not absolute, so __init__.py tried to delete file from local directory (where cloudy was imported). Now __init__.py deletes the global DataFrame file from the main cloudy directory." />
+    <MESSAGE value="fix: Raise an exception when 'pd_DataFrame' argument in cloudy.set_global_df() function is not pandas.DataFrame object.&#10;&#10;if not isinstance(type(pd_DataFrame), type(pd.DataFrame)) was always True, so the exception couldn't be raised. The solution was to remove type() function." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: Raise an exception when 'pd_DataFrame' argument in cloudy.set_global_df() function is not pandas.DataFrame object.&#10;&#10;if not isinstance(type(pd_DataFrame), type(pd.DataFrame)) was always True, so the exception couldn't be raised. The solution was to remove type() function." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="68" y="126" key="CommitChangelistDialog2" timestamp="1632179100733">
+    <state x="68" y="126" key="CommitChangelistDialog2" timestamp="1632180132047">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="68" y="126" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632179100733" />
+    <state x="68" y="126" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632180132047" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632178335869">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632180134506">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632178335869" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632180134506" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632174934282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
