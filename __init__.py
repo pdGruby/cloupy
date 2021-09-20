@@ -10,10 +10,10 @@ from cloudy.scraping.climex_scraping import get_wmo_stations_info as i_wmo_stati
 from cloudy.diagrams.walter_lieth import WalterLieth
 
 try:
-    path = str(__file__).replace('__init__.py', '')
+    path_ = str(__file__).replace('__init__.py', '')
 
-    os.remove(path + r'global_df.csv')
-    os.remove(path + r'global_df.json')
+    os.remove(path_ + r'global_df.csv')
+    os.remove(path_ + r'global_df.json')
 except FileNotFoundError:
     pass
 
@@ -87,10 +87,10 @@ def set_global_df(pd_DataFrame, file_format='csv'):
     except FileNotFoundError:
         pass
 
-    if not isinstance(type(pd_DataFrame), type(pd.DataFrame)):
+    if not isinstance(pd_DataFrame, pd.DataFrame):
         raise AttributeError(
             """
-            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame()'.
+            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame'.
             More info about creating pandas.DataFrame() object is available here:
             'https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html'
             """

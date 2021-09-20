@@ -705,7 +705,10 @@ class WalterLieth:
                         1. It's possible that input for 'station_name' in 'cloudy.WalterLieth' is invalid.
                         2. You can also be looking for the station which is not available in global pandas.DataFrame.
                         3. If you have changed default column order from IMGW database the function will return this exception.
-                        4. If you're willing not to filtr data by 'station_name', you can set 'filtr_station' argument to
+                        4. Check if your DataFrame does not contain any unnecessary column. It is possible that 'index_column=0'
+                        argument will handle the problem if you have read csv file by pandas.read_csv() for setting the global
+                        DataFrame.
+                        5. If you're willing not to filtr data by 'station_name', you can set 'filtr_station' argument to
                         {False}. It's not recommended to plot data from more stations than one, but this argument
                         has been created mainly for this purpose - just in case.
                         """
