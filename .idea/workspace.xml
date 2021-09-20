@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scraping/climex_scraping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/climex_scraping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +91,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631811493145</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat/fix: Add 'station_name_is_wmo_id' argument to 'return_wmoid_or_coord' function in climex_scraping.py/Do not replicate input requests for stations which do not have unique name.&#10;&#10;In 'return_wmoid_or_coord' new argument allows to search for a specific station by it's unique WMO ID code. New argument is useful when a specific station is needed couple of times - it avoids replicating input requests for index when more than one station with the specific name were found. New argument can be set to True and then WMO ID code can be input in 'station_name'/cloudy used to replicate input requests for indexes in WalterLieth method (d_imgw_data) when there were more stations with exactly the same name in WMO database. Now when the station is chosen once, WalterLieth's method remembers station's WMO ID code which is unique. If WalterLieth's method needs to use again 'return_wmoid_or_coord' function from climex_scraping.py, it uses remembered unique WMO ID code, so the user is not obligated to repeat index input from 'return_wmoid_or_coord' function.">
+      <created>1631814040945</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1631814040945</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -109,7 +116,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -123,25 +132,26 @@
     <MESSAGE value="feat: Add new method for downloading meteorological data from WMO website in WalterLieth class.&#10;&#10;New method for WalterLieth class in walter_lieth.py added. Method is primal and has not been tested yet, so some bugs may occur." />
     <MESSAGE value="fix: Fix the bug which occurs for specific stations with lack of data for temp_max and temp_min (in WalterLieth method for downloading WMO data)&#10;&#10;The section of the code which helps to handle with lack of unrequired data parameters (temp_max and temp_min) used to return errors. The problem was with creating a list of Nones values which length was the same as DataFrame columns - [None] should have been multiplied by LENGTH of the data.index, not data.index itself." />
     <MESSAGE value="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is." />
+    <MESSAGE value="feat/fix: Add 'station_name_is_wmo_id' argument to 'return_wmoid_or_coord' function in climex_scraping.py/Do not replicate input requests for stations which do not have unique name.&#10;&#10;In 'return_wmoid_or_coord' new argument allows to search for a specific station by it's unique WMO ID code. New argument is useful when a specific station is needed couple of times - it avoids replicating input requests for index when more than one station with the specific name were found. New argument can be set to True and then WMO ID code can be input in 'station_name'/cloudy used to replicate input requests for indexes in WalterLieth method (d_imgw_data) when there were more stations with exactly the same name in WMO database. Now when the station is chosen once, WalterLieth's method remembers station's WMO ID code which is unique. If WalterLieth's method needs to use again 'return_wmoid_or_coord' function from climex_scraping.py, it uses remembered unique WMO ID code, so the user is not obligated to repeat index input from 'return_wmoid_or_coord' function." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat/fix: Add 'station_name_is_wmo_id' argument to 'return_wmoid_or_coord' function in climex_scraping.py/Do not replicate input requests for stations which do not have unique name.&#10;&#10;In 'return_wmoid_or_coord' new argument allows to search for a specific station by it's unique WMO ID code. New argument is useful when a specific station is needed couple of times - it avoids replicating input requests for index when more than one station with the specific name were found. New argument can be set to True and then WMO ID code can be input in 'station_name'/cloudy used to replicate input requests for indexes in WalterLieth method (d_imgw_data) when there were more stations with exactly the same name in WMO database. Now when the station is chosen once, WalterLieth's method remembers station's WMO ID code which is unique. If WalterLieth's method needs to use again 'return_wmoid_or_coord' function from climex_scraping.py, it uses remembered unique WMO ID code, so the user is not obligated to repeat index input from 'return_wmoid_or_coord' function." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="0" y="166" key="CommitChangelistDialog2" timestamp="1631811492422">
+    <state x="0" y="166" key="CommitChangelistDialog2" timestamp="1631814040240">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631811492422" />
+    <state x="0" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631814040240" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631811522749">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631814046770">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631811522749" />
-    <state x="2389" y="401" key="com.intellij.ide.util.TipDialog" timestamp="1631805091844">
-      <screen x="1920" y="0" width="1680" height="1010" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631814046770" />
+    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632174934282">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631744109961" />
+    <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632174934282" />
     <state x="2389" y="401" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1631805091844" />
     <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1631745804664">
       <screen x="0" y="0" width="1920" height="1040" />

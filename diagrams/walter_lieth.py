@@ -539,7 +539,8 @@ class WalterLieth:
         self.dataframe = data
 
     def d_wmo_data(
-            self, nearby_stations=True, return_coordinates=True
+            self, nearby_stations=True, return_coordinates=True,
+            check_years=True
     ):
 
         import cloudy.scraping.climex_scraping as wmo_scraping
@@ -548,6 +549,12 @@ class WalterLieth:
             self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'],
             nearby_stations=nearby_stations, return_coordinates=return_coordinates
         )
+
+        if check_years:
+            min_year = data['year'].min()
+            max_year = data['year'].max()
+            self.years_range = range(min_year, max_year + 1)
+
         data = data.drop(['station', 'year'], axis=1)
 
         if return_coordinates:
