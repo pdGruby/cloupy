@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="feat: Do not require to set 'years_range' in WalterLieth class.&#10;&#10;Now 'years_range' is set to None by default, so it is not positional argument. If user uses 'd_imgw_id' method, then 'check_years' argument has to be True or 'years_range' in WalterLieth class has to be set manually.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
     </list>
@@ -98,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631814040945</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: Check years in downloaded data by 'd_wmo_data' method in WalterLieth class with the years in WalterLieth.years_range. If any difference, then change WalterLieth.years_range&#10;&#10;New argument in 'd_wmo_data' method allows to check years in downloaded data with years set in WalterLieth.years_range. New method is called 'check_years' and is set to True by default.">
+      <created>1632175599467</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1632175599467</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -133,21 +140,22 @@
     <MESSAGE value="fix: Fix the bug which occurs for specific stations with lack of data for temp_max and temp_min (in WalterLieth method for downloading WMO data)&#10;&#10;The section of the code which helps to handle with lack of unrequired data parameters (temp_max and temp_min) used to return errors. The problem was with creating a list of Nones values which length was the same as DataFrame columns - [None] should have been multiplied by LENGTH of the data.index, not data.index itself." />
     <MESSAGE value="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is." />
     <MESSAGE value="feat/fix: Add 'station_name_is_wmo_id' argument to 'return_wmoid_or_coord' function in climex_scraping.py/Do not replicate input requests for stations which do not have unique name.&#10;&#10;In 'return_wmoid_or_coord' new argument allows to search for a specific station by it's unique WMO ID code. New argument is useful when a specific station is needed couple of times - it avoids replicating input requests for index when more than one station with the specific name were found. New argument can be set to True and then WMO ID code can be input in 'station_name'/cloudy used to replicate input requests for indexes in WalterLieth method (d_imgw_data) when there were more stations with exactly the same name in WMO database. Now when the station is chosen once, WalterLieth's method remembers station's WMO ID code which is unique. If WalterLieth's method needs to use again 'return_wmoid_or_coord' function from climex_scraping.py, it uses remembered unique WMO ID code, so the user is not obligated to repeat index input from 'return_wmoid_or_coord' function." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat/fix: Add 'station_name_is_wmo_id' argument to 'return_wmoid_or_coord' function in climex_scraping.py/Do not replicate input requests for stations which do not have unique name.&#10;&#10;In 'return_wmoid_or_coord' new argument allows to search for a specific station by it's unique WMO ID code. New argument is useful when a specific station is needed couple of times - it avoids replicating input requests for index when more than one station with the specific name were found. New argument can be set to True and then WMO ID code can be input in 'station_name'/cloudy used to replicate input requests for indexes in WalterLieth method (d_imgw_data) when there were more stations with exactly the same name in WMO database. Now when the station is chosen once, WalterLieth's method remembers station's WMO ID code which is unique. If WalterLieth's method needs to use again 'return_wmoid_or_coord' function from climex_scraping.py, it uses remembered unique WMO ID code, so the user is not obligated to repeat index input from 'return_wmoid_or_coord' function." />
+    <MESSAGE value="feat: Check years in downloaded data by 'd_wmo_data' method in WalterLieth class with the years in WalterLieth.years_range. If any difference, then change WalterLieth.years_range&#10;&#10;New argument in 'd_wmo_data' method allows to check years in downloaded data with years set in WalterLieth.years_range. New method is called 'check_years' and is set to True by default." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Check years in downloaded data by 'd_wmo_data' method in WalterLieth class with the years in WalterLieth.years_range. If any difference, then change WalterLieth.years_range&#10;&#10;New argument in 'd_wmo_data' method allows to check years in downloaded data with years set in WalterLieth.years_range. New method is called 'check_years' and is set to True by default." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="0" y="166" key="CommitChangelistDialog2" timestamp="1631814040240">
+    <state x="0" y="166" key="CommitChangelistDialog2" timestamp="1632177061182">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631814040240" />
+    <state x="0" y="166" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632177061182" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1631814046770">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632175602880">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631814046770" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632175602880" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632174934282">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

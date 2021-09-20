@@ -13,8 +13,9 @@ class WalterLieth:
 
     ---------------METHODS---------------
     draw()
-    download_data()
-    download_coordinates()
+    d_imgw_data()
+    d_imgw_coordinates()
+    dw_wmo_data()
     import_global_df()
     -------------------------------------
 
@@ -54,8 +55,9 @@ class WalterLieth:
     """
 
     def __init__(
-            self, station_name, years_range,
-            dataframe=None, lat=False, lon=False, elevation=False
+            self, station_name, years_range=None,
+            dataframe=None, lat=False, lon=False,
+            elevation=False
     ):
         self.dataframe = dataframe
         self.years_range = years_range
@@ -97,8 +99,8 @@ class WalterLieth:
         if self.dataframe is None or self.dataframe.empty:
             raise AttributeError(
                 """
-            No data in WalterLieth.dataframe. Input data on your own or use WalterLieth's methods: WalterLieth.download_data,
-            WalterLieth.import_global_df
+                No data in WalterLieth.dataframe. Input data on your own or use WalterLieth's methods: WalterLieth.d_imgw_data,
+                WalterLieth.d_wmo_data, WalterLieth.import_global_df
                 """)
 
         ls_prop_cycle = rcParams['axes.prop_cycle'].by_key()['linestyle']
@@ -183,7 +185,9 @@ class WalterLieth:
             dry_period_legend_label = 'dry period'
 
         title = self.station_name
-        if len(self.years_range) == 1:
+        if self.years_range is None:
+            years = False
+        elif len(self.years_range) == 1:
             years = self.years_range[0]
         else:
             years = f'{str(min(self.years_range))}-{str(max(self.years_range))}'
@@ -441,13 +445,14 @@ class WalterLieth:
             fig.legend(handles, labels, loc='lower center', ncol=NCOL, bbox_to_anchor=(0.52, 0))
 
     def d_imgw_data(
-            self, interval='monthly', stations_kind='synop',
-            filtr_station=True, check_years=True
+            self, years_range, interval='monthly',
+            stations_kind='synop', filtr_station=True, check_years=True
     ):
         """
         Download data for drawing from IMGW database.
 
         Keyword arguments:
+        years_range -- years range (eg. range(2010, 2021))
         interval -- data interval ('monthly', 'daily', 'prompt') (default
         'monthly')
         stations_kind -- stations kind from IMGW database ('synop', 'climat',
@@ -458,21 +463,13 @@ class WalterLieth:
         range from WalterLieth.years_range. If not, change
         WalterLieth.years_range depending on years range in downloaded data
         (default True)
-
-        ---------------NOTE THAT--------------
-        Note that 'd_imgw_data' method uses 'get_meteorological_data' function
-        from cloudy.scraping.imgw. All required arugments for the function which
-        are not required in this method are taken from WalterLieth object. Due
-        to this fact, WalterLieth.years_range has to be specified before running
-        'download_data' method.
-        --------------------------------------
         """
 
         import cloudy.scraping.imgw as imgw_scraping
 
         if interval == 'monthly':
             data = imgw_scraping.get_meteorological_data(
-                years_range=self.years_range, period=interval,
+                years_range=years_range, period=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
                           'Średnia temperatura miesięczna [°C]',
@@ -651,8 +648,9 @@ class WalterLieth:
         if elevation:
             self.elevation = cor_elev['elv']
 
-    def import_global_df(self, columns_order, filtr_station=True,
-                         check_years=True
+    def import_global_df(
+            self, columns_order, filtr_station=True,
+            check_years=True
                          ):
         """
         Import data for WalterLieth.dataframe from global data frame.
@@ -665,9 +663,9 @@ class WalterLieth:
         interval
         filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name
         (default True)
-        check_years -- check if years range in downloaded data matches years range
-        from WalterLieth.years_range. If not, change WalterLieth.years_range
-        depending on years range in downloaded data (default True)
+        check_years -- check if years range in global DataFrame matches WalterLieth.years_range.
+        If not, change WalterLieth.years_range depending on years range in global DataFrame
+        data (default True)
         """
 
         from cloudy import read_global_df
