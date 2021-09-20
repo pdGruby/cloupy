@@ -10,8 +10,10 @@ from cloudy.scraping.climex_scraping import get_wmo_stations_info as i_wmo_stati
 from cloudy.diagrams.walter_lieth import WalterLieth
 
 try:
-    os.remove('global_df.csv')
-    os.remove('global_df.json')
+    path = str(__file__).replace('__init__.py', '')
+
+    os.remove(path + r'global_df.csv')
+    os.remove(path + r'global_df.json')
 except FileNotFoundError:
     pass
 
