@@ -216,7 +216,7 @@ class WalterLieth:
         else:
             raise AttributeError(
                 f"""
-                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe.index)} columns which is invalid. Input 5 or 6 columns
+                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 or 6 columns
                 depending on data interval.
                 """)
 
@@ -650,7 +650,8 @@ class WalterLieth:
 
     def import_global_df(
             self, columns_order, filtr_station=True,
-            check_years=True
+            check_years=True, station_in_column=False,
+            years_in_column=False
     ):
         """
         Import data for WalterLieth.dataframe from global data frame.
@@ -661,13 +662,15 @@ class WalterLieth:
         comes from IMGW database and it's structure has not been modified in any
         way, then 'imgw_monthly' or 'imgw_daily' can be used - depending on data
         interval
-        filtr_station -- if downloaded data has to be filtered by WalterLieth.station_name.
-        It makes a difference only if 'columns_order' argument is 'imgw_monthly'
-        or 'imgw_daily' (default True)
+        filtr_station -- if imported data has to be filtered by WalterLieth.station_name.
+        (default True)
         check_years -- check if years range in global DataFrame matches WalterLieth.years_range.
         If not, change WalterLieth.years_range depending on years range in global DataFrame
-        data. It makes a difference only if 'columns_order' argument is 'imgw_monthly'
-        or 'imgw_daily' (default True)
+        data. (default True)
+        station_in_column -- if you want to filter imported data by WalterLieth.station_name,
+        specify the column in which station names are located (with an index which
+        is an integer).
+        years_in_column -- ...
         """
 
         from cloudy import read_global_df
@@ -684,10 +687,17 @@ class WalterLieth:
         if columns_order != 'imgw_monthly' and columns_order != 'imgw_daily' and not isinstance(columns_order, list):
             raise AttributeError(
                 """
-                Valid arguments 'columns_order': 'imgw_monthly', 'imgw_daily', [list of 5 or 6 ints]
+                Valid arguments 'columns_order': 'imgw_monthly', 'imgw_daily', [list of ints]
                 If your data's source is IMGW database and default columns order of the dataframe is preserved,
                 you can input 'imgw_monthly' or 'imgw_daily' values for 'columns_order' argument (depending on data interval).
                 """)
+
+        if not isinstance(station_in_column, int) or not isinstance(years_in_column, int):
+            raise AttributeError(
+                """
+                For 'station_in_column' and 'years_in_column' only single integers are valid values.
+                """
+            )
 
         df = read_global_df()
 
@@ -724,11 +734,50 @@ class WalterLieth:
             df_for_object = df_for_object.drop(df_for_object.columns[0], axis=1)  # station names
             if columns_order == 'imgw_monthly':
                 df_for_object = df_for_object.drop(df_for_object.columns[0], axis=1)  # years
-
-            self.dataframe = df_for_object
         else:
             df_for_object = df.iloc[:, columns_order]
-            self.dataframe = df_for_object
+
+            if isinstance(station_in_column, int):
+
+                if filtr_station:
+                    df_for_object = df_for_object[df_for_object.iloc[:, station_in_column] == self.station_name]
+                    df_for_object.drop(df_for_object.columns[station_in_column], axis=1, inplace=True)
+                else:
+                    raise AttributeError(
+                        """
+                        If you want to filtr by station in specified column ('station_in_column'), please set
+                        'filtr_station' argument to True.
+                        """
+                    )
+
+                if df_for_object.empty:
+                    raise ValueError(
+                        """
+                        The data frame after filtering is empty. Check if WalterLieth.station_name is in global data frame
+                        and if 'station_in_column' argument is valid.
+                        """
+                    )
+
+            if isinstance(years_in_column, int):
+
+                if check_years:
+                    if isinstance(station_in_column, int):
+                        years_in_column -= 1
+
+                    year_min = df_for_object.iloc[:, years_in_column].min()
+                    year_max = df_for_object.iloc[:, years_in_column].max()
+
+                    self.years_range = range(year_min, year_max + 1)
+                    df_for_object.drop(df_for_object.columns[years_in_column], axis=1, inplace=True)
+                else:
+                    raise AttributeError(
+                        """
+                        If you want to update WalterLieth.years_range by specified column ('years_in_column'), please set 
+                        'check_years' argument to True.
+                        """
+                    )
+
+        self.dataframe = df_for_object
 
     @staticmethod
     def check_cloudy_graphs_chosen_style(
