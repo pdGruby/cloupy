@@ -1,4 +1,6 @@
 def get_wmo_stations_info():
+    """Return pandas.DataFrame with WMO stations information (WMO ids, coordinates, etc.)"""
+
     import pandas as pd
 
     wmo_ids_path = str(__file__).replace('climex_scraping.py', 'wmo_ids_pop2.csv')
@@ -10,6 +12,27 @@ def return_wmoid_or_coord(
         station_name, to_return, contains_station_name=True,
         station_name_is_wmo_id=False
 ):
+    """
+    Return WMO ids or coordinates of the WMO stations which contains 'station_name'
+    in their names.
+
+    Keyword arguments:
+        station_name -- the name of station for which WMO id or coordinates has
+    to be returned. If 'cou' prefix added to 'station_name' and after the prefix
+    goes a country name, the function will look for all stations in specified
+    country (e.g. 'couPOLAND' will return WMO ids or coordinates for all stations
+    in Poland)
+        to_return -- which parameter has to be returned ('wmo_id', 'lat', 'lon',
+    'elv')
+        contains_station_name -- if set to True, the function will look for the
+    stations which contains 'station_name' in their names. If set to False, the
+    function will look for the stations with names exactly as in 'station_name'
+    (default True)
+        station_name_is_wmo_id -- if set to True, the function will look for a
+    station by its WMO id. In this case, in 'station_name' argument you have to
+    pass WMO id
+    """
+
     import pandas as pd
 
     station_name = str(station_name)
@@ -68,6 +91,11 @@ def return_wmoid_or_coord(
 
 
 def downloaded_data_decoder(data_table):
+    """
+    Decode the data from .dat file from the WMO website. Return more
+    computer-friendly data for the further adaptation.
+    """
+
     table = data_table.split('#')
 
     data = table[-1]
@@ -89,6 +117,8 @@ def downloaded_data_decoder(data_table):
 
 
 def download(url):
+    """Download and return the data from the given URL of the WMO website"""
+
     from bs4 import BeautifulSoup as bs
     import requests
 
@@ -126,6 +156,8 @@ def download(url):
 
 
 def concatenate_dfs(dfs):
+    """Concatenate given data frames to a one consistent data frame"""
+
     import pandas as pd
 
     min_year = 3000
@@ -195,6 +227,8 @@ def concatenate_dfs(dfs):
 
 
 def transpose_table(table):
+    """Transpose the table for further adaptation"""
+
     new_table = []
     for row in table:
         for i, value in enumerate(row):
@@ -206,13 +240,22 @@ def transpose_table(table):
 
 
 def look_for_the_nearest_station(
-        lat, lon
+        lat, lon, degrees_range=0.5
 ):
+    """
+    Return the nearest stations from WMO database for specified coordinates.
+
+    Keyword arguments:
+        lat -- the latitude for which station will be searched
+        lon -- the longitude for which station will be searched
+        degrees_range -- the acceptable range in degrees in all directions
+    (default 0.5)
+    """
+
     import pandas as pd
 
     wmo_ids_path = str(__file__).replace('climex_scraping.py', 'wmo_ids_pop2.csv')
 
-    degrees_range = 0.5
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
 
     ids_coords = ids_coords[
@@ -232,8 +275,30 @@ def look_for_the_nearest_station(
 
 def download_meteo_data(
         station_name, elements_to_scrape, nearby_stations=False,
-        return_coordinates=False
+        degrees_range_for_nearby_stations=0.5, return_coordinates=False
 ):
+    """
+    Download meteorological data for specified station/stations from the WMO website.
+    There are 5 elements which are possible to download: average air temperature,
+    sum of precipitation, absolute minimum air temperature, absolute maximum air
+    temperature, sea level pressure. The interval for downloaded data is always
+    monthly.
+
+    Keyword arguments:
+        station_name -- the name of station for which data has to be downloaded.
+    If 'cou' prefix added and after the prefix goes a country name, the function
+    will look for all stations in specified country (e.g. 'couPOLAND')
+        elements_to_scrape -- which elements from the WMO website have to be
+    scraped ('temp', 'preci', 'temp_min', 'temp_max', 'sl_press')
+        nearby_stations -- if a lack of data/single element occurs and 'nearby_stations'
+    argument is set to True, the function will look for the nearest stations and
+    try to complete the lack (default False)
+        degrees_range_for_nearby_stations -- the acceptable range in degrees in
+    all directions if nearby stations have to be searched (default 0.5)
+        return_coordinates -- if set to True, the function will add columns with
+    latitude, longitude and elevation for specified station/stations (default False)
+    """
+
     import pandas as pd
 
     if isinstance(elements_to_scrape, str):
@@ -273,7 +338,9 @@ def download_meteo_data(
                 else:
                     lat = return_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
                     lon = return_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
-                    nearest_stations = look_for_the_nearest_station(lat, lon)
+                    nearest_stations = look_for_the_nearest_station(
+                        lat, lon, degrees_range=degrees_range_for_nearby_stations
+                    )
                     if nearest_stations.empty:
                         print(
                             f"""
@@ -312,9 +379,12 @@ def download_meteo_data(
                         downloaded_data = data_from_near_stations[more_elements_in]
                         print(
                             f"""
-                            Warning: no '{element}' data was found for the chosen station ({station}), so the data was taken from the nearest
-                            station (WMO ID: {more_elements_in}). Latitude and longitude differences were below 0.5 degrees. If you
-                            don't want to download data from the nearest station, change 'nearby_stations' argument value to False.
+                            Warning: no '{element}' data was found for the chosen station ({station}), so the data was 
+                            taken from the nearest station (WMO ID: {more_elements_in}). Latitude and longitude differences 
+                            were below 0.5 degrees. If you do not  want to download data from the nearest station, change 
+                            'nearby_stations' argument value to False. If you would like to change acceptable latitude 
+                            and longitude differences, you can do it by passing float/int to 'degrees_range_for_nearby_stations' 
+                            argument.
                             """)
             else:
                 pass

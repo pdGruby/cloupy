@@ -5,7 +5,7 @@ class WalterLieth:
 
     Keyword arguments:
     station_name -- station name for which data will be drawn
-    years_range -- years range for which data will be drawn
+    years_range -- years range for which data will be drawn (default None)
     dataframe -- data for drawing (default None)
     lat -- latitude of the station (default None)
     lon -- longitude of the station (default None)
@@ -15,7 +15,7 @@ class WalterLieth:
     draw()
     d_imgw_data()
     d_imgw_coordinates()
-    dw_wmo_data()
+    d_wmo_data()
     import_global_df()
     -------------------------------------
 
@@ -27,7 +27,7 @@ class WalterLieth:
     If data interval is monthly, then 5 columns are required:
     1st column: months,
     2nd column: average air temperature,
-    3rd column: average sum of precipitation,
+    3rd column: sum of precipitation,
     4th column: absolute maximum air temperature,
     5th column: absolute minimum air temperature
 
@@ -48,10 +48,12 @@ class WalterLieth:
                 'max_temp': [10, 15, 17, 18, 19, 20, 35, 34, 25, 20, 15, 10],
                 'min_temp': [-36, -29, -20, -15, -5, -1, 1, 2, -1, -4, -18, -22]
                             })
-
-    Note that data must be provided for every single month. In another case,
-    Walter-Lieth diagram is not possible to be drawn.
     --------------------------------------------
+
+    ---------------NOTE THAT---------------
+    The data must be provided for every single month. In another case,
+    Walter-Lieth diagram is not possible to be drawn.
+    ---------------------------------------
     """
 
     def __init__(
@@ -76,20 +78,20 @@ class WalterLieth:
         Specify which elements have to be drawn and draw Walter-Lieth diagram.
 
         Keyword arguments:
-        figsize -- figure size (default (7.74, 7.74))
-        language -- choose language (None, 'POL', 'ENG') (default None). If
+            figsize -- figure size (default (7.74, 7.74))
+            language -- choose language (None, 'POL', 'ENG') (default None). If
         None, then choose default language, which is 'ENG'
-        freeze_rectangles -- if bottom rectangles which show freeze periods have
-        to be drawn (default True)
-        title_text -- if station name has to be drawn (default True)
-        years_text -- if years range has to be drawn (default True)
-        coordinates_box -- if box with coordinates info has to be drawn (default
-        True)
-        yearly_means_box -- if box with yearly means has to be drawn (default
-        True)
-        extremes_box -- if box with extreme temperatures has to be drawn
+            freeze_rectangles -- if bottom rectangles which show freeze periods
+        have to be drawn (default True)
+            title_text -- if station name has to be drawn (default True)
+            years_text -- if years range has to be drawn (default True)
+            coordinates_box -- if box with coordinates info has to be drawn
         (default True)
-        legend_box -- if legend has to be drawn (default True)
+            yearly_means_box -- if box with yearly means has to be drawn (default
+        True)
+            extremes_box -- if box with extreme temperatures has to be drawn
+        (default True)
+            legend_box -- if legend has to be drawn (default True)
         """
 
         import matplotlib.pyplot as plt
@@ -216,22 +218,20 @@ class WalterLieth:
         else:
             raise AttributeError(
                 f"""
-                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 or 6 columns
-                depending on data interval.
+                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 
+                or 6 columns depending on the data interval.
                 """)
 
         if precipitation.min() < 0:
             raise ValueError(
                 f"""
-                Value below 0 mm occured in precipitation series.
-                Invalid value: {precipitation.min()}
+                Value below 0 mm occured in precipitation series. Invalid value: {precipitation.min()}
                 """)
 
         if mean_temperature.max() > 50:
             raise ValueError(
                 f"""
-                Monthly mean temperature exceeded 50°C!
-                Invalid value: {mean_temperature.max()}
+                Monthly mean temperature exceeded 50°C! Invalid value: {mean_temperature.max()}
                 """)
 
         annual_mean_temp = round(mean_temperature.mean(), 1)
@@ -446,23 +446,22 @@ class WalterLieth:
 
     def d_imgw_data(
             self, years_range, interval='monthly',
-            stations_kind='synop', filtr_station=True, check_years=True
+            stations_kind='synop', filter_station=True, check_years=True
     ):
         """
         Download data for drawing from IMGW database.
 
         Keyword arguments:
-        years_range -- years range (eg. range(2010, 2021))
-        interval -- data interval ('monthly', 'daily', 'prompt') (default
+            years_range -- years range (eg. range(2010, 2021))
+            interval -- data interval ('monthly', 'daily', 'prompt') (default
         'monthly')
-        stations_kind -- stations kind from IMGW database ('synop', 'climat',
+            stations_kind -- stations kind from IMGW database ('synop', 'climat',
         'fall') (default 'synop')
-        filtr_station -- if downloaded data has to be filtered by
+            filter_station -- if downloaded data has to be filtered by
         WalterLieth.station_name (default True)
-        check_years -- check if years range in downloaded data matches years
-        range from WalterLieth.years_range. If not, change
-        WalterLieth.years_range depending on years range in downloaded data
-        (default True)
+            check_years -- check if years range in downloaded data matches years
+        range from WalterLieth.years_range. If not, change WalterLieth.years_range
+        depending on years range in downloaded data (default True)
         """
 
         import cloudy.scraping.imgw as imgw_scraping
@@ -477,7 +476,7 @@ class WalterLieth:
                           'Absolutna temperatura maksymalna [°C]',
                           'Absolutna temperatura minimalna [°C]']
             )
-            if filtr_station:
+            if filter_station:
                 data = data[data['Nazwa stacji'] == self.station_name]
 
             if check_years:
@@ -494,13 +493,13 @@ class WalterLieth:
                     """)
 
         elif interval == 'daily':
-            if not filtr_station:
+            if not filter_station:
                 raise AttributeError(
                     """
-                        'cloudy.WalterLieth.d_imgw_data' does not support given combination: 
-                        interval='daily', filtr_station=False. Use interval='monthly' instead 
-                        or stick with daily interval and input filtr_station=True.
-                        """)
+                    'cloudy.WalterLieth.d_imgw_data' does not support given combination: interval='daily', 
+                    filter_station=False. Use interval='monthly' instead or stick with daily interval and input 
+                    filter_station=True.
+                    """)
 
             data = imgw_scraping.get_meteorological_data(
                 years_range=self.years_range, period=interval,
@@ -537,14 +536,30 @@ class WalterLieth:
 
     def d_wmo_data(
             self, nearby_stations=True, return_coordinates=True,
-            check_years=True
+            degrees_range_for_nearby_stations=0.5, check_years=True
     ):
+        """
+        Download data for drawing from WMO database.
+
+        Keyword arguments:
+            nearby_stations -- if a lack of data/single element occurs and
+        'nearby_stations' argument is set to True, the method will look for the
+        nearest stations and try to complete the lack (default True)
+            return_coordinates -- if set to True, the method will add columns
+        with latitude, longitude and elevation for specified station/stations
+        (default True)
+            degrees_range_for_nearby_stations -- the acceptable range in degrees
+        in all directions if nearby stations have to be searched (default 0.5)
+            check_years -- check if years range in downloaded data matches years
+        range from WalterLieth.years_range. If not, change WalterLieth.years_range
+        depending on years range in downloaded data (default True)
+        """
 
         import cloudy.scraping.climex_scraping as wmo_scraping
 
         data = wmo_scraping.download_meteo_data(
-            self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'],
-            nearby_stations=nearby_stations, return_coordinates=return_coordinates
+            self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'], nearby_stations=nearby_stations,
+            return_coordinates=return_coordinates, degrees_range_for_nearby_stations=degrees_range_for_nearby_stations
         )
 
         if check_years:
@@ -586,8 +601,8 @@ class WalterLieth:
                 if element == 'temp' or element == 'preci':
                     raise AttributeError(
                         f"""
-                        No required data for '{element}'. It seems like the data was downloaded, but actually the column contains
-                        only None values.
+                        No required data for '{element}'. It seems like the data was downloaded, but actually the column 
+                        contains only None values.
                         """
                     )
                 elif element == 'temp_min':
@@ -603,22 +618,23 @@ class WalterLieth:
                     print(
                         f"""
                         WARNING: no data found for '{element}'. It is not required for drawing, but the box with extreme
-                        temperatures will show None value. You can tell drawing function not to draw box with extreme temperatures:
-                        extreme_box=False.
+                        temperatures will show None value. You can tell drawing function not to draw box with extreme 
+                        temperatures: extreme_box=False.
                         """
                     )
         self.dataframe = data
 
     def d_imgw_coordinates(
-            self, latitude=True, longitude=True, elevation=True
+            self, latitude=True, longitude=True,
+            elevation=True
     ):
         """
         Download coordinates for the specified station of IMGW database.
 
         Keyword arguments:
-        latitude -- if WalterLieth.lat has to be updated (default True)
-        longitude -- if WalterLieth.lon has to be updated (default True)
-        elevation -- if WalterLieth.elv has to be updated (default True)
+            latitude -- if WalterLieth.lat has to be updated (default True)
+            longitude -- if WalterLieth.lon has to be updated (default True)
+            elevation -- if WalterLieth.elv has to be updated (default True)
         """
 
         import cloudy.scraping.imgw as imgw_scraping
@@ -649,28 +665,70 @@ class WalterLieth:
             self.elevation = cor_elev['elv']
 
     def import_global_df(
-            self, columns_order, filtr_station=True,
-            check_years=True, station_in_column=False,
-            years_in_column=False
+            self, columns_order, filter_station=True,
+            check_years=True, station_in_column=False, years_in_column=False
     ):
         """
         Import data for WalterLieth.dataframe from global data frame.
 
         Keyword arguments:
-        columns_order -- specify which columns from global data frame have to be
-        taken (list of indexes, 'imgw_monthly', 'imgw_daily'). If global data frame
-        comes from IMGW database and it's structure has not been modified in any
-        way, then 'imgw_monthly' or 'imgw_daily' can be used - depending on data
+            columns_order -- specify which columns from global data frame have to
+        be taken (list of indexes, 'imgw_monthly', 'imgw_daily'). If global data
+        frame comes from IMGW database and it's structure has not been modified in
+        any way, then 'imgw_monthly' or 'imgw_daily' can be used - depending on data
         interval
-        filtr_station -- if imported data has to be filtered by WalterLieth.station_name.
-        (default True)
-        check_years -- check if years range in global DataFrame matches WalterLieth.years_range.
-        If not, change WalterLieth.years_range depending on years range in global DataFrame
-        data. (default True)
-        station_in_column -- if you want to filter imported data by WalterLieth.station_name,
-        specify the column in which station names are located (with an index which
-        is an integer).
-        years_in_column -- ...
+            filter_station -- if imported data has to be filtered by
+        WalterLieth.station_name (default True)
+            check_years -- check if years range in global DataFrame matches
+        WalterLieth.years_range. If not, change WalterLieth.years_range depending
+        on years range in global DataFrame (default True)
+            station_in_column -- if you want to filter imported data by
+        WalterLieth.station_name, specify the column in which station names are
+        located (with an index which is an integer) (default False, accepts integers)
+            years_in_column -- if you want to check if WalterLieth.years_range matches
+        years range in imported global data frame, specify the index of column in
+        which years data is located (default False, accepts integers)
+
+        ---------------NOTE THAT---------------
+        If the data in global data frame comes from the IMGW website and it's
+        structure has not been modified in any way, you can use 'imgw_monthly',
+        'imgw_daily' in 'columns_order' argument. If it is your case, you do not
+        have to set 'station_in_column' and 'years_in_column' arguments - the
+        method will do it for you.
+
+        If the data in global data frame does not come from the IMGW website, you
+        have to specify in which columns needed data for drawing is (by passing
+        list of integers to 'columns_order'). Note that if you want to filter data
+        by station name (from WalterLieth.station_name) or check if years range
+        in imported data matches WalterLieth.years_range, you also have to pass
+        proper columns from global data frame to 'columns_order' argument. When
+        you do, you have to set the indexes of the columns in which data of
+        years or station name is located ('station_in_column' and 'years_in_column'
+        arguments). Remember that these indexes must be for new data frame which
+        originates after data filtering by 'columns_order'.
+
+        For example:
+        columns_order = [2, 3, 4, 5, 6, 7, 8], where:
+        2nd column contains station names (the index in new data frame is 0),
+        3rd column contains years (new index is 1),
+        4rd column contains months (new index is 2),
+        5rd column contains average air temperatures (new index is 3),
+        6rd column contains average sum of precipitation (new index is 4),
+        7rd column contains absolute maximum air temperature (new index is 5),
+        8rd column contains absolute minimum air temperature (new index is 6)
+
+        So, if you want to filter by station name and check if WalterLieth.years_range
+        matches the data in imported global data frame, 'station_in_column' and
+        'years_in_column' should be:
+        station_in_column = int(0)
+        years_in_column = int(1)
+
+        After filtering, the method will drop these columns and pass the data frame
+        to WalterLieth.dataframe without the columns in which station names and
+        years were. If the structure of data frame after droping above columns
+        fits required data structure for WalterLieth class, the graph should be
+        drawn correctly (see WalterLieth class docstring for required data structure)
+        ---------------------------------------
         """
 
         from cloudy import read_global_df
@@ -680,15 +738,15 @@ class WalterLieth:
                 """
                 1. Use list of ints to specify which columns from global pandas.DataFrame are necessary for drawing.
                 2. Remember that you can get accurate info about required data structure in cloudy.WalterLieth docs.
-                3. Alternatively, if your data's source is IMGW database you can use 'imgw_monthly' or 'imgw_daily' strings 
-                for your input.
+                3. Alternatively, if your data's source is IMGW database you can use 'imgw_monthly' or 'imgw_daily' 
+                strings for your input.
                 """)
 
         if columns_order != 'imgw_monthly' and columns_order != 'imgw_daily' and not isinstance(columns_order, list):
             raise AttributeError(
                 """
-                Valid arguments 'columns_order': 'imgw_monthly', 'imgw_daily', [list of ints]
-                If your data's source is IMGW database and default columns order of the dataframe is preserved,
+                Valid inputs for 'columns_order': 'imgw_monthly', 'imgw_daily', [list of ints]
+                If your data's source is IMGW database and the default columns order of the data frame is preserved,
                 you can input 'imgw_monthly' or 'imgw_daily' values for 'columns_order' argument (depending on data interval).
                 """)
 
@@ -707,22 +765,23 @@ class WalterLieth:
             else:
                 df_for_object = df.iloc[:, [1, 2, 3, 9, 13, 5, 7]]
 
-            if filtr_station:
+            if filter_station:
                 df_for_object = df_for_object[df_for_object.iloc[:, 0] == self.station_name]
                 if df_for_object.empty:
                     raise ValueError(
                         """
-                        Dataframe has just been filtered and the output was empty. Check your inputs which may affect filtering.
+                        Dataframe has just been filtered and the output was empty. Check your inputs which may affect 
+                        filtering.
                         
-                        1. It's possible that input for 'station_name' in 'cloudy.WalterLieth' is invalid.
+                        1. It is possible that input for 'station_name' in 'cloudy.WalterLieth' is invalid.
                         2. You can also be looking for the station which is not available in global pandas.DataFrame.
                         3. If you have changed default column order from IMGW database the function will return this exception.
                         4. Check if your DataFrame does not contain any unnecessary column. It is possible that 'index_col=0'
                         argument will handle the problem if you have read csv file by pandas.read_csv() for setting the global
                         DataFrame.
-                        5. If you're willing not to filtr data by 'station_name', you can set 'filtr_station' argument to
-                        {False}. It's not recommended to plot data from more stations than one, but this argument
-                        has been created mainly for this purpose - just in case.
+                        5. If you're willing not to filtr data by 'station_name', you can set 'filter_station' argument to
+                        False. However, it is not recommended to draw WalterLieth diagram if the data does not come from 
+                        a single station.
                         """
                     )
 
@@ -739,14 +798,14 @@ class WalterLieth:
 
             if isinstance(station_in_column, int):
 
-                if filtr_station:
+                if filter_station:
                     df_for_object = df_for_object[df_for_object.iloc[:, station_in_column] == self.station_name]
                     df_for_object.drop(df_for_object.columns[station_in_column], axis=1, inplace=True)
                 else:
                     raise AttributeError(
                         """
-                        If you want to filtr by station in specified column ('station_in_column'), please set
-                        'filtr_station' argument to True.
+                        If you want to filter by station in specified column ('station_in_column'), please set
+                        'filter_station' argument to True.
                         """
                     )
 
@@ -783,6 +842,8 @@ class WalterLieth:
     def check_cloudy_graphs_chosen_style(
             ls_prop_cycle, color_prop_cycle
     ):
+        """Return which style has been set globally for cloudy"""
+
         if ls_prop_cycle.count('-') == 10:
             return 'default'
         elif ls_prop_cycle.count('-') == 1 and color_prop_cycle.count('k') == 6:
@@ -794,6 +855,10 @@ class WalterLieth:
     def get_max_twm_and_min_tcm(
             mean_temperature, abs_max_temp, abs_min_temp
     ):
+        """
+        Return an absolute maximum of the warmest month and an absolute minimum
+        of the coldest month
+        """
 
         the_highest_temp = mean_temperature.max()
         the_lowest_temp = mean_temperature.min()
@@ -813,7 +878,7 @@ class WalterLieth:
                 Invalid data structure in 'cloudy.WalterLieth.dataframe'. Check 'cloudy.WalterLieth' docs for more info.
                 
                 1. Check if you haven't mistaken column order in 'cloudy.WalterLieth.dataframe'. 
-                2. It's also possible that you have tried to pass daily interval and there's a lack of column/columns. 
+                2. It's also possible that you have tried to pass daily interval and there's a lack of column/columns.
                 Note that daily interval data must contain 6 columns - for more info about required data structure check 
                 'cloudy.WalterLieth' docs. If you have used 'cloudy.WalterLieth.import_global_df' method for data from IMGW
                 database, check values for argument 'columns_order' (if 'imgw_monthly' or 'imgw_daily' have been used properly,
@@ -821,9 +886,9 @@ class WalterLieth:
                 """)
 
     @staticmethod
-    def get_temp_yticks(
-            temperature
-    ):
+    def get_temp_yticks(temperature):
+        """Return ticks list for WalterLieth graph"""
+
         available_temp_axis_ticks = [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50]
         min_temp = min(list(temperature))
 
@@ -859,6 +924,8 @@ class WalterLieth:
 
     @staticmethod
     def get_yticks_labels_for_precipitation(temp_yaxis_ticks):
+        """Return list for the secondary axis in WalterLieth graph"""
+
         preci_ticks = []
         for index, tick in enumerate(temp_yaxis_ticks):
             if index == 0 and tick != 0:
@@ -870,6 +937,8 @@ class WalterLieth:
 
     @staticmethod
     def get_max_ytick_for_precipitation(precipitation):
+        """Return the highest tick for precipitation for the upper axis in WL graph"""
+
         available_ticks = [200, 300, 400, 500, 600,
                            700, 800, 900, 1000, 1100,
                            1200, 1300, 1400, 1500, 1600,
@@ -883,6 +952,8 @@ class WalterLieth:
 
     @staticmethod
     def determine_if_freeze(abs_min_temp):
+        """Return a list of the months in which freeze is likely and more likely"""
+
         likely = []
         freeze = []
 
@@ -902,7 +973,11 @@ class WalterLieth:
         return likely, freeze
 
     @staticmethod
-    def interpolate_margins(mean_temperature, precipitation):
+    def interpolate_margins(
+            mean_temperature, precipitation
+    ):
+        """Interpolate given data to the edges of the WalterLieth graph"""
+
         temperature = list(mean_temperature)
         precipitation = list(precipitation)
 
@@ -961,7 +1036,11 @@ class WalterLieth:
         return new_temperature, new_precipitation
 
     @staticmethod
-    def distinguish_between_wet_and_dry(mean_temperature, precipitation):
+    def distinguish_between_wet_and_dry(
+            mean_temperature, precipitation
+    ):
+        """Distinguish wet and dry periods and return appropriate lists"""
+
         corrected_precipitation = []
         for preci in precipitation:
             if preci < 100:

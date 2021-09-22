@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="docs/feat: Create docstrings for new functions and method, update and correct docstrings of the old functions, methods and classes/">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scraping/climex_scraping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/climex_scraping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scraping/imgw.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/imgw.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +136,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632182160505</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="feat: Filter imported global data frame by station name and check if imported years fit to WalterLieth.years_range&#10;&#10;WalterLieth.import_global_df method now allows to filter data by specified station name in WalterLieth.station_name. It also allows to check if imported years from global data frame matches WalterLieth.range_years (if not, the method automatically changes it).">
+      <created>1632268867147</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1632268867147</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -173,25 +183,26 @@
     <MESSAGE value="fix: Delete global DataFrame file in the main cloudy directory every time user imports cloudy.&#10;&#10;The path for deleting file was not absolute, so __init__.py tried to delete file from local directory (where cloudy was imported). Now __init__.py deletes the global DataFrame file from the main cloudy directory." />
     <MESSAGE value="fix: Raise an exception when 'pd_DataFrame' argument in cloudy.set_global_df() function is not pandas.DataFrame object.&#10;&#10;if not isinstance(type(pd_DataFrame), type(pd.DataFrame)) was always True, so the exception couldn't be raised. The solution was to remove type() function." />
     <MESSAGE value="feat: Choose needed columns from global DataFrame by df.iloc[:, columns_order] in WalterLieth.import_global_df method.&#10;&#10;To this moment only data from the IMGW website with no structure changes could have been imported as a global DataFrame. Now it is possible to pick specific columns from global DataFrame to fit required data structure for WalterLieth.dataframe." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Choose needed columns from global DataFrame by df.iloc[:, columns_order] in WalterLieth.import_global_df method.&#10;&#10;To this moment only data from the IMGW website with no structure changes could have been imported as a global DataFrame. Now it is possible to pick specific columns from global DataFrame to fit required data structure for WalterLieth.dataframe." />
+    <MESSAGE value="feat: Filter imported global data frame by station name and check if imported years fit to WalterLieth.years_range&#10;&#10;WalterLieth.import_global_df method now allows to filter data by specified station name in WalterLieth.station_name. It also allows to check if imported years from global data frame matches WalterLieth.range_years (if not, the method automatically changes it)." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Filter imported global data frame by station name and check if imported years fit to WalterLieth.years_range&#10;&#10;WalterLieth.import_global_df method now allows to filter data by specified station name in WalterLieth.station_name. It also allows to check if imported years from global data frame matches WalterLieth.range_years (if not, the method automatically changes it)." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="68" y="126" key="CommitChangelistDialog2" timestamp="1632182159245">
+    <state x="0" y="126" key="CommitChangelistDialog2" timestamp="1632349881949">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="68" y="126" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632182159245" />
+    <state x="0" y="126" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632349881949" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632182167642">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632268960261">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632182167642" />
-    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632262698272">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632268960261" />
+    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632321352345">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632262698272" />
+    <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632321352345" />
     <state x="2389" y="401" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1631805091844" />
     <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1631745804664">
       <screen x="0" y="0" width="1920" height="1040" />

@@ -23,9 +23,10 @@ def get_file_formats(
     Return available file formats for the given 'period' and 'stations_kind'.
 
     Keyword arguments:
-    period -- period kind of IMGW database ('monthly', 'daily', 'prompt')
-    stations_kind -- stations' kind ('synop', 'climat', 'fall')
-    file_format_index -- which element from the list will be returned ('all', 1, 2)
+        period -- period kind of IMGW database ('monthly', 'daily', 'prompt')
+        stations_kind -- stations' kind ('synop', 'climat', 'fall')
+        file_format_index -- which element from the list will be returned ('all',
+    1, 2)
     """
 
     if period == 'monthly':
@@ -81,14 +82,14 @@ def get_file_formats(
     return chosen_file_format
 
 
-def get_column_names(
-        file_format
-):
+def get_column_names(file_format):
     """
     Return columns names for the given file format.
 
     Keyword arguments:
-    file_format -- file format of IMGW database (eg. 's_m_t')
+        file_format -- file format of IMGW database (eg. 's_m_t'). Available file
+    formats: k_m_d, k_m_t, o_m, s_m_d, s_m_t, k_d, k_d_t, o_d, s_d, s_d_t, k_t,
+    s_t
     """
 
     if file_format == 'k_m_d':
@@ -249,8 +250,8 @@ def look_for_keywords_in_columns(
     Look for the given keywords in the columns of IMGW database file formats.
 
     Keyword arguments:
-    keywords -- keywords that will be looked for
-    file_format -- IMGW database file format of which columns will be taken to
+        keywords -- keywords that will be looked for
+        file_format -- IMGW database file format of which columns will be taken to
     look for keywords. If 'file_format' is None, then every column from every file
     will be taken (default None)
     """
@@ -308,10 +309,11 @@ def get_urls(
     'years_range'.
 
     Keyword arguments:
-    period -- period kind of IMGW database (monthly, daily, prompt)
-    stations_kind -- stations' kind (synop, climat, fall)
-    years_range -- years range
+        period -- period kind of IMGW database (monthly, daily, prompt)
+        stations_kind -- stations' kind (synop, climat, fall)
+        years_range -- years range
     """
+
     if period == 'monthly':
         period = 'miesieczne/'
     elif period == 'daily':
@@ -372,15 +374,14 @@ def get_urls(
     return urls
 
 
-def download_data(
-        urls
-):
+def download_data(urls):
     """
     Download data from IMGW database.
 
     Keyword arguments:
-    urls -- urls for data which is wanted
+        urls -- urls for data which is wanted
     """
+
     import requests
     from bs4 import BeautifulSoup as bs
     import zipfile
@@ -410,18 +411,20 @@ def download_data(
 
 def concatenate_data(
         downloaded_files_names, file_formats, specific_columns,
-        keywords, optimize_memory_usage, years_range, merge_splitted_stations
+        keywords, optimize_memory_usage, years_range,
+        merge_splitted_stations
 ):
     """
     Merge tables from downloaded files and return merged pd.DataFrame.
 
     Keyword arguments:
-    downloaded_files_names -- names list of downloaded files
-    file_formats -- IMGW file formats which are in downloaded files
-    specific_columns -- specified columns which will be taken to merge
-    keywords -- words which have to be in column name if a column has to be merged
-    optimize_memory_usage -- reduce pd.DataFrame memory usage
-    years_range -- filtr pd.DataFrame to given period
+        downloaded_files_names -- names list of downloaded files
+        file_formats -- IMGW file formats which are in downloaded files
+        specific_columns -- specified columns which will be taken to merge
+        keywords -- words which have to be in column name if a column has to be
+    merged
+        optimize_memory_usage -- reduce pd.DataFrame memory usage
+        years_range -- filtr pd.DataFrame to given period
     """
 
     import pandas as pd
@@ -527,26 +530,26 @@ def concatenate_data(
 
 def get_meteorological_data(
         period, stations_kind, years_range,
-        file_format_index=0, file_format=None,
-        specific_columns=None, keywords=None,
-        merge_splitted_stations=True, optimize_memory_usage=False
+        file_format_index=0, file_format=None, specific_columns=None,
+        keywords=None, merge_splitted_stations=True, optimize_memory_usage=False
 ):
     """
     Download IMGW data files and return data as one merged pd.DataFrame.
 
     Keyword arguments:
-    period -- period kind of IMGW database ('monthly', 'daily', 'prompt')
-    stations_kind -- stations' kind ('synop', 'climat', 'fall')
-    years_range -- years range (eg. range(2010, 2021))
-    file_format_index -- which element from the list of file formats will be
+        period -- period kind of IMGW database ('monthly', 'daily', 'prompt')
+        stations_kind -- stations' kind ('synop', 'climat', 'fall')
+        years_range -- years range (eg. range(2010, 2021))
+        file_format_index -- which element from the list of file formats will be
     returned (default 0)
-    file_format -- file format of IMGW database (default None)
-    specific_columns -- specified columns which will be taken to merge (default None)
-    keywords -- words which have to be in a column name if a column
-    has to be merged (default None)
-    merge_splitted_stations - merge stations which are the same but have different
-    name (default True)
-    optimize_memory_usage - reduce pd.DataFrame memory usage (default False)
+        file_format -- file format of IMGW database (default None)
+        specific_columns -- specified columns which will be taken to merge
+    (default None)
+        keywords -- words which have to be in a column name if a column has to be
+    merged (default None)
+        merge_splitted_stations -- merge stations which are the same but have
+    different names (default True)
+        optimize_memory_usage -- reduce pd.DataFrame memory usage (default False)
     """
 
     from os import listdir
@@ -602,6 +605,8 @@ def get_meteorological_data(
 
 
 def get_coordinates_and_elevation(station_name):
+    """Return coordinates for IMGW stations for the given station name"""
+
     from bs4 import BeautifulSoup as bs
     import requests
     import re

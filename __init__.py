@@ -7,9 +7,10 @@ from matplotlib import rcParams
 from cloudy.scraping.imgw import get_meteorological_data as d_imgw_data
 from cloudy.scraping.climex_scraping import download_meteo_data as d_wmo_data
 from cloudy.scraping.climex_scraping import get_wmo_stations_info as i_wmo_stations
+from cloudy.scraping.climex_scraping import look_for_the_nearest_station as i_wmo_near_station
 from cloudy.diagrams.walter_lieth import WalterLieth
 
-try:
+try:  # delete global data frame from the previous session
     path_ = str(__file__).replace('__init__.py', '')
 
     os.remove(path_ + r'global_df.csv')
@@ -17,6 +18,7 @@ try:
 except FileNotFoundError:
     pass
 
+#  dictionaries of styles for drawing
 default_style = {
     'font.family': 'Calibri',
     'axes.titleweight': 'bold',
@@ -50,6 +52,8 @@ retro_style = {
                        )
         )
 }
+
+#  set default style for cloudy
 diagStyle = rcParams
 diagStyle['savefig.dpi'] = 300
 diagStyle['savefig.bbox'] = 'tight'
@@ -59,12 +63,33 @@ for param, value in default_style.items():
 
 
 def change_diagStyle_params(diagStyle_dict):
+    """
+    Change global parameters for drawing diagrams.
+
+    Keyword arguments:
+        diagStyle_dict -- a dictionary in which the keys are parameters that have
+    to be changed; values are values to which default values have to be changed.
+
+    ---------------NOTE THAT---------------
+    For available parameters and their valid values you can check matplotlib's
+    'rcParams' documentation:
+    https://matplotlib.org/stable/tutorials/introductory/customizing.html
+    ---------------------------------------
+    """
+
     global diagStyle
     for changed_param, changed_value in diagStyle_dict.items():
         diagStyle[changed_param] = changed_value
 
 
 def choose_diagStyle(diag_style='default'):
+    """
+    Choose global style for diagrams.
+
+    Keyword arguments:
+        diag_style -- the style for diagrams. Available styles: 'default', 'retro'
+    (default 'default')
+    """
     if diag_style == 'default':
         for default_param, default_value in default_style.items():
             diagStyle[default_param] = default_value
@@ -77,7 +102,16 @@ def choose_diagStyle(diag_style='default'):
         )
 
 
-def set_global_df(pd_DataFrame, file_format='csv'):
+def set_global_df(
+        pd_DataFrame, file_format='csv'
+):
+    """
+    Set global data frame from which data can be imported in any time.
+
+    Keyword arguments:
+        pd_DataFrame -- a pandas DataFrame object which will be global DataFrame
+        file_format -- ...to be deleted...
+    """
 
     path = str(__file__).replace('__init__.py', '')
 
@@ -90,9 +124,8 @@ def set_global_df(pd_DataFrame, file_format='csv'):
     if not isinstance(pd_DataFrame, pd.DataFrame):
         raise AttributeError(
             """
-            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame'.
-            More info about creating pandas.DataFrame() object is available here:
-            'https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html'
+            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame'. More info about creating pandas.DataFrame() 
+            object is available here: 'https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html'
             """
         )
 
@@ -109,7 +142,10 @@ def set_global_df(pd_DataFrame, file_format='csv'):
 
 
 def read_global_df():
-
+    """
+    Return the global data frame which was previously set by 'set_global_df'
+    function.
+    """
     path = str(__file__).replace('__init__.py', '')
 
     try:
@@ -122,6 +158,7 @@ def read_global_df():
     try:
         df = pd.read_json(path + r'global_df.json')
     except ValueError:
-        raise FileNotFoundError("Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again.")
+        raise FileNotFoundError(
+            "Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again.")
     else:
         return df
