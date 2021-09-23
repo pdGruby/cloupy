@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="docs/feat: Create docstrings for new functions and methods, update and correct docstrings of the old functions, methods and classes/Allow changing acceptable range in degrees in every direction when looking for the nearest station in WMO database&#10;&#10;Docstrings were created for the new functions and methods in climex_scraping.py and walter_lieth.py. Already existing docstrings for functions, methods and classes were checked and corrected if necessary. Docstrings' structure was changed, now every docstring is consistent. Some messages for the exceptions in climex_scraping.py, walter_lieth.py and imgw.py were also corrected./Now it is possible to change acceptable distance in degrees when looking for the nearest station among the stations in WMO database. For this purpose, new argument appeared in 'look_for_the_nearest_station' function from climex_scraping.py. The methods in the WalterLieth class which use 'look_for_the_nearest_station' function were also updated and now acceptable distance can also be changed in WalterLieth methods.">
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scraping/climex_scraping.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/climex_scraping.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632351718240</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="fix: Return pandas.DataFrame with the same columns order as in 'elements_to_scrape' argument when scraping data for the whole country&#10;&#10;The function used to return mixed columns order in comparision to 'elements_to_scrape' argument when it downloaded data for the whole country. It turned out to be problematic while implementing the function to class methods.">
+      <created>1632425941340</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1632425941340</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -189,21 +196,22 @@
     <MESSAGE value="feat: Choose needed columns from global DataFrame by df.iloc[:, columns_order] in WalterLieth.import_global_df method.&#10;&#10;To this moment only data from the IMGW website with no structure changes could have been imported as a global DataFrame. Now it is possible to pick specific columns from global DataFrame to fit required data structure for WalterLieth.dataframe." />
     <MESSAGE value="feat: Filter imported global data frame by station name and check if imported years fit to WalterLieth.years_range&#10;&#10;WalterLieth.import_global_df method now allows to filter data by specified station name in WalterLieth.station_name. It also allows to check if imported years from global data frame matches WalterLieth.range_years (if not, the method automatically changes it)." />
     <MESSAGE value="docs/feat: Create docstrings for new functions and methods, update and correct docstrings of the old functions, methods and classes/Allow changing acceptable range in degrees in every direction when looking for the nearest station in WMO database&#10;&#10;Docstrings were created for the new functions and methods in climex_scraping.py and walter_lieth.py. Already existing docstrings for functions, methods and classes were checked and corrected if necessary. Docstrings' structure was changed, now every docstring is consistent. Some messages for the exceptions in climex_scraping.py, walter_lieth.py and imgw.py were also corrected./Now it is possible to change acceptable distance in degrees when looking for the nearest station among the stations in WMO database. For this purpose, new argument appeared in 'look_for_the_nearest_station' function from climex_scraping.py. The methods in the WalterLieth class which use 'look_for_the_nearest_station' function were also updated and now acceptable distance can also be changed in WalterLieth methods." />
-    <option name="LAST_COMMIT_MESSAGE" value="docs/feat: Create docstrings for new functions and methods, update and correct docstrings of the old functions, methods and classes/Allow changing acceptable range in degrees in every direction when looking for the nearest station in WMO database&#10;&#10;Docstrings were created for the new functions and methods in climex_scraping.py and walter_lieth.py. Already existing docstrings for functions, methods and classes were checked and corrected if necessary. Docstrings' structure was changed, now every docstring is consistent. Some messages for the exceptions in climex_scraping.py, walter_lieth.py and imgw.py were also corrected./Now it is possible to change acceptable distance in degrees when looking for the nearest station among the stations in WMO database. For this purpose, new argument appeared in 'look_for_the_nearest_station' function from climex_scraping.py. The methods in the WalterLieth class which use 'look_for_the_nearest_station' function were also updated and now acceptable distance can also be changed in WalterLieth methods." />
+    <MESSAGE value="fix: Return pandas.DataFrame with the same columns order as in 'elements_to_scrape' argument when scraping data for the whole country&#10;&#10;The function used to return mixed columns order in comparision to 'elements_to_scrape' argument when it downloaded data for the whole country. It turned out to be problematic while implementing the function to class methods." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: Return pandas.DataFrame with the same columns order as in 'elements_to_scrape' argument when scraping data for the whole country&#10;&#10;The function used to return mixed columns order in comparision to 'elements_to_scrape' argument when it downloaded data for the whole country. It turned out to be problematic while implementing the function to class methods." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="0" y="126" key="CommitChangelistDialog2" timestamp="1632424113795">
+    <state x="0" y="126" key="CommitChangelistDialog2" timestamp="1632425940585">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="126" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632424113795" />
+    <state x="0" y="126" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632425940585" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1631745887419" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632351720787">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632425974184">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632351720787" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632425974184" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632397125078">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

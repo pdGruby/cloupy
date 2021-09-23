@@ -1,3 +1,39 @@
+"""
+Enjoy easy data scraping from websites and its management. What's more, enjoy
+even easier data visualization!
+
+--------DATA MANAGEMENT FUNCTIONS-------
+    set_global_df() -- set global data frame from which data can be imported in
+any time.
+    read_global_df() -- return the global data frame as pandas.DataFrame
+----------------------------------------
+
+---------DATA SCRAPING FUNCTIONS--------
+    d_imgw_data() -- download IMGW data files from the IMGW website and return it
+as one merged pd.DataFrame
+    d_wmo_data() -- download meteorological data for specified station/stations
+from the WMO website
+    i_wmo_stations() -- return pandas.DataFrame with WMO stations information (WMO
+ids, coordinates, etc.)
+    i_wmo_near_station() -- return the nearest stations from WMO database for
+specified coordinates
+----------------------------------------
+
+-------DATA VISUALIZATION FUNCTIONS------
+    choose_diagStyle() -- choose global style for diagrams
+    change_diagStyle_params() -- change global parameters for drawing diagrams
+-----------------------------------------
+
+--------DATA VISUALIZATION CLASSES-------
+# Note that every class for drawing diagrams contains above functions as its
+methods (for data scraping and management)
+
+    WalterLieth() -- create a WalterLieth object where data for drawing Walter-Lieth
+diagram can be downloaded, modified, manually provided
+-----------------------------------------
+"""
+
+
 import pandas as pd
 import os
 from cycler import cycler
