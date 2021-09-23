@@ -416,5 +416,12 @@ def download_meteo_data(
             concatenated_df['elv'] = elv_series
 
         full_df = full_df.append(concatenated_df)
+
+        if 'cou' in station_name:
+            columns_order = ['station'] + elements_to_scrape
+            if return_coordinates:
+                columns_order += ['lat', 'lon', 'elv']
+            full_df = full_df[[columns_order]]
+
     print('Data downloaded.')
     return full_df
