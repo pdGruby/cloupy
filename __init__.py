@@ -139,21 +139,19 @@ def choose_diagStyle(diag_style='default'):
 
 
 def set_global_df(
-        pd_DataFrame, file_format='csv'
+        pd_DataFrame
 ):
     """
     Set global data frame from which data can be imported in any time.
 
     Keyword arguments:
         pd_DataFrame -- a pandas DataFrame object which will be global DataFrame
-        file_format -- ...to be deleted...
     """
 
     path = str(__file__).replace('__init__.py', '')
 
     try:
         os.remove(path + r'global_df.csv')
-        os.remove(path + r'global_df.json')
     except FileNotFoundError:
         pass
 
@@ -165,16 +163,7 @@ def set_global_df(
             """
         )
 
-    if file_format == 'csv':
-        pd_DataFrame.to_csv(path + r'global_df.csv')
-    elif file_format == 'json':
-        pd_DataFrame.to_json(path + r'global_df.json')
-    else:
-        raise AttributeError(
-            """
-            Invalid input for 'file_format'. Available inputs: 'csv', 'json'
-            """
-        )
+    pd_DataFrame.to_csv(path + r'global_df.csv')
 
 
 def read_global_df():
@@ -187,13 +176,6 @@ def read_global_df():
     try:
         df = pd.read_csv(path + r'global_df.csv', index_col=0)
     except FileNotFoundError:
-        pass
-    else:
-        return df
-
-    try:
-        df = pd.read_json(path + r'global_df.json')
-    except ValueError:
         raise FileNotFoundError(
             "Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again.")
     else:
