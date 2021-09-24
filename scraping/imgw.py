@@ -265,6 +265,8 @@ def look_for_keywords_in_columns(
         found_file_formats = {}
         for period in periods:
             for kind in stations_kinds:
+                if period == 'prompt' and kind == 'fall':
+                    continue
                 file_formats = get_file_formats(period, kind, 'all')
                 found_file_formats['period=' + str(period) + ', ' + 'stations_kind=' + str(kind)] = file_formats
 
@@ -275,7 +277,7 @@ def look_for_keywords_in_columns(
                     columns_names = get_column_names(file)
                     for name in columns_names:
                         for keyword in keywords:
-                            if keyword in name:
+                            if keyword.upper() in name.upper():
                                 try:
                                     keywords_in_files[str(period_stkind) + ", " + "file_format=" + str(file)].append(
                                         name)
@@ -421,7 +423,7 @@ def concatenate_data(
         downloaded_files_names -- names list of downloaded files
         file_formats -- IMGW file formats which are in downloaded files
         specific_columns -- specified columns which will be taken to merge
-        keywords -- words which have to be in column name if a column has to be
+        keywords -- words which have to be in column name if the column has to be
     merged
         optimize_memory_usage -- reduce pd.DataFrame memory usage
         years_range -- filtr pd.DataFrame to given period
@@ -429,6 +431,16 @@ def concatenate_data(
 
     import pandas as pd
     import numpy as np
+
+    if isinstance(file_formats, list) and len(file_formats) > 1:
+        raise ValueError(
+            f"""Invalid value for 'file_format'. Data downloading is possible only for a single file. 
+            {len(file_formats)} files given ({file_formats}).
+            """
+        )
+
+    if isinstance(file_formats, str):
+        file_formats = [file_formats]
 
     df = pd.DataFrame()
     keywords_in_columns = []
@@ -462,7 +474,7 @@ def concatenate_data(
                     columns = get_column_names(file_format)
                     for keyword in keywords:
                         for column in columns:
-                            if keyword in column:
+                            if keyword.upper() in column.upper():
                                 keywords_in_columns.append(columns.index(column))
 
                 if keywords is not None:
@@ -491,14 +503,13 @@ def concatenate_data(
 
     try:
         df = df[df[2] >= min(
-            years_range)]  # Zmień tak, żeby szukało najniższego roku z serii. df[2] wcale nie musi być rokiem jeżeli ktoś się pobawi z keywords.
+            years_range)]
         df = df[df[2] <= max(
-            years_range)]  # Zmień tak, żeby szukało najwyższego roku z serii. df[2] wcale nie musi być rokiem jeżeli ktoś się pobawi z keywords.
+            years_range)]
     except KeyError:
         print("No column with year has been specified. Can't limit data range to given 'years_range'.")
 
-    if merge_splitted_stations:
-
+    if merge_splitted_stations and 1 in df.columns:
         stations_series = df[1]
         new_stations_series = []
         for station in stations_series:
@@ -555,6 +566,13 @@ def get_meteorological_data(
     from os import listdir
     from os.path import isfile, join
     import shutil
+
+    if file_format not in get_file_formats(period, stations_kind, 'all') and file_format is not None:
+        raise ValueError(
+            f"""
+            There's no such file format ({file_format}) for specified combination of 'period' and 'stations_kind'
+            """
+        )
 
     urls = get_urls(period, stations_kind, years_range)
     download_data(urls)
