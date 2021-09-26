@@ -357,7 +357,8 @@ class WalterLieth:
                      False, False]
             for index in range(period[0], period[1] + 1):
                 where[index] = True
-            temp_axis.fill_between(x_for_plotting, [p / 2 for p in precipitation], mean_temperature,
+            temp_axis.fill_between(x_for_plotting, [p / 2 for p in precipitation],
+                                   [temp if temp > 0 else 0 for temp in mean_temperature],
                                    where=where, interpolate=True, hatch=wet_period_hatch,
                                    color='none', edgecolor=wet_period_hatch_color, linewidth=0.0,
                                    label=humid_period_legend_label)
