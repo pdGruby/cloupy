@@ -447,7 +447,8 @@ class WalterLieth:
 
     def d_imgw_data(
             self, years_range, interval='monthly',
-            stations_kind='synop', filter_station=True, check_years=True
+            stations_kind='synop', filter_station=True, check_years=True,
+            return_coordinates=True
     ):
         """
         Download data for drawing from IMGW database.
@@ -463,6 +464,8 @@ class WalterLieth:
             check_years -- check if years range in downloaded data matches years
         range from WalterLieth.years_range. If not, change WalterLieth.years_range
         depending on years range in downloaded data (default True)
+            return_coordinates -- search for coordinates for the chosen station
+        name in WalterLieth.station_name (default True)
         """
 
         import cloudy.scraping.imgw as imgw_scraping
@@ -475,7 +478,8 @@ class WalterLieth:
                           'Średnia temperatura miesięczna [°C]',
                           'Miesieczna suma opadów [mm]',
                           'Absolutna temperatura maksymalna [°C]',
-                          'Absolutna temperatura minimalna [°C]']
+                          'Absolutna temperatura minimalna [°C]'],
+                return_coordinates=return_coordinates
             )
             if filter_station:
                 data = data[data['Nazwa stacji'] == self.station_name]
@@ -510,7 +514,8 @@ class WalterLieth:
                           'Suma dobowa opadów [mm]',  # w k_d jest 'ów'
                           'Suma dobowa opadu [mm]',  # w s_d jest 'u'. dziwne.
                           'Maksymalna temperatura dobowa [°C]',
-                          'Minimalna temperatura dobowa [°C]']
+                          'Minimalna temperatura dobowa [°C]'],
+                return_coordinates=return_coordinates
             )
 
             data = data[data['Nazwa stacji'] == self.station_name]
@@ -532,6 +537,12 @@ class WalterLieth:
                     No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
                     are valid. Check 'interval' argument.
                     """)
+
+        if return_coordinates:
+            self.lat = round(data['lat'].mean(), 1)
+            self.lon = round(data['lon'].mean(), 1)
+            self.elevation = round(data['elv'].mean())
+            data = data.drop(['lat', 'lon', 'elv'], axis=1)
 
         self.dataframe = data
 

@@ -563,7 +563,7 @@ def get_meteorological_data(
     different names (default True)
         optimize_memory_usage -- reduce pd.DataFrame memory usage (default False)
         return_coordinates -- add columns with latitude, longitude and elevation
-    to the returned DataFrame
+    to the returned DataFrame (default False)
     """
 
     from os import listdir
