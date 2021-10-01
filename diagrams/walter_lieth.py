@@ -14,7 +14,6 @@ class WalterLieth:
     ---------------METHODS---------------
     draw()
     d_imgw_data()
-    d_imgw_coordinates()
     d_wmo_data()
     import_global_df()
     -------------------------------------

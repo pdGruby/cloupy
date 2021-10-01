@@ -389,6 +389,8 @@ def download_data(urls):
     import zipfile
     import io
 
+    files_reading_dir_path = str(__file__).replace('imgw.py', 'files_reading_folder')
+
     for url in urls:
         if urls.index(url) == 0:
             print("Starting data download... 0% done")
@@ -404,7 +406,7 @@ def download_data(urls):
         for path in zip_file_paths:
             zip_file = requests.get(url + path)
             zip_file = zipfile.ZipFile(io.BytesIO(zip_file.content))
-            zip_file.extractall('./files_reading_folder')
+            zip_file.extractall(files_reading_dir_path)
 
         if (urls.index(url) + 1) % 5 == 0:
             print("Downloading data... {}% done".format(round((urls.index(url) / len(urls)) * 100)))
@@ -444,6 +446,7 @@ def concatenate_data(
 
     df = pd.DataFrame()
     keywords_in_columns = []
+    files_reading_dir_path = str(__file__).replace('imgw.py', 'files_reading_folder')
 
     for file in downloaded_files_names:
         if downloaded_files_names.index(file) == 0:
@@ -458,7 +461,7 @@ def concatenate_data(
 
             if file_format in file and avoid_file_format not in file:
 
-                path = './files_reading_folder/' + file
+                path = files_reading_dir_path + '/' + file
                 csv_DataFrame = pd.read_csv(path, encoding="ANSI", header=None)
 
                 if specific_columns is not None:
@@ -577,9 +580,11 @@ def get_meteorological_data(
             """
         )
 
+    files_reading_dir_path = str(__file__).replace('imgw.py', 'files_reading_folder')
+
     urls = get_urls(period, stations_kind, years_range)
     download_data(urls)
-    downloaded_files_names = [f for f in listdir('./files_reading_folder') if isfile(join('./files_reading_folder', f))]
+    downloaded_files_names = [f for f in listdir(files_reading_dir_path) if isfile(join(files_reading_dir_path, f))]
 
     if file_format is not None:
         if type(file_format) == str:
@@ -621,7 +626,7 @@ def get_meteorological_data(
         else:
             df.columns = column_names
 
-    shutil.rmtree('./files_reading_folder')
+    shutil.rmtree(files_reading_dir_path)
 
     if return_coordinates:
 

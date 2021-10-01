@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="fix: Do not fill periods below the 0 degrees line in WalterLieth diagram">
-      <change afterPath="$PROJECT_DIR$/test/test_imgw.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/test_integration/test_integration_imgw.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/test_unittest/test_unittest_imgw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scraping/imgw.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/imgw.py" afterDir="false" />
@@ -34,6 +35,15 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Python\Lib\site-packages\cloudy\test\test_unittest" />
+      <recent name="C:\Python\Lib\site-packages\cloudy\test\test_integration" />
+      <recent name="C:\Python\Lib\site-packages\cloudy\test" />
+      <recent name="C:\Python\Lib\site-packages\cloudy\test\unittesting" />
+      <recent name="C:\Python\Lib\site-packages\cloudy\test\integration testing" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="test_imgw" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="cloudy" />
@@ -47,7 +57,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/test_imgw.py" />
+      <option name="SCRIPT_NAME" value="C:\Python\Lib\site-packages\cloudy\test\test_unittest\test_imgw.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -227,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633047508180</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="feat: Add 'return_coordinates' argument to 'd_imgw_data' method in WalterLieth class&#10;&#10;Now the method uses the new feature of 'get_meteorological_data' function from imgw.py.">
+      <created>1633094170629</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1633094170629</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -276,13 +293,14 @@
     <MESSAGE value="fix: Do not fill periods below the 0 degree line in Walter Lieth diagram&#10;&#10;Humid/dry periods in the Walter Lieth diagram should only be drawn above the 0 degree line." />
     <MESSAGE value="feat: Delete 'get_coordinates_and_elevation' function from imgw.py and 'd_imgw_coordinates' method from the WalterLieth class in walter_lieth.py. Add a new argument to 'get_meteorological_data' in imgw.py, which allows to get station coordinates already at this stage&#10;&#10;Downloading coordinates for the IMGW stations used to be executed with the additional function from imgw.py (the function, which used BeautifulSoup, so sometimes it was quite lengthy to get coordinates). Now it is possible to get station coordinates in 'get_meteorological_data' function. The coordinate data is retrieved from a local file, so the whole process is much faster." />
     <MESSAGE value="fix: Add imgw_coordinates.csv file to the main directory&#10;&#10;The last commit was done without adding the essential file ('imgw_coordinates.csv'). The new feature from the previous commit for the 'get_meteorological_data' in imgw.py cannot work without this file." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Add imgw_coordinates.csv file to the main directory&#10;&#10;The last commit was done without adding the essential file ('imgw_coordinates.csv'). The new feature from the previous commit for the 'get_meteorological_data' in imgw.py cannot work without this file." />
+    <MESSAGE value="feat: Add 'return_coordinates' argument to 'd_imgw_data' method in WalterLieth class&#10;&#10;Now the method uses the new feature of 'get_meteorological_data' function from imgw.py." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add 'return_coordinates' argument to 'd_imgw_data' method in WalterLieth class&#10;&#10;Now the method uses the new feature of 'get_meteorological_data' function from imgw.py." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633047507106">
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633094169489">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633047507106" />
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633094169489" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -295,30 +313,46 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="782" y="419" key="Github.CreateGistDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633047290636" />
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1632508053167">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1633116652049">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632508053167" />
-    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1632508053167">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1633116652049">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632508053167" />
-    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1632508053167">
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1633116652049">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632508053167" />
-    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1632508053167">
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1633116652049">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632508053167" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1633116652049">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1633116652049">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1633116652049">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1633116652049">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
     <state x="785" y="231" key="RollbackChangesDialog" timestamp="1632429475265">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="785" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632429475265" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633047512081">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633094173749">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633047512081" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633094173749" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1633092700370">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -328,9 +362,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632424096143" />
-    <state x="623" y="225" key="search.everywhere.popup" timestamp="1632495378762">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1633115248490">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" key="search.everywhere.popup/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632495378762" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633115248490" />
   </component>
 </project>
