@@ -542,7 +542,8 @@ def concatenate_data(
 def get_meteorological_data(
         period, stations_kind, years_range,
         file_format_index=0, file_format=None, specific_columns=None,
-        keywords=None, merge_splitted_stations=True, optimize_memory_usage=False
+        keywords=None, merge_splitted_stations=True, optimize_memory_usage=False,
+        return_coordinates=False
 ):
     """
     Download IMGW data files and return data as one merged pd.DataFrame.
@@ -561,6 +562,8 @@ def get_meteorological_data(
         merge_splitted_stations -- merge stations which are the same but have
     different names (default True)
         optimize_memory_usage -- reduce pd.DataFrame memory usage (default False)
+        return_coordinates -- add columns with latitude, longitude and elevation
+    to the returned DataFrame
     """
 
     from os import listdir
@@ -619,82 +622,33 @@ def get_meteorological_data(
             df.columns = column_names
 
     shutil.rmtree('./files_reading_folder')
+
+    if return_coordinates:
+
+        import pandas as pd
+
+        lat = []
+        lon = []
+        elv = []
+
+        path = str(__file__).replace('imgw.py', 'imgw_coordinates.csv')
+        station_coordinates = pd.read_csv(path, index_col=0)
+
+        for station in list(df['Nazwa stacji']):
+            try:
+                coordinates = station_coordinates[station]
+            except KeyError:
+                lat.append(None)
+                lon.append(None)
+                elv.append(None)
+                continue
+
+            lat.append(coordinates[0])
+            lon.append(coordinates[1])
+            elv.append(coordinates[2])
+
+        df['lat'] = lat
+        df['lon'] = lon
+        df['elv'] = elv
+
     return df
-
-
-def get_coordinates_and_elevation(station_name):
-    """Return coordinates for IMGW stations for the given station name"""
-
-    from bs4 import BeautifulSoup as bs
-    import requests
-    import re
-
-    station_name = station_name.capitalize()
-    if station_name == 'Warszawa':
-        station_name = 'Warsaw'
-    if station_name == 'Kraków-balice':
-        station_name = 'Cracow'
-    if station_name == 'Kasprowy wierch':
-        return {'lat': 49.23, 'lon': 19.97, 'elv': 1987}
-    if station_name == 'Przemyśl':
-        return {'lat': 49.78, 'lon': 22.78, 'elv': 279}
-    if station_name == 'Śnieżka':
-        return {'lat': 50.73, 'lon': 15.74, 'elv': 1603}
-    if station_name == 'Żarnowiec':
-        return {'lat': 50.48, 'lon': 19.86, 'elv': 325}
-    if station_name == 'Hala gąsienicowa':
-        return {'lat': 49.24, 'lon': 20.01, 'elv': 1564}
-
-    splitter = False
-    if '-' in station_name:
-        splitter = '-'
-    if ' ' in station_name:
-        splitter = ' '
-    if splitter:
-        splitted = station_name.split(splitter)
-
-        start = splitted[0]
-        connector = splitter
-        end = splitted[1].capitalize()
-
-        station_name = start + connector + end
-        station_name = station_name.strip()
-
-    list_of_locations_url = 'http://www.altitude-maps.com/country/170,Poland'
-
-    r = requests.get(list_of_locations_url)
-    soup = bs(r.content, features="html.parser")
-
-    href = None
-    for element in soup.find_all('a'):
-        if station_name in element.get_text():
-            href = element['href']
-            break
-
-    if href is None:
-        station_name = station_name.split('-')[0]
-        for element in soup.find_all('a'):
-            if station_name in element.get_text():
-                href = element['href']
-                break
-
-    if href is None:
-        raise KeyError(
-            """
-            No coordinates have been found for the 'station_name' argument.
-            Check if input 'station_name' is correct and if it is available on the website: 
-            'http://www.altitude-maps.com/country/170,Poland'
-            If 'station_name' input is correct and it is not available on the website, you have to input data on your own.    
-            """)
-
-    full_url = 'http://www.altitude-maps.com/' + href
-
-    text = requests.get(full_url).text
-    lat = re.search(r"geoplugin_latitude.*?([\d.-]+)", text).group(1)
-    lon = re.search(r"geoplugin_longitude.*?([\d.-]+)", text).group(1)
-    elv = re.search(r"geoip_elevation.*?([\d.-]+)", text).group(1)
-
-    lat = round(float(lat), 2)
-    lon = round(float(lon), 2)
-    elv = round(float(elv), 2)
-    return {'lat': lat, 'lon': lon, 'elv': elv}

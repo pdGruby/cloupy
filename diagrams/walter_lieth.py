@@ -625,46 +625,6 @@ class WalterLieth:
                     )
         self.dataframe = data
 
-    def d_imgw_coordinates(
-            self, latitude=True, longitude=True,
-            elevation=True
-    ):
-        """
-        Download coordinates for the specified station of IMGW database.
-
-        Keyword arguments:
-            latitude -- if WalterLieth.lat has to be updated (default True)
-            longitude -- if WalterLieth.lon has to be updated (default True)
-            elevation -- if WalterLieth.elv has to be updated (default True)
-        """
-
-        import cloudy.scraping.imgw as imgw_scraping
-
-        cor_elev = imgw_scraping.get_coordinates_and_elevation(self.station_name)
-
-        for key, value in cor_elev.items():
-
-            if key != 'elv':
-                if '.' in str(value):
-                    new_value = str(value)
-                else:
-                    new_value = str(value) + '.'
-
-                while len(new_value.split('.')[1]) != 2:
-                    new_value += '0'
-
-                cor_elev[key] = new_value
-
-            else:
-                cor_elev[key] = round(value)
-
-        if latitude:
-            self.lat = cor_elev['lat']
-        if longitude:
-            self.lon = cor_elev['lon']
-        if elevation:
-            self.elevation = cor_elev['elv']
-
     def import_global_df(
             self, columns_order, filter_station=True,
             check_years=True, station_in_column=False, years_in_column=False

@@ -4,7 +4,7 @@
     <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="fix: Do not fill periods below the 0 degrees line in WalterLieth diagram">
       <change afterPath="$PROJECT_DIR$/test/test_imgw.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/diagrams/walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/diagrams/walter_lieth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scraping/imgw.py" beforeDir="false" afterPath="$PROJECT_DIR$/scraping/imgw.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632507949149</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="fix: Do not fill periods below the 0 degree line in Walter Lieth diagram&#10;&#10;Humid/dry periods in the Walter Lieth diagram should only be drawn above the 0 degree line.">
+      <created>1632689252472</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1632689252472</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -251,13 +258,14 @@
     <MESSAGE value="docs: Add docstring for cloudy package&#10;&#10;Describe main features of cloudy and its main functions and classes." />
     <MESSAGE value="refactor: Save global data frame only in csv file, remove 'file_format' argument from 'set_global_df' function&#10;&#10;The feature of choosing file format in which global data frame will be saved was useless." />
     <MESSAGE value="fix: Raise exception if user passes more than one file format to 'file_formats' arguments in 'get_meteorological_data' and 'concatenate_data' functions from imgw.py. Allow passing keywords in every shape (no matter if a letter is uppercase or lowercase).&#10;&#10;The functions from imgw.py took several file formats for their 'file_format' arguments, causing data merge errors. The main purpose of these functions was to download and concatenate files with the same format. Uppercase/lowercase letters used to have an impact for filtering data frames by keywords." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Raise exception if user passes more than one file format to 'file_formats' arguments in 'get_meteorological_data' and 'concatenate_data' functions from imgw.py. Allow passing keywords in every shape (no matter if a letter is uppercase or lowercase).&#10;&#10;The functions from imgw.py took several file formats for their 'file_format' arguments, causing data merge errors. The main purpose of these functions was to download and concatenate files with the same format. Uppercase/lowercase letters used to have an impact for filtering data frames by keywords." />
+    <MESSAGE value="fix: Do not fill periods below the 0 degree line in Walter Lieth diagram&#10;&#10;Humid/dry periods in the Walter Lieth diagram should only be drawn above the 0 degree line." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: Do not fill periods below the 0 degree line in Walter Lieth diagram&#10;&#10;Humid/dry periods in the Walter Lieth diagram should only be drawn above the 0 degree line." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1632689025549">
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633046291026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632689025549" />
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633046291026" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -286,15 +294,15 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="785" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632429475265" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632507954004">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1632689257682">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632507954004" />
-    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1632685553857">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632689257682" />
+    <state x="2389" y="401" key="com.intellij.ide.util.TipDialog" timestamp="1633010216425">
+      <screen x="1920" y="0" width="1680" height="1010" />
     </state>
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632685553857" />
-    <state x="2389" y="401" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1631805091844" />
+    <state x="2389" y="401" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1633010216425" />
     <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1632424096143">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
