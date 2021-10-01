@@ -464,7 +464,7 @@ def concatenate_data(
                 path = files_reading_dir_path + '/' + file
                 csv_DataFrame = pd.read_csv(path, encoding="ANSI", header=None)
 
-                if specific_columns is not None:
+                if specific_columns is not None and keywords is None:
                     if type(specific_columns) == str:
                         specific_columns = [specific_columns]
 
@@ -610,14 +610,14 @@ def get_meteorological_data(
     if len(file_formats) == 1:
         column_names = get_column_names(file_formats[0])
 
-        if specific_columns is not None:
+        if specific_columns is not None and keywords is None:
             chosen_columns_names = []
             if type(specific_columns) == list:
                 for column_index in specific_columns:
                     chosen_columns_names.append(column_names[column_index])
             df.columns = chosen_columns_names
 
-        if keywords is not None:
+        elif keywords is not None:
             chosen_columns_names = []
             for column_index in keywords_in_columns:
                 chosen_columns_names.append(column_names[column_index])

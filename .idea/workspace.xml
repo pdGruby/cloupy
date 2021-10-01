@@ -244,7 +244,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633094170629</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="fix: Create files_reading_folder directory in the cloudy.scraping directory&#10;&#10;The files_reading_folder directory used to be created in the directory where cloudy was imported. From now the directory for reading files will be created inside the cloudy library.">
+      <created>1633126278193</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1633126278193</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -294,13 +301,14 @@
     <MESSAGE value="feat: Delete 'get_coordinates_and_elevation' function from imgw.py and 'd_imgw_coordinates' method from the WalterLieth class in walter_lieth.py. Add a new argument to 'get_meteorological_data' in imgw.py, which allows to get station coordinates already at this stage&#10;&#10;Downloading coordinates for the IMGW stations used to be executed with the additional function from imgw.py (the function, which used BeautifulSoup, so sometimes it was quite lengthy to get coordinates). Now it is possible to get station coordinates in 'get_meteorological_data' function. The coordinate data is retrieved from a local file, so the whole process is much faster." />
     <MESSAGE value="fix: Add imgw_coordinates.csv file to the main directory&#10;&#10;The last commit was done without adding the essential file ('imgw_coordinates.csv'). The new feature from the previous commit for the 'get_meteorological_data' in imgw.py cannot work without this file." />
     <MESSAGE value="feat: Add 'return_coordinates' argument to 'd_imgw_data' method in WalterLieth class&#10;&#10;Now the method uses the new feature of 'get_meteorological_data' function from imgw.py." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Add 'return_coordinates' argument to 'd_imgw_data' method in WalterLieth class&#10;&#10;Now the method uses the new feature of 'get_meteorological_data' function from imgw.py." />
+    <MESSAGE value="fix: Create files_reading_folder directory in the cloudy.scraping directory&#10;&#10;The files_reading_folder directory used to be created in the directory where cloudy was imported. From now the directory for reading files will be created inside the cloudy library." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: Create files_reading_folder directory in the cloudy.scraping directory&#10;&#10;The files_reading_folder directory used to be created in the directory where cloudy was imported. From now the directory for reading files will be created inside the cloudy library." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633094169489">
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633126277001">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633094169489" />
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633126277001" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -349,10 +357,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="785" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632429475265" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633094173749">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633126287702">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633094173749" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633126287702" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1633092700370">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
