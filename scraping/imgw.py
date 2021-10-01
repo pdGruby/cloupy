@@ -294,7 +294,7 @@ def look_for_keywords_in_columns(
             for name in columns_names:
                 if type(keywords) == list:
                     for keyword in keywords:
-                        if keyword in name:
+                        if keyword.upper() in name.upper():
                             keywords_in_columns.append(name)
                 else:
                     raise AttributeError("Invalid input for 'keywords'. Use list of strs or str.")
