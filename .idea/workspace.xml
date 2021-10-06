@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="fix: Do not fill periods below the 0 degrees line in WalterLieth diagram">
-      <change afterPath="$PROJECT_DIR$/test/test_integration/test_integration_imgw.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test_unittest/test_unittest_imgw.py" afterDir="false" />
+    <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/test/test_unittest/test_unittest_wmo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -263,7 +262,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633127564035</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="test: Create an unit test and an integration test for the imgw.py from cloudy.scraping">
+      <created>1633134046299</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1633134046299</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -290,7 +296,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactor: Change the name of method in cloudy.WalterLieth class (new name is d_imgw_coordinates).&#10;&#10;'download_coordinates' method name changed to 'd_imgw_coordinates'." />
     <MESSAGE value="fix: Change the path to WMO stations data in a function.&#10;&#10;Function 'look_for_the_nearest_station' in climex_scraping.py looked for the file with WMO stations' data in the directory in which cloudy was imported. Now it looks for it in the main directory of cloudy." />
     <MESSAGE value="refactor/feat: Use list comprehension in specific cases in climex_scraping.py/Return a station's elevation in d_wmo_data function&#10;&#10;The bad way of creating lists based on existing lists was applied (now list comprehension is applied)/Now d_wmo_data function returns also an elevation with latitude and longitude." />
     <MESSAGE value="feat: Add new method for downloading meteorological data from WMO website in WalterLieth class.&#10;&#10;New method for WalterLieth class in walter_lieth.py added. Method is primal and has not been tested yet, so some bugs may occur." />
@@ -315,13 +320,14 @@
     <MESSAGE value="fix: Create files_reading_folder directory in the cloudy.scraping directory&#10;&#10;The files_reading_folder directory used to be created in the directory where cloudy was imported. From now the directory for reading files will be created inside the cloudy library." />
     <MESSAGE value="fix: Filter by the 'keywords' argument over the 'specific_columns' argument in 'get_meteorological_data' and 'concatenate_data' functions from imgw.py&#10;&#10;Inputting both arguments used to report an error. Now, when both arguments are input, the 'keywords' argument is higher up the hierarchy, so filtering is based on it and the arguments do not interfere each other." />
     <MESSAGE value="fix: Make keywords uppercase every time when filtering (in look_for_keywords_in_columns function from imgw.py)&#10;&#10;Now there is no difference between uppercase, lowercase and capitalized strings in 'keywords' argument. The function used to be case-sensitive, which was unnecessary." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Make keywords uppercase every time when filtering (in look_for_keywords_in_columns function from imgw.py)&#10;&#10;Now there is no difference between uppercase, lowercase and capitalized strings in 'keywords' argument. The function used to be case-sensitive, which was unnecessary." />
+    <MESSAGE value="test: Create an unit test and an integration test for the imgw.py from cloudy.scraping" />
+    <option name="LAST_COMMIT_MESSAGE" value="test: Create an unit test and an integration test for the imgw.py from cloudy.scraping" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633127563040">
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2" timestamp="1633134045196">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633127563040" />
+    <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134045196" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -334,49 +340,50 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="782" y="419" key="Github.CreateGistDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633047290636" />
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom" timestamp="1633134121635">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121635" />
+    <state width="1899" height="348" key="GridCell.Tab.0.center" timestamp="1633134121634">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121634" />
+    <state width="1899" height="348" key="GridCell.Tab.0.left" timestamp="1633134121634">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121634" />
+    <state width="1899" height="348" key="GridCell.Tab.0.right" timestamp="1633134121634">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121634" />
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom" timestamp="1633134121635">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121635" />
+    <state width="1899" height="348" key="GridCell.Tab.1.center" timestamp="1633134121635">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121635" />
+    <state width="1899" height="348" key="GridCell.Tab.1.left" timestamp="1633134121635">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
-    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1633116652049">
+    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121635" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right" timestamp="1633134121635">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633116652049" />
+    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134121635" />
     <state x="785" y="231" key="RollbackChangesDialog" timestamp="1632429475265">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="785" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632429475265" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633127569684">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633134053789">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633127569684" />
-    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1633092700370">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134053789" />
+    <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1633531903660">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633531903660" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633092700370" />
     <state x="2389" y="401" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1680.1010@1920.0.1680.1010" timestamp="1633010216425" />
     <state x="769" y="437" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1632424096143">
