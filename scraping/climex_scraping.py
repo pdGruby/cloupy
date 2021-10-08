@@ -156,7 +156,7 @@ def download(url):
 
 
 def concatenate_dfs(dfs):
-    """Concatenate given data frames to a one consistent data frame"""
+    """Concatenate given dataframes to one consistent dataframe"""
 
     import pandas as pd
 
@@ -381,10 +381,10 @@ def download_meteo_data(
                             f"""
                             Warning: no '{element}' data was found for the chosen station ({station}), so the data was 
                             taken from the nearest station (WMO ID: {more_elements_in}). Latitude and longitude differences 
-                            were below 0.5 degrees. If you do not  want to download data from the nearest station, change 
-                            'nearby_stations' argument value to False. If you would like to change acceptable latitude 
-                            and longitude differences, you can do it by passing float/int to 'degrees_range_for_nearby_stations' 
-                            argument.
+                            were below 0.5 degrees (default) or as in the 'degrees_range_for_nearby_stations' argument (if 
+                            specified). If you do not want to download data from the nearest station, change 'nearby_stations' 
+                            argument value to False. If you would like to change acceptable latitude and longitude differences, 
+                            you can do it by passing float/int to 'degrees_range_for_nearby_stations' argument.
                             """)
             else:
                 pass
