@@ -319,7 +319,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633739314778</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="test: Check the internet connection before testing functions which scrape data from the IMGW database&#10;&#10;Now if there's no internet connection, the integration test for the imgw.py module will not be executed">
+      <created>1633785814212</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1633785814212</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -346,7 +353,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: Check if downloaded data by 'd_wmo_data' method in WalterLieth class does not contain a column with only None values&#10;&#10;If downloaded data contains such column and meteorological element is not required for drawing (temp_max, temp_min), then warn user. If downloaded data contains such column and meteorological element is required for drawing (temp, preci), raise AttributeError and inform user what the problem is." />
     <MESSAGE value="feat/fix: Add 'station_name_is_wmo_id' argument to 'return_wmoid_or_coord' function in climex_scraping.py/Do not replicate input requests for stations which do not have unique name.&#10;&#10;In 'return_wmoid_or_coord' new argument allows to search for a specific station by it's unique WMO ID code. New argument is useful when a specific station is needed couple of times - it avoids replicating input requests for index when more than one station with the specific name were found. New argument can be set to True and then WMO ID code can be input in 'station_name'/cloudy used to replicate input requests for indexes in WalterLieth method (d_imgw_data) when there were more stations with exactly the same name in WMO database. Now when the station is chosen once, WalterLieth's method remembers station's WMO ID code which is unique. If WalterLieth's method needs to use again 'return_wmoid_or_coord' function from climex_scraping.py, it uses remembered unique WMO ID code, so the user is not obligated to repeat index input from 'return_wmoid_or_coord' function." />
     <MESSAGE value="feat: Check years in downloaded data by 'd_wmo_data' method in WalterLieth class with the years in WalterLieth.years_range. If any difference, then change WalterLieth.years_range&#10;&#10;New argument in 'd_wmo_data' method allows to check years in downloaded data with years set in WalterLieth.years_range. New method is called 'check_years' and is set to True by default." />
     <MESSAGE value="feat: Do not require to set 'years_range' in WalterLieth class.&#10;&#10;Now 'years_range' is set to None by default, so it is not positional argument. If 'years_range' is None, then 'WalterLieth.draw' method will not draw years' text in the right top corner." />
@@ -371,13 +377,14 @@
     <MESSAGE value="fix: Sort dataframe by a list, not a list inside another list. Return station, year and month columns when downloading the date for the entire country.&#10;&#10;The 'download_meteo_data' function from climex_scraping.py used to sort the order of the columns by a list inside another list, which caused errors every time the feature of the function was used. Sorting contributed to omission of the year and month columns when the dataframe was returned, so now it does not exclude the above columns." />
     <MESSAGE value="test: Create an integration test for the climex_scraping.py" />
     <MESSAGE value="test: Create a test for concatenate_dfs function from climex_scraping.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="test: Create a test for concatenate_dfs function from climex_scraping.py" />
+    <MESSAGE value="test: Check the internet connection before testing functions which scrape data from the IMGW database&#10;&#10;Now if there's no internet connection, the integration test for the imgw.py module will not be executed" />
+    <option name="LAST_COMMIT_MESSAGE" value="test: Check the internet connection before testing functions which scrape data from the IMGW database&#10;&#10;Now if there's no internet connection, the integration test for the imgw.py module will not be executed" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2" timestamp="1633739314088">
+    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2" timestamp="1633791176521">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633739314088" />
+    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633791176521" />
     <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134045196" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -436,10 +443,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="785" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632429475265" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633739321991">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633785818845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633739321991" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633785818845" />
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134053789" />
     <state x="2322" y="342" key="com.intellij.ide.util.TipDialog" timestamp="1633785372221">
       <screen x="1920" y="0" width="1440" height="860" />

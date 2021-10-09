@@ -12,6 +12,7 @@ def check_if_NOT_connected_to_the_internet(host='http://google.com'):
         return True
 
 
+@pytest.mark.filterwarnings("ignore::pandas.errors.DtypeWarning")
 @pytest.mark.skipif(check_if_NOT_connected_to_the_internet(), reason='internet connection required')
 class TestDataDownloading:
 
@@ -23,7 +24,6 @@ class TestDataDownloading:
     def st_kinds(self):
         return ['synop', 'climat', 'fall']
 
-    @pytest.mark.filterwarnings("ignore::pandas.errors.DtypeWarning")
     def test_if_column_2_is_always_year(
             self, periods, st_kinds
     ):
@@ -70,28 +70,24 @@ class TestDataDownloading:
 
                 shutil.rmtree(files_reading_dir_path)
 
-    @pytest.mark.filterwarnings("ignore::pandas.errors.DtypeWarning")
     def test_data_downloading_for_years_before_2001(
             self, periods, st_kinds
     ):
         years_range = range(1984, 1987)
         TestDataDownloading.download_and_test_data(periods, st_kinds, years_range)
 
-    @pytest.mark.filterwarnings("ignore::pandas.errors.DtypeWarning")
     def test_data_downloading_for_years_after_2000(
             self, periods, st_kinds
     ):
         years_range = range(2011, 2013)
         TestDataDownloading.download_and_test_data(periods, st_kinds, years_range)
 
-    @pytest.mark.filterwarnings("ignore::pandas.errors.DtypeWarning")
     def test_data_downloading_for_years_between_2000_and_2001(
             self, periods, st_kinds
     ):
         years_range = range(2000, 2002)
         TestDataDownloading.download_and_test_data(periods, st_kinds, years_range)
 
-    @pytest.mark.filterwarnings("ignore::pandas.errors.DtypeWarning")
     def test_adding_coordinates_to_dataframe(
             self, periods, st_kinds
     ):
