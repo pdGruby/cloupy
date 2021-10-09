@@ -1,7 +1,18 @@
 import pytest
 import cloudy.scraping.imgw as imgw
+import urllib.request
+import urllib.error
 
 
+def check_if_NOT_connected_to_the_internet(host='http://google.com'):
+    try:
+        urllib.request.urlopen(host)
+        return False
+    except urllib.error.URLError:
+        return True
+
+
+@pytest.mark.skipif(check_if_NOT_connected_to_the_internet(), reason='internet connection required')
 class TestDataDownloading:
 
     @pytest.fixture
