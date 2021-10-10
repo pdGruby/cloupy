@@ -52,7 +52,7 @@ class TestDrawing:
 
     @pytest.fixture
     def path_for_saving(self):
-        return str(__file__).replace('test_walter_lieth.py', 'check_size.jpg')
+        return str(__file__).replace('test_unittest_walter_lieth.py', 'check_size.jpg')
 
     def test_humid_period_and_elements_viewing(
             self, default_settings, opposite_settings,

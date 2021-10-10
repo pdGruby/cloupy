@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="035fc70b-1e45-4287-a3a7-659bedf72031" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test/test_unittest/test_walter_lieth.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/test_integration/test_integration_walter_lieth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test_unittest/test_unittest_imgw.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_unittest/test_unittest_imgw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_unittest/test_walter_lieth.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_unittest/test_unittest_walter_lieth.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -334,7 +334,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633791347240</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="test: Create new unit test for the WalterLieth diagram">
+      <created>1633824192014</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1633824192014</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -361,7 +368,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: Check years in downloaded data by 'd_wmo_data' method in WalterLieth class with the years in WalterLieth.years_range. If any difference, then change WalterLieth.years_range&#10;&#10;New argument in 'd_wmo_data' method allows to check years in downloaded data with years set in WalterLieth.years_range. New method is called 'check_years' and is set to True by default." />
     <MESSAGE value="feat: Do not require to set 'years_range' in WalterLieth class.&#10;&#10;Now 'years_range' is set to None by default, so it is not positional argument. If 'years_range' is None, then 'WalterLieth.draw' method will not draw years' text in the right top corner." />
     <MESSAGE value="fix: Delete global DataFrame file in the main cloudy directory every time user imports cloudy.&#10;&#10;The path for deleting file was not absolute, so __init__.py tried to delete file from local directory (where cloudy was imported). Now __init__.py deletes the global DataFrame file from the main cloudy directory." />
     <MESSAGE value="fix: Raise an exception when 'pd_DataFrame' argument in cloudy.set_global_df() function is not pandas.DataFrame object.&#10;&#10;if not isinstance(type(pd_DataFrame), type(pd.DataFrame)) was always True, so the exception couldn't be raised. The solution was to remove type() function." />
@@ -386,13 +392,14 @@
     <MESSAGE value="test: Create a test for concatenate_dfs function from climex_scraping.py" />
     <MESSAGE value="test: Check the internet connection before testing functions which scrape data from the IMGW database&#10;&#10;Now if there's no internet connection, the integration test for the imgw.py module will not be executed" />
     <MESSAGE value="test: Move filtering warnings above the class in the integration test for downloading data from the IMGW database&#10;&#10;The decorator pytest.mark.filterwarnings was moved above the class, so it is not multiplied in the class' methods." />
-    <option name="LAST_COMMIT_MESSAGE" value="test: Move filtering warnings above the class in the integration test for downloading data from the IMGW database&#10;&#10;The decorator pytest.mark.filterwarnings was moved above the class, so it is not multiplied in the class' methods." />
+    <MESSAGE value="test: Create new unit test for the WalterLieth diagram" />
+    <option name="LAST_COMMIT_MESSAGE" value="test: Create new unit test for the WalterLieth diagram" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2" timestamp="1633791346526">
+    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2" timestamp="1633824190589">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633791346526" />
+    <state x="221" y="106" width="1288" height="811" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633824190589" />
     <state x="225" y="74" width="1447" height="881" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134045196" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1631745887419">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -451,10 +458,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="785" y="231" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1632429475265" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633791350615">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1633824193859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633791350615" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1440.860@0.0.1920.1040" timestamp="1633824193859" />
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040/1920.0.1680.1010@0.0.1920.1040" timestamp="1633134053789" />
     <state x="536" y="413" key="com.intellij.ide.util.TipDialog" timestamp="1633820011889">
       <screen x="0" y="0" width="1920" height="1040" />
