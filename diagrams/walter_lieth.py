@@ -506,7 +506,7 @@ class WalterLieth:
                     """)
 
             data = imgw_scraping.get_meteorological_data(
-                years_range=self.years_range, period=interval,
+                years_range=years_range, period=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
                           'Średnia temperatura dobowa [°C]',
