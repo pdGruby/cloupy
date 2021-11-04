@@ -472,7 +472,7 @@ class WalterLieth:
 
         if interval == 'monthly':
             data = imgw_scraping.get_meteorological_data(
-                years_range=years_range, period=interval,
+                years_range=years_range, interval=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
                           'Średnia temperatura miesięczna [°C]',
@@ -507,7 +507,7 @@ class WalterLieth:
                     """)
 
             data = imgw_scraping.get_meteorological_data(
-                years_range=years_range, period=interval,
+                years_range=years_range, interval=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
                           'Średnia temperatura dobowa [°C]',

@@ -17,7 +17,7 @@ def check_if_NOT_connected_to_the_internet(host='http://google.com'):
 class TestDataDownloading:
 
     @pytest.fixture
-    def periods(self):
+    def intervals(self):
         return ['monthly', 'daily', 'prompt']
 
     @pytest.fixture
@@ -25,7 +25,7 @@ class TestDataDownloading:
         return ['synop', 'climat', 'fall']
 
     def test_if_column_2_is_always_year(
-            self, periods, st_kinds
+            self, intervals, st_kinds
     ):
 
         from os import listdir
@@ -38,18 +38,18 @@ class TestDataDownloading:
             'test\\test_integration\\test_integration_imgw.py', 'scraping\\files_reading_folder'
         )
 
-        for period in periods:
+        for interval in intervals:
             for st_kind in st_kinds:
 
-                if st_kind == 'fall' and period == 'prompt':
+                if st_kind == 'fall' and interval == 'prompt':
                     continue
 
-                urls = imgw.get_urls(period, st_kind, y_range)
+                urls = imgw.get_urls(interval, st_kind, y_range)
                 imgw.download_data(urls)
                 downloaded_files_names = [f for f in listdir(files_reading_dir_path) if
                                           isfile(join(files_reading_dir_path, f))]
 
-                file_formats = imgw.get_file_formats(period, st_kind, 'all')
+                file_formats = imgw.get_file_formats(interval, st_kind, 'all')
                 keywords = ['nazwa stacji', 'temperatura', 'rok', 'opad', 'wiatr']
                 shuffle(keywords)
 
@@ -71,35 +71,35 @@ class TestDataDownloading:
                 shutil.rmtree(files_reading_dir_path)
 
     def test_data_downloading_for_years_before_2001(
-            self, periods, st_kinds
+            self, intervals, st_kinds
     ):
         years_range = range(1984, 1987)
-        TestDataDownloading.download_and_test_data(periods, st_kinds, years_range)
+        TestDataDownloading.download_and_test_data(intervals, st_kinds, years_range)
 
     def test_data_downloading_for_years_after_2000(
-            self, periods, st_kinds
+            self, intervals, st_kinds
     ):
         years_range = range(2011, 2013)
-        TestDataDownloading.download_and_test_data(periods, st_kinds, years_range)
+        TestDataDownloading.download_and_test_data(intervals, st_kinds, years_range)
 
     def test_data_downloading_for_years_between_2000_and_2001(
-            self, periods, st_kinds
+            self, intervals, st_kinds
     ):
         years_range = range(2000, 2002)
-        TestDataDownloading.download_and_test_data(periods, st_kinds, years_range)
+        TestDataDownloading.download_and_test_data(intervals, st_kinds, years_range)
 
     def test_adding_coordinates_to_dataframe(
-            self, periods, st_kinds
+            self, intervals, st_kinds
     ):
         years_range = range(2010, 2011)
-        for period in periods:
+        for interval in intervals:
             for st_kind in st_kinds:
 
-                if st_kind == 'fall' and period == 'prompt':
+                if st_kind == 'fall' and interval == 'prompt':
                     continue
 
                 df = imgw.get_meteorological_data(
-                    period, st_kind, years_range,
+                    interval, st_kind, years_range,
                     specific_columns=[0, 1, 2, 3],
                     optimize_memory_usage=True,
                     return_coordinates=True
@@ -115,19 +115,19 @@ class TestDataDownloading:
 
     @staticmethod
     def download_and_test_data(
-            periods, st_kinds, years_range
+            intervals, st_kinds, years_range
     ):
-        for period in periods:
+        for interval in intervals:
             for st_kind in st_kinds:
-                if period == 'prompt' and st_kind == 'fall':
+                if interval == 'prompt' and st_kind == 'fall':
                     with pytest.raises(NotADirectoryError):
                         imgw.get_meteorological_data(
-                            period, st_kind, years_range
+                            interval, st_kind, years_range
                         )
                         continue
                 else:
                     df = imgw.get_meteorological_data(
-                        period, st_kind, years_range,
+                        interval, st_kind, years_range,
                         optimize_memory_usage=True,
                         specific_columns=[0, 1, 2, 3]
                     )
