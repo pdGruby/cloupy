@@ -468,7 +468,7 @@ class WalterLieth:
         name in WalterLieth.station_name (default True)
         """
 
-        import cloudy.scraping.imgw as imgw_scraping
+        import cloupy.scraping.imgw as imgw_scraping
 
         if interval == 'monthly':
             data = imgw_scraping.get_meteorological_data(
@@ -568,7 +568,7 @@ class WalterLieth:
         (default True)
         """
 
-        import cloudy.scraping.climex_scraping as wmo_scraping
+        import cloupy.scraping.climex_scraping as wmo_scraping
 
         data = wmo_scraping.download_meteo_data(
             self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'], nearby_stations=nearby_stations,
@@ -705,7 +705,7 @@ class WalterLieth:
         ---------------------------------------
         """
 
-        from cloudy import read_global_df
+        from cloupy import read_global_df
 
         if isinstance(columns_order, list) and not isinstance(columns_order[0], int):
             raise AttributeError(

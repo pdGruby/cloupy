@@ -1,6 +1,6 @@
 import pytest
 import matplotlib.pyplot as plt
-import cloudy as cl
+import cloupy as cl
 import os
 import urllib.request
 import urllib.error

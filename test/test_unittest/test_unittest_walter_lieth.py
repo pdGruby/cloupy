@@ -1,4 +1,4 @@
-from cloudy.diagrams.walter_lieth import WalterLieth
+from cloupy.diagrams.walter_lieth import WalterLieth
 import pytest
 import pandas as pd
 import matplotlib.pyplot as plt

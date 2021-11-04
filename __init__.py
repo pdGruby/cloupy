@@ -40,11 +40,11 @@ from cycler import cycler
 from matplotlib.pyplot import *
 from matplotlib import rcParams
 
-from cloudy.scraping.imgw import get_meteorological_data as d_imgw_data
-from cloudy.scraping.climex_scraping import download_meteo_data as d_wmo_data
-from cloudy.scraping.climex_scraping import get_wmo_stations_info as i_wmo_stations
-from cloudy.scraping.climex_scraping import look_for_the_nearest_station as i_wmo_near_station
-from cloudy.diagrams.walter_lieth import WalterLieth
+from cloupy.scraping.imgw import get_meteorological_data as d_imgw_data
+from cloupy.scraping.climex_scraping import download_meteo_data as d_wmo_data
+from cloupy.scraping.climex_scraping import get_wmo_stations_info as i_wmo_stations
+from cloupy.scraping.climex_scraping import look_for_the_nearest_station as i_wmo_near_station
+from cloupy.diagrams.walter_lieth import WalterLieth
 
 try:  # delete global data frame from the previous session
     path_ = str(__file__).replace('__init__.py', '')

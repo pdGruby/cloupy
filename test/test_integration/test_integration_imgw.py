@@ -1,5 +1,5 @@
 import pytest
-import cloudy.scraping.imgw as imgw
+import cloupy.scraping.imgw as imgw
 import urllib.request
 import urllib.error
 
