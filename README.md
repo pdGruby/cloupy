@@ -1,24 +1,24 @@
 
-# cloudy
+# cloupy
 ![logo](https://i.ibb.co/JQjbdRj/logo.png)
 
-cloudy is a Python library for climatological data downloading, processing and visualizing. The main goal of the library is to help its author in writing a BA thesis. The library is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloudy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the library usage.
+cloupy is a Python library for climatological data downloading, processing and visualizing. The main goal of the library is to help its author in writing a BA thesis. The library is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloupy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the library usage.
 
 ## Installation
 
-Use the git function [clone](https://git-scm.com/docs/git-clone/) to install cloudy.
+Use the git function [clone](https://git-scm.com/docs/git-clone/) to install cloupy.
 
 ```bash
 # your local path to Python's libraries
 cd c:/Python/Lib/site-packages
  
-git clone https://github.com/pdGruby/cloudy.git
+git clone https://github.com/pdGruby/cloupy.git
 ```
     
 ## Usage/Examples
-1. Import cloudy library.
+1. Import cloupy library.
 ```python
-import cloudy as cl
+import cloupy as cl
 ```
 
 2. Download climatological data for a single station and for the whole country from the WMO database.
