@@ -1,5 +1,5 @@
 import pytest
-from scraping import climex_scraping
+from scraping import wmo
 import mock
 import builtins
 from random import shuffle
@@ -44,7 +44,7 @@ class TestDataDownloading:
             shuffle(elements)
             if station != 'POZNAN':
                 with mock.patch.object(builtins, 'input', lambda _: input_dict[station]):
-                    data = climex_scraping.download_meteo_data(station, elements)
+                    data = wmo.download_meteo_data(station, elements)
                     assert not data.empty
                     assert TestDataDownloading.check_if_columns_in_proper_order(
                         list(data.columns[3:]), elements
@@ -52,7 +52,7 @@ class TestDataDownloading:
                     for column in data.columns:
                         assert not data[column].isnull().all()
             else:
-                data = climex_scraping.download_meteo_data(station, elements)
+                data = wmo.download_meteo_data(station, elements)
                 assert not data.empty
                 assert TestDataDownloading.check_if_columns_in_proper_order(
                     list(data.columns[3:]), elements
@@ -67,14 +67,14 @@ class TestDataDownloading:
         for station in stations:
             if station != 'POZNAN':
                 with mock.patch.object(builtins, 'input', lambda _: input_dict[station]):
-                    data = climex_scraping.download_meteo_data(
+                    data = wmo.download_meteo_data(
                         station, elements, return_coordinates=True
                     )
                     assert list(data.columns[-1:-4:-1]) == ['elv', 'lon', 'lat']
                     for element in ['lat', 'lon', 'elv']:
                         assert not data[element].isnull().any()
             else:
-                data = climex_scraping.download_meteo_data(
+                data = wmo.download_meteo_data(
                     station, elements, return_coordinates=True
                 )
                 assert list(data.columns[-1:-4:-1]) == ['elv', 'lon', 'lat']
@@ -94,12 +94,12 @@ class TestDataDownloading:
         for station, input_val in stations_and_input_val.items():
             with mock.patch.object(builtins, 'input', lambda _: input_val):
                 if station == 'KOLO':
-                    data = climex_scraping.download_meteo_data(
+                    data = wmo.download_meteo_data(
                         station, elements, nearby_stations=True,
                         degrees_range_for_nearby_stations=1
                     )
                 else:
-                    data = climex_scraping.download_meteo_data(station, elements, nearby_stations=True)
+                    data = wmo.download_meteo_data(station, elements, nearby_stations=True)
                 assert list(data.columns[3:]) == elements
                 assert TestDataDownloading.check_if_columns_in_proper_order(
                     list(data.columns[3:]), elements
@@ -115,7 +115,7 @@ class TestDataDownloading:
 
         for country in countries:
             shuffle(elements)
-            data = climex_scraping.download_meteo_data(country, elements)
+            data = wmo.download_meteo_data(country, elements)
 
             for column in data.columns:
                 assert not data[column].isnull().all()

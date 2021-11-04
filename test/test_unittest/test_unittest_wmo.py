@@ -1,4 +1,4 @@
-from scraping import climex_scraping
+from scraping import wmo
 import pytest
 import mock
 import builtins
@@ -7,84 +7,84 @@ import builtins
 class TestReturningWmoidOrCoord:
     def test_default_returning_wmoid(self):
         with mock.patch.object(builtins, 'input', lambda _: '3'):
-            assert climex_scraping.return_wmoid_or_coord('PARIS', 'wmo_id') == {'PARIS/LE BOURGET': '7150'}
+            assert wmo.return_wmoid_or_coord('PARIS', 'wmo_id') == {'PARIS/LE BOURGET': '7150'}
 
         with mock.patch.object(builtins, 'input', lambda _: '1'):
-            assert climex_scraping.return_wmoid_or_coord('LONDON', 'wmo_id') == {'LONDON A': '71623.3'}
+            assert wmo.return_wmoid_or_coord('LONDON', 'wmo_id') == {'LONDON A': '71623.3'}
 
         with mock.patch.object(builtins, 'input', lambda _: '0'):
-            assert climex_scraping.return_wmoid_or_coord('LAS VEGAS', 'wmo_id') == {'LAS VEGAS WWTP': '294.862'}
+            assert wmo.return_wmoid_or_coord('LAS VEGAS', 'wmo_id') == {'LAS VEGAS WWTP': '294.862'}
 
         with mock.patch.object(builtins, 'input', lambda _: '1'):
-            assert climex_scraping.return_wmoid_or_coord('SYDNEY', 'wmo_id') == {'SYDNEY AIRPOR': '94767'}
+            assert wmo.return_wmoid_or_coord('SYDNEY', 'wmo_id') == {'SYDNEY AIRPOR': '94767'}
 
         with mock.patch.object(builtins, 'input', lambda _: '-1'):
-            assert climex_scraping.return_wmoid_or_coord('BERLIN', 'wmo_id') == {'BERLIN-TEMPEL': '10384'}
+            assert wmo.return_wmoid_or_coord('BERLIN', 'wmo_id') == {'BERLIN-TEMPEL': '10384'}
 
         with mock.patch.object(builtins, 'input', lambda _: '0'):
-            assert climex_scraping.return_wmoid_or_coord('QUITO', 'wmo_id') == {'QUITO/MARISCA': '84071'}
+            assert wmo.return_wmoid_or_coord('QUITO', 'wmo_id') == {'QUITO/MARISCA': '84071'}
 
     def test_default_returning_coords(self):
-        assert climex_scraping.return_wmoid_or_coord('BUENOS AIRES', 'lat') == {'BUENOS AIRES': -34.58}
+        assert wmo.return_wmoid_or_coord('BUENOS AIRES', 'lat') == {'BUENOS AIRES': -34.58}
 
-        assert climex_scraping.return_wmoid_or_coord('CAPETOWN', 'lat') == {'CAPETOWN': -33.9}
+        assert wmo.return_wmoid_or_coord('CAPETOWN', 'lat') == {'CAPETOWN': -33.9}
 
         with mock.patch.object(builtins, 'input', lambda _: '0'):
-            assert climex_scraping.return_wmoid_or_coord('CAIR', 'lon') == {'CAIRO AIRPORT': 31.4}
+            assert wmo.return_wmoid_or_coord('CAIR', 'lon') == {'CAIRO AIRPORT': 31.4}
 
-        assert climex_scraping.return_wmoid_or_coord('MURMANSK', 'lon') == {'MURMANSK': 33.05}
+        assert wmo.return_wmoid_or_coord('MURMANSK', 'lon') == {'MURMANSK': 33.05}
 
-        assert climex_scraping.return_wmoid_or_coord('TOKYO', 'elv') == {'TOKYO': 36.0}
+        assert wmo.return_wmoid_or_coord('TOKYO', 'elv') == {'TOKYO': 36.0}
 
         with mock.patch.object(builtins, 'input', lambda _: '5'):
-            assert climex_scraping.return_wmoid_or_coord('SRI', 'elv') == {'DIYATALAWA, SRI': 1248.0}
+            assert wmo.return_wmoid_or_coord('SRI', 'elv') == {'DIYATALAWA, SRI': 1248.0}
 
     def test_contains_station_name_arg(self):
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             'PARIS', 'elv', contains_station_name=False
         ) == {'PARIS': 165.2}
 
         with pytest.raises(AttributeError):
-            climex_scraping.return_wmoid_or_coord('LAS VEGAS', 'elv', contains_station_name=False)
+            wmo.return_wmoid_or_coord('LAS VEGAS', 'elv', contains_station_name=False)
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             'SIDNEY', 'lon', contains_station_name=False
         ) == {'SIDNEY': -84.2}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             'DIYATALAWA, SRI', 'lon', contains_station_name=False
         ) == {'DIYATALAWA, SRI': 81.0}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             'POZNAN', 'wmo_id', contains_station_name=False
         ) == {'POZNAN': '12330'}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             'KOLO', 'wmo_id', contains_station_name=False
         ) == {'KOLO': '12345'}
 
     def test_station_name_is_wmo_id_arg(self):
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             80419, 'elv', station_name_is_wmo_id=True
         ) == {'BARCELONA': 7.0}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             67775, 'elv', station_name_is_wmo_id=True
         ) == {'HARARE': 1480.0}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             72386, 'lon', station_name_is_wmo_id=True
         ) == {'LAS VEGAS/MCC': -115.17}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             10763, 'lon', station_name_is_wmo_id=True
         ) == {'NUERNBERG': 11.05}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             '8220.1', 'lat', station_name_is_wmo_id=True
         ) == {'MADRID/RETIRO': 40.4}
 
-        assert climex_scraping.return_wmoid_or_coord(
+        assert wmo.return_wmoid_or_coord(
             '325.220', 'lat', station_name_is_wmo_id=True
         ) == {'LISBON': 46.45}
 
@@ -104,7 +104,7 @@ class TestDataDecoderAndTransposingTable:
             """
         )
 
-        decoded_data = climex_scraping.downloaded_data_decoder(data)
+        decoded_data = wmo.downloaded_data_decoder(data)
         assert decoded_data == [
             ['1951', '-0.9', '0.4', '0.7', '7.9', '11.8', '17.8', '18.3', '19.5', '14.8', '6.8', '6.5', '2.5'],
             ['1952', '0.4', '-0.2', '-1.2', '10.3', '11.7', '15.6', '18.1', '18.6', '11.5', '6.7', '1.8', '-1.9'],
@@ -113,7 +113,7 @@ class TestDataDecoderAndTransposingTable:
             ['1955', '-3.5', '-3.3', '-0.7', '5.4', '11.0', '15.5', '18.7', '18.7', '14.4', '8.0', '3.4', '1.5']
         ]
 
-        transposed_table = climex_scraping.transpose_table(decoded_data)
+        transposed_table = wmo.transpose_table(decoded_data)
         assert transposed_table == [
             ['1951', 1, '-0.9'], ['1951', 2, '0.4'], ['1951', 3, '0.7'], ['1951', 4, '7.9'],
             ['1951', 5, '11.8'], ['1951', 6, '17.8'], ['1951', 7, '18.3'], ['1951', 8, '19.5'],
@@ -135,7 +135,7 @@ class TestDataDecoderAndTransposingTable:
 
 class TestLookingForTheNearestStation:
     def test_default_settings(self):
-        assert climex_scraping.look_for_the_nearest_station(
+        assert wmo.look_for_the_nearest_station(
             lat=50, lon=-100
         ).to_dict() == {
             'country': {2431: 'CANADA', 2432: 'CANADA', 2434: 'CANADA'},
@@ -147,7 +147,7 @@ class TestLookingForTheNearestStation:
                         }
 
     def test_other_degrees_range_arg(self):
-        assert climex_scraping.look_for_the_nearest_station(
+        assert wmo.look_for_the_nearest_station(
             lat=45.9, lon=103.2, degrees_range=1
         ).to_dict() == {
             'country': {1507: 'MONGOLIA', 1527: 'MONGOLIA'},
@@ -190,7 +190,7 @@ class TestConcatenatingDataframes:
               ['2019', 11, '2'], ['2019', 12, '2']]
              ]
 
-        concatenated_data = climex_scraping.concatenate_dfs(data)
+        concatenated_data = wmo.concatenate_dfs(data)
         assert concatenated_data.to_dict() == {
             'year': {0: 2017, 1: 2017, 2: 2017, 3: 2017, 4: 2017, 5: 2017,
                      6: 2017, 7: 2017, 8: 2017, 9: 2017, 10: 2017, 11: 2017,

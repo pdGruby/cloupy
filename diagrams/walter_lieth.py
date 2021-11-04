@@ -568,7 +568,7 @@ class WalterLieth:
         (default True)
         """
 
-        import cloupy.scraping.climex_scraping as wmo_scraping
+        import cloupy.scraping.wmo as wmo_scraping
 
         data = wmo_scraping.download_meteo_data(
             self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'], nearby_stations=nearby_stations,
