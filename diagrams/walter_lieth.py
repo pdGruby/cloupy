@@ -471,7 +471,7 @@ class WalterLieth:
         import cloupy.scraping.imgw as imgw_scraping
 
         if interval == 'monthly':
-            data = imgw_scraping.get_meteorological_data(
+            data = imgw_scraping.download_imgw_climatological_data(
                 years_range=years_range, interval=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
@@ -506,7 +506,7 @@ class WalterLieth:
                     filter_station=True.
                     """)
 
-            data = imgw_scraping.get_meteorological_data(
+            data = imgw_scraping.download_imgw_climatological_data(
                 years_range=years_range, interval=interval,
                 stations_kind=stations_kind, file_format_index=0,
                 keywords=['Rok', 'Nazwa stacji', 'Miesiąc',
@@ -570,7 +570,7 @@ class WalterLieth:
 
         import cloupy.scraping.wmo as wmo_scraping
 
-        data = wmo_scraping.download_meteo_data(
+        data = wmo_scraping.download_wmo_climatological_data(
             self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'], nearby_stations=nearby_stations,
             return_coordinates=return_coordinates, degrees_range_for_nearby_stations=degrees_range_for_nearby_stations
         )

@@ -98,7 +98,7 @@ class TestDataDownloading:
                 if st_kind == 'fall' and interval == 'prompt':
                     continue
 
-                df = imgw.get_meteorological_data(
+                df = imgw.download_imgw_climatological_data(
                     interval, st_kind, years_range,
                     specific_columns=[0, 1, 2, 3],
                     optimize_memory_usage=True,
@@ -121,12 +121,12 @@ class TestDataDownloading:
             for st_kind in st_kinds:
                 if interval == 'prompt' and st_kind == 'fall':
                     with pytest.raises(NotADirectoryError):
-                        imgw.get_meteorological_data(
+                        imgw.download_imgw_climatological_data(
                             interval, st_kind, years_range
                         )
                         continue
                 else:
-                    df = imgw.get_meteorological_data(
+                    df = imgw.download_imgw_climatological_data(
                         interval, st_kind, years_range,
                         optimize_memory_usage=True,
                         specific_columns=[0, 1, 2, 3]

@@ -8,7 +8,7 @@ def get_wmo_stations_info():
     return ids_coords
 
 
-def return_wmoid_or_coord(
+def get_wmoid_or_coord(
         station_name, to_return, contains_station_name=True,
         station_name_is_wmo_id=False
 ):
@@ -90,7 +90,7 @@ def return_wmoid_or_coord(
     return dict_to_return
 
 
-def downloaded_data_decoder(data_table):
+def decode_downloaded_data(data_table):
     """
     Decode the data from .dat file from the WMO website. Return more
     computer-friendly data for further adaptation.
@@ -116,7 +116,7 @@ def downloaded_data_decoder(data_table):
     return decoded
 
 
-def download(url):
+def download_data(url):
     """Download and return the data from the given URL of the WMO website"""
 
     from bs4 import BeautifulSoup as bs
@@ -143,7 +143,7 @@ def download(url):
     soup = bs(r.content, features='html.parser')
 
     table = soup.get_text()
-    downloaded_data = downloaded_data_decoder(table)
+    downloaded_data = decode_downloaded_data(table)
 
     if not downloaded_data:
         raise FileNotFoundError(
@@ -239,7 +239,7 @@ def transpose_table(table):
     return new_table
 
 
-def look_for_the_nearest_station(
+def search_for_the_nearest_station(
         lat, lon, degrees_range=0.5
 ):
     """
@@ -272,7 +272,7 @@ def look_for_the_nearest_station(
     return ids_coords
 
 
-def download_meteo_data(
+def download_wmo_climatological_data(
         station_name, elements_to_scrape, nearby_stations=False,
         degrees_range_for_nearby_stations=0.5, return_coordinates=False
 ):
@@ -312,7 +312,7 @@ def download_meteo_data(
         'sl_press': 'http://climexp.knmi.nl/getslp.cgi?id=someone@somewhere&WMO={}'
     }
 
-    wmo_ids = return_wmoid_or_coord(station_name, 'wmo_id')
+    wmo_ids = get_wmoid_or_coord(station_name, 'wmo_id')
     wmo_ids_list = [wmo_id for station, wmo_id in wmo_ids.items()]
 
     full_df = pd.DataFrame()
@@ -323,7 +323,7 @@ def download_meteo_data(
             url = elements_with_urls[element].format(wmo_id)
 
             try:
-                downloaded_data = download(url)
+                downloaded_data = download_data(url)
             except FileNotFoundError:
                 if 'cou' in station_name:
                     continue
@@ -336,9 +336,9 @@ def download_meteo_data(
                         """)
                     continue
                 else:
-                    lat = return_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
-                    lon = return_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
-                    nearest_stations = look_for_the_nearest_station(
+                    lat = get_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
+                    lon = get_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
+                    nearest_stations = search_for_the_nearest_station(
                         lat, lon, degrees_range=degrees_range_for_nearby_stations
                     )
                     if nearest_stations.empty:
@@ -357,7 +357,7 @@ def download_meteo_data(
 
                         url = elements_with_urls[element].format(near_wmo_id)
                         try:
-                            data_for_station = download(url)
+                            data_for_station = download_data(url)
                         except FileNotFoundError:
                             data_from_near_stations[near_wmo_id] = None
                         else:
@@ -403,9 +403,9 @@ def download_meteo_data(
         concatenated_df.insert(0, 'station', station_series)
 
         if return_coordinates:
-            lat = return_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
-            lon = return_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
-            elv = return_wmoid_or_coord(wmo_id, 'elv', station_name_is_wmo_id=True)[station]
+            lat = get_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
+            lon = get_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
+            elv = get_wmoid_or_coord(wmo_id, 'elv', station_name_is_wmo_id=True)[station]
 
             lat_series = [lat] * len(concatenated_df.index)
             lon_series = [lon] * len(concatenated_df.index)

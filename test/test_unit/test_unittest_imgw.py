@@ -63,15 +63,15 @@ class TestKeywordsInColumns:
         capitalized_keywords = ['Temperatura', 'Opad']
 
         lowercased_result = TestKeywordsInColumns.values_counter(
-            imgw.look_for_keywords_in_columns(lowercased_keywords)
+            imgw.search_for_keywords_in_columns(lowercased_keywords)
         )
 
         uppercased_result = TestKeywordsInColumns.values_counter(
-            imgw.look_for_keywords_in_columns(uppercased_keywords)
+            imgw.search_for_keywords_in_columns(uppercased_keywords)
         )
 
         capitalized_result = TestKeywordsInColumns.values_counter(
-            imgw.look_for_keywords_in_columns(capitalized_keywords)
+            imgw.search_for_keywords_in_columns(capitalized_keywords)
         )
 
         assert lowercased_result == uppercased_result == capitalized_result
@@ -96,11 +96,11 @@ class TestKeywordsInColumns:
             's_t': 13
         }
         for format_, expected_value in expected_lengths.items():
-            lowercased_result = len(imgw.look_for_keywords_in_columns(lowercased_keywords, format_))
+            lowercased_result = len(imgw.search_for_keywords_in_columns(lowercased_keywords, format_))
 
-            uppercased_result = len(imgw.look_for_keywords_in_columns(uppercased_keywords, format_))
+            uppercased_result = len(imgw.search_for_keywords_in_columns(uppercased_keywords, format_))
 
-            capitalized_result = len(imgw.look_for_keywords_in_columns(capitalized_keywords, format_))
+            capitalized_result = len(imgw.search_for_keywords_in_columns(capitalized_keywords, format_))
 
             assert lowercased_result == uppercased_result == capitalized_result == expected_lengths[format_]
 

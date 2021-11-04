@@ -244,11 +244,11 @@ def get_column_names(file_format):
                 'Status pomiaru CIPR']
 
 
-def look_for_keywords_in_columns(
+def search_for_keywords_in_columns(
         keywords, file_format=None
 ):
     """
-    Look for the given keywords in the columns of the IMGW database file formats.
+    Search for the given keywords in the columns of the IMGW database file formats.
 
     Keyword arguments:
         keywords -- keywords that will be looked for
@@ -544,7 +544,7 @@ def concatenate_data(
         return df
 
 
-def get_meteorological_data(
+def download_imgw_climatological_data(
         interval, stations_kind, years_range,
         file_format_index=0, file_format=None, specific_columns=None,
         keywords=None, merge_splitted_stations=True, optimize_memory_usage=False,
