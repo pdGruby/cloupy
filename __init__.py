@@ -2,33 +2,44 @@
 Enjoy easy data scraping from websites and its processing. What's more, enjoy
 even easier data visualization!
 
---------DATA PROCESSING FUNCTIONS-------
+-----DATA PROCESSING FUNCTIONS/CLASSES----
     set_global_df() -- set a global dataframe from which data can be imported at
 any time and place
     read_global_df() -- return the global data frame as pandas.DataFrame
-----------------------------------------
+
+    DataFrame() - create pandas.DataFrame object
+-------------------------------------------
 
 ---------DATA SCRAPING FUNCTIONS--------
-    d_imgw_data() -- download IMGW data files from the IMGW website and return them
+    d_imgw_data() -- download IMGW data files from the IMGW database and return them
 as one merged pd.DataFrame
+    i_imgw_get_file_formats() -- return the available file formats for the given
+'interval' and 'stations_kind' in the IMGW database (different file formats contain
+different data)
+    i_imgw_search_keywords_in_columns() -- search for the given keywords in the column
+names and return a dictionary with the file formats in which the keywords were found
+
     d_wmo_data() -- download climatological data for specified station/stations
 from the WMO website
-    i_wmo_stations() -- return pandas.DataFrame with WMO stations information (WMO
-ids, coordinates, etc.)
-    i_wmo_near_station() -- return the nearest stations from the WMO database for
-the given coordinates
+    i_wmo_get_stations() -- return pandas.DataFrame with WMO stations information
+(WMO ids, coordinates, etc.)
+    i_wmo_search_near_station() -- return the nearest stations from the WMO database
+for the given coordinates
 ----------------------------------------
 
 -------DATA VISUALIZATION FUNCTIONS------
     choose_diagStyle() -- choose a global style for diagrams
     change_diagStyle_params() -- change global parameters for drawing diagrams
+
+    save_graph() -- save created graph (it is the function 'savefig' from the
+    matplotlib library)
 -----------------------------------------
 
 --------DATA VISUALIZATION CLASSES-------
-# Note that every class for drawing diagrams contains above functions as its
-methods (for data scraping and processing)
+# Note that every class for drawing diagrams contains some of the above functions
+as its methods (for data scraping and processing)
 
-    WalterLieth() -- create a WalterLieth object in which data for drawing a
+    g_WalterLieth() -- create a WalterLieth object in which data for drawing a
 Walter-Lieth diagram can be downloaded, modified, manually provided
 -----------------------------------------
 """
@@ -41,10 +52,17 @@ from matplotlib.pyplot import *
 from matplotlib import rcParams
 
 from cloupy.scraping.imgw import download_imgw_climatological_data as d_imgw_data
+from cloupy.scraping.imgw import get_file_formats as i_imgw_get_file_formats
+from cloupy.scraping.imgw import search_for_keywords_in_columns as i_imgw_search_keywords_in_columns
+
 from cloupy.scraping.wmo import download_wmo_climatological_data as d_wmo_data
-from cloupy.scraping.wmo import get_wmo_stations_info as i_wmo_stations
-from cloupy.scraping.wmo import search_for_the_nearest_station as i_wmo_near_station
-from cloupy.diagrams.walter_lieth import WalterLieth
+from cloupy.scraping.wmo import get_wmo_stations_info as i_wmo_get_stations
+from cloupy.scraping.wmo import search_for_the_nearest_station as i_wmo_search_near_station
+
+from cloupy.diagrams.walter_lieth import WalterLieth as g_WalterLieth
+
+from pandas import DataFrame as DataFrame
+from matplotlib.pyplot import savefig as save_graph
 
 try:  # delete global data frame from the previous session
     path_ = str(__file__).replace('__init__.py', '')

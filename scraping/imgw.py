@@ -20,7 +20,8 @@ def get_file_formats(
         interval, stations_kind, file_format_index
 ):
     """
-    Return the available file formats for the given 'interval' and 'stations_kind'.
+    Return the available file formats for the given 'interval' and 'stations_kind'
+    (different file formats contain different data).
 
     Keyword arguments:
         interval -- data interval from the IMGW database ('monthly', 'daily', 'prompt')
@@ -248,7 +249,8 @@ def search_for_keywords_in_columns(
         keywords, file_format=None
 ):
     """
-    Search for the given keywords in the columns of the IMGW database file formats.
+    Search for the given keywords in the column names and return a dictionary with
+    the file formats in which the keywords were found.
 
     Keyword arguments:
         keywords -- keywords that will be looked for
