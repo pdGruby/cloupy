@@ -17,18 +17,18 @@ def return_wmoid_or_coord(
     in their names.
 
     Keyword arguments:
-        station_name -- the name of station for which WMO id or coordinates has
-    to be returned. If 'cou' prefix added to 'station_name' and after the prefix
-    goes a country name, the function will look for all stations in specified
+        station_name -- name of the station for which WMO id or coordinates will
+    be returned. If 'cou' prefix added to 'station_name' and a country name appears
+    after the prefix, the function will search for all stations in the specified
     country (e.g. 'couPOLAND' will return WMO ids or coordinates for all stations
     in Poland)
         to_return -- which parameter has to be returned ('wmo_id', 'lat', 'lon',
     'elv')
-        contains_station_name -- if set to True, the function will look for the
-    stations which contains 'station_name' in their names. If set to False, the
-    function will look for the stations with names exactly as in 'station_name'
+        contains_station_name -- if set to True, the function will search for
+    stations which CONTAIN 'station_name' in their name. If set to False, the
+    function will search for stations with NAMES EXACTLY as in 'station_name'
     (default True)
-        station_name_is_wmo_id -- if set to True, the function will look for a
+        station_name_is_wmo_id -- if set to True, the function will search for a
     station by its WMO id. In this case, in 'station_name' argument you have to
     pass WMO id
     """
@@ -93,7 +93,7 @@ def return_wmoid_or_coord(
 def downloaded_data_decoder(data_table):
     """
     Decode the data from .dat file from the WMO website. Return more
-    computer-friendly data for the further adaptation.
+    computer-friendly data for further adaptation.
     """
 
     table = data_table.split('#')
@@ -156,7 +156,7 @@ def download(url):
 
 
 def concatenate_dfs(dfs):
-    """Concatenate given dataframes to one consistent dataframe"""
+    """Concatenate given dataframes into one consistent dataframe"""
 
     import pandas as pd
 
@@ -243,13 +243,12 @@ def look_for_the_nearest_station(
         lat, lon, degrees_range=0.5
 ):
     """
-    Return the nearest stations from WMO database for specified coordinates.
+    Return the nearest stations from the WMO database for the given coordinates.
 
     Keyword arguments:
         lat -- the latitude for which station will be searched
         lon -- the longitude for which station will be searched
-        degrees_range -- the acceptable range in degrees in all directions
-    (default 0.5)
+        degrees_range -- acceptable range in degrees in all directions (default 0.5)
     """
 
     import pandas as pd
@@ -278,25 +277,26 @@ def download_meteo_data(
         degrees_range_for_nearby_stations=0.5, return_coordinates=False
 ):
     """
-    Download meteorological data for specified station/stations from the WMO website.
-    There are 5 elements which are possible to download: average air temperature,
+    Download climatological data for specified station/stations from the WMO website.
+    There are 5 elements which can be downloaded: average air temperature,
     sum of precipitation, absolute minimum air temperature, absolute maximum air
     temperature, sea level pressure. The interval for downloaded data is always
     monthly.
 
     Keyword arguments:
-        station_name -- the name of station for which data has to be downloaded.
-    If 'cou' prefix added and after the prefix goes a country name, the function
-    will look for all stations in specified country (e.g. 'couPOLAND')
-        elements_to_scrape -- which elements from the WMO website have to be
-    scraped ('temp', 'preci', 'temp_min', 'temp_max', 'sl_press')
-        nearby_stations -- if a lack of data/single element occurs and 'nearby_stations'
-    argument is set to True, the function will look for the nearest stations and
-    try to complete the lack (default False)
-        degrees_range_for_nearby_stations -- the acceptable range in degrees in
-    all directions if nearby stations have to be searched (default 0.5)
+        station_name -- name of the station for which the data will to downloaded.
+    If 'cou' prefix added to 'station_name' and a country name appears after the
+    prefix, the function will search for all stations in the specified country
+    (e.g. 'couPOLAND' will download data for Poland)
+        elements_to_scrape -- which elements from the WMO website will be scraped.
+    ('temp', 'preci', 'temp_min', 'temp_max', 'sl_press')
+        nearby_stations -- if there is no data or a single element is missing, and
+    if 'nearby_stations' argument is set to True, the function will search for the
+    nearest stations and try to complete the lack (default False)
+        degrees_range_for_nearby_stations -- acceptable range in degrees in all
+    directions if nearby stations have to be searched (default 0.5)
         return_coordinates -- if set to True, the function will add columns with
-    latitude, longitude and elevation for specified station/stations (default False)
+    latitude, longitude and elevation for the specified station/stations (default False)
     """
 
     import pandas as pd

@@ -1,12 +1,12 @@
 class WalterLieth:
     """
-    Create WalterLieth object where data for drawing Walter-Lieth diagram can be
-    downloaded, modified, manually provided.
+    Create a WalterLieth object in which data for drawing a Walter-Lieth diagram
+    can be downloaded, modified, manually provided.
 
     Keyword arguments:
-    station_name -- station name for which data will be drawn
+    station_name -- name of the station for which data will be drawn
     years_range -- years range for which data will be drawn (default None)
-    dataframe -- data for drawing (default None)
+    dataframe -- data for the drawing (default None)
     lat -- latitude of the station (default None)
     lon -- longitude of the station (default None)
     elevation -- elevation of the station (default None)
@@ -19,18 +19,18 @@ class WalterLieth:
     -------------------------------------
 
     ---------------DATA STRUCTURE---------------
-    Supported data structure for WalterLieth.dataframe is 5 or 6 columns of
-    pandas.DataFrame object, depending on the data interval. Supported data
+    The supported data structure for WalterLieth.dataframe is 5 or 6 columns of
+    pandas.DataFrame object, depending on the data interval. The supported data
     intervals are daily and monthly.
 
-    If data interval is monthly, then 5 columns are required:
+    If the data interval is monthly, 5 columns are required:
     1st column: months,
     2nd column: average air temperature,
     3rd column: sum of precipitation,
     4th column: absolute maximum air temperature,
     5th column: absolute minimum air temperature
 
-    If data interval is daily, then 6 columns are required:
+    If the data interval is daily, 6 columns are required:
     1st column: years,
     2nd column: months,
     3rd column: average air temperature,
@@ -50,8 +50,8 @@ class WalterLieth:
     --------------------------------------------
 
     ---------------NOTE THAT---------------
-    The data must be provided for every single month. In another case,
-    Walter-Lieth diagram is not possible to be drawn.
+    The data must be provided for every month. Otherwise, the Walter-Lieth diagram
+    can not be drawn.
     ---------------------------------------
     """
 
@@ -217,7 +217,7 @@ class WalterLieth:
         else:
             raise AttributeError(
                 f"""
-                Data in cloudy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 
+                Data in clopy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 
                 or 6 columns depending on the data interval.
                 """)
 
@@ -450,19 +450,20 @@ class WalterLieth:
             return_coordinates=True
     ):
         """
-        Download data for drawing from IMGW database.
+        Download data for a drawing from the IMGW database.
 
         Keyword arguments:
             years_range -- years range (eg. range(2010, 2021))
-            interval -- data interval ('monthly', 'daily', 'prompt') (default
+            interval -- the data interval ('monthly', 'daily', 'prompt') (default
         'monthly')
-            stations_kind -- stations kind from IMGW database ('synop', 'climat',
+            stations_kind -- stations kind from the IMGW database ('synop', 'climat',
         'fall') (default 'synop')
-            filter_station -- if downloaded data has to be filtered by
+            filter_station -- if the downloaded data must be filtered by
         WalterLieth.station_name (default True)
-            check_years -- check if years range in downloaded data matches years
-        range from WalterLieth.years_range. If not, change WalterLieth.years_range
-        depending on years range in downloaded data (default True)
+            check_years -- check if the years range in the downloaded data matches
+        the years range from WalterLieth.years_range. If not, change
+        WalterLieth.years_range depending on years range in the downloaded data
+        (default True)
             return_coordinates -- search for coordinates for the chosen station
         name in WalterLieth.station_name (default True)
         """
@@ -500,7 +501,7 @@ class WalterLieth:
             if not filter_station:
                 raise AttributeError(
                     """
-                    'cloudy.WalterLieth.d_imgw_data' does not support given combination: interval='daily', 
+                    'cloupy.WalterLieth.d_imgw_data' does not support given combination: interval='daily', 
                     filter_station=False. Use interval='monthly' instead or stick with daily interval and input 
                     filter_station=True.
                     """)
@@ -550,20 +551,21 @@ class WalterLieth:
             degrees_range_for_nearby_stations=0.5, check_years=True
     ):
         """
-        Download data for drawing from WMO database.
+        Download data for a drawing from the WMO database.
 
         Keyword arguments:
-            nearby_stations -- if a lack of data/single element occurs and
-        'nearby_stations' argument is set to True, the method will look for the
-        nearest stations and try to complete the lack (default True)
-            return_coordinates -- if set to True, the method will add columns
-        with latitude, longitude and elevation for specified station/stations
+            nearby_stations -- if there is no data or a single element is missing,
+        and if 'nearby_stations' argument is set to True, the function will search
+        for the nearest stations and try to complete the lack (default True)
+            return_coordinates -- if set to True, the function will add columns
+        with latitude, longitude and elevation for the specified station/stations
+        (default False)
+            degrees_range_for_nearby_stations -- acceptable range in degrees in all
+        directions if nearby stations have to be searched (default 0.5)
+            check_years -- check if the years range in the downloaded data matches
+        the years range from WalterLieth.years_range. If not, change
+        WalterLieth.years_range depending on the years range in the downloaded data
         (default True)
-            degrees_range_for_nearby_stations -- the acceptable range in degrees
-        in all directions if nearby stations have to be searched (default 0.5)
-            check_years -- check if years range in downloaded data matches years
-        range from WalterLieth.years_range. If not, change WalterLieth.years_range
-        depending on years range in downloaded data (default True)
         """
 
         import cloudy.scraping.climex_scraping as wmo_scraping
@@ -640,65 +642,66 @@ class WalterLieth:
             check_years=True, station_in_column=False, years_in_column=False
     ):
         """
-        Import data for WalterLieth.dataframe from global data frame.
+        Import data for WalterLieth.dataframe from the global dataframe.
 
         Keyword arguments:
-            columns_order -- specify which columns from global data frame have to
-        be taken (list of indexes, 'imgw_monthly', 'imgw_daily'). If global data
-        frame comes from IMGW database and it's structure has not been modified in
-        any way, then 'imgw_monthly' or 'imgw_daily' can be used - depending on data
-        interval
-            filter_station -- if imported data has to be filtered by
+            columns_order -- specify which columns from the global dataframe are
+        to be taken (list of indexes, 'imgw_monthly', 'imgw_daily'). If the global
+        dataframe comes from the IMGW database and its structure has not been
+        modified in any way, then 'imgw_monthly' or 'imgw_daily' can be used -
+        depending on the data interval
+            filter_station -- if the imported data must be filtered by
         WalterLieth.station_name (default True)
-            check_years -- check if years range in global DataFrame matches
+            check_years -- check if the years range in the global DataFrame matches
         WalterLieth.years_range. If not, change WalterLieth.years_range depending
-        on years range in global DataFrame (default True)
-            station_in_column -- if you want to filter imported data by
+        on the years range in the global DataFrame (default True)
+            station_in_column -- if you want to filter the imported data by
         WalterLieth.station_name, specify the column in which station names are
         located (with an index which is an integer) (default False, accepts integers)
             years_in_column -- if you want to check if WalterLieth.years_range matches
-        years range in imported global data frame, specify the index of column in
-        which years data is located (default False, accepts integers)
+        the years range in the imported global dataframe, specify the index of
+        the column in which years data is located (default False, accepts integers)
 
         ---------------NOTE THAT---------------
-        If the data in global data frame comes from the IMGW website and it's
+        If the data in the global dataframe comes from the IMGW database and its
         structure has not been modified in any way, you can use 'imgw_monthly',
-        'imgw_daily' in 'columns_order' argument. If it is your case, you do not
-        have to set 'station_in_column' and 'years_in_column' arguments - the
-        method will do it for you.
+        'imgw_daily' in the 'columns_order' argument. If this is your case, you do
+        not have to set the 'station_in_column' and 'years_in_column' arguments -
+        the method will do it for you.
 
-        If the data in global data frame does not come from the IMGW website, you
-        have to specify in which columns needed data for drawing is (by passing
-        list of integers to 'columns_order'). Note that if you want to filter data
-        by station name (from WalterLieth.station_name) or check if years range
-        in imported data matches WalterLieth.years_range, you also have to pass
-        proper columns from global data frame to 'columns_order' argument. When
-        you do, you have to set the indexes of the columns in which data of
-        years or station name is located ('station_in_column' and 'years_in_column'
-        arguments). Remember that these indexes must be for new data frame which
-        originates after data filtering by 'columns_order'.
+        If the data in the global dataframe does not come from the IMGW database,
+        you have to specify the columns in which the required data for the drawing
+        is located (by passing a list of integers to 'columns_order'). Note that
+        if you want to filter the data by station name (from WalterLieth.station_name)
+        or check if the years range in the imported data matches WalterLieth.years_range,
+        you also have to pass proper columns from the global dataframe to the
+        'columns_order' argument. When you do that, you have to set the indexes of
+        the columns in which the years or the station name are located ('station_in_column'
+        and 'years_in_column' arguments). Remember that these indexes must be for
+        a new dataframe which originates after the data filtering by 'columns_order'.
 
         For example:
         columns_order = [2, 3, 4, 5, 6, 7, 8], where:
-        2nd column contains station names (the index in new data frame is 0),
-        3rd column contains years (new index is 1),
-        4rd column contains months (new index is 2),
-        5rd column contains average air temperatures (new index is 3),
-        6rd column contains average sum of precipitation (new index is 4),
-        7rd column contains absolute maximum air temperature (new index is 5),
-        8rd column contains absolute minimum air temperature (new index is 6)
+        2nd column contains station names (the index in the new dataframe is 0),
+        3rd column contains years (the new index is 1),
+        4rd column contains months (the new index is 2),
+        5rd column contains average air temperatures (the new index is 3),
+        6rd column contains average sum of precipitation (the new index is 4),
+        7rd column contains absolute maximum air temperature (the new index is 5),
+        8rd column contains absolute minimum air temperature (the new index is 6)
 
         So, if you want to filter by station name and check if WalterLieth.years_range
-        matches the data in imported global data frame, 'station_in_column' and
+        matches the data in the imported global dataframe, 'station_in_column' and
         'years_in_column' should be:
         station_in_column = int(0)
         years_in_column = int(1)
 
-        After filtering, the method will drop these columns and pass the data frame
+        After filtering, the method will drop these columns and pass the dataframe
         to WalterLieth.dataframe without the columns in which station names and
-        years were. If the structure of data frame after droping above columns
-        fits required data structure for WalterLieth class, the graph should be
-        drawn correctly (see WalterLieth class docstring for required data structure)
+        years were. If the structure of the dataframe after droping the above columns
+        matches the required data structure for the WalterLieth class, the graph
+        should be drawn correctly (see the WalterLieth class docstring for the
+        required data structure)
         ---------------------------------------
         """
 
@@ -708,7 +711,7 @@ class WalterLieth:
             raise AttributeError(
                 """
                 1. Use list of ints to specify which columns from global pandas.DataFrame are necessary for drawing.
-                2. Remember that you can get accurate info about required data structure in cloudy.WalterLieth docs.
+                2. Remember that you can get accurate info about required data structure in cloupy.WalterLieth docs.
                 3. Alternatively, if your data's source is IMGW database you can use 'imgw_monthly' or 'imgw_daily' 
                 strings for your input.
                 """)
@@ -744,7 +747,7 @@ class WalterLieth:
                         Dataframe has just been filtered and the output was empty. Check your inputs which may affect 
                         filtering.
                         
-                        1. It is possible that input for 'station_name' in 'cloudy.WalterLieth' is invalid.
+                        1. It is possible that input for 'station_name' in 'cloupy.WalterLieth' is invalid.
                         2. You can also be looking for the station which is not available in global pandas.DataFrame.
                         3. If you have changed default column order from IMGW database the function will return this exception.
                         4. Check if your DataFrame does not contain any unnecessary column. It is possible that 'index_col=0'
@@ -813,7 +816,7 @@ class WalterLieth:
     def check_cloudy_graphs_chosen_style(
             ls_prop_cycle, color_prop_cycle
     ):
-        """Return which style has been set globally for cloudy"""
+        """Return which style has been set globally for cloupy"""
 
         if ls_prop_cycle.count('-') == 10:
             return 'default'
@@ -827,7 +830,7 @@ class WalterLieth:
             mean_temperature, abs_max_temp, abs_min_temp
     ):
         """
-        Return an absolute maximum of the warmest month and an absolute minimum
+        Return the absolute maximum of the warmest month and the absolute minimum
         of the coldest month
         """
 
@@ -846,19 +849,19 @@ class WalterLieth:
         except KeyError:
             raise ValueError(
                 """
-                Invalid data structure in 'cloudy.WalterLieth.dataframe'. Check 'cloudy.WalterLieth' docs for more info.
+                Invalid data structure in 'cloupy.WalterLieth.dataframe'. Check 'cloupy.WalterLieth' docs for more info.
                 
-                1. Check if you haven't mistaken column order in 'cloudy.WalterLieth.dataframe'. 
+                1. Check if you haven't mistaken column order in 'cloupy.WalterLieth.dataframe'. 
                 2. It's also possible that you have tried to pass daily interval and there's a lack of column/columns.
                 Note that daily interval data must contain 6 columns - for more info about required data structure check 
-                'cloudy.WalterLieth' docs. If you have used 'cloudy.WalterLieth.import_global_df' method for data from IMGW
+                'cloupy.WalterLieth' docs. If you have used 'cloupy.WalterLieth.import_global_df' method for data from IMGW
                 database, check values for argument 'columns_order' (if 'imgw_monthly' or 'imgw_daily' have been used properly,
                 depending on IMGW data interval).
                 """)
 
     @staticmethod
     def get_temp_yticks(temperature):
-        """Return ticks list for WalterLieth graph"""
+        """Return a tick list for the WalterLieth graph"""
 
         available_temp_axis_ticks = [-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50]
         min_temp = min(list(temperature))
@@ -878,14 +881,14 @@ class WalterLieth:
         except IndexError:
             raise ValueError(
                 """
-                Invalid data structure in 'cloudy.WalterLieth.dataframe'. Check 'cloudy.WalterLieth' docs for more info.
+                Invalid data structure in 'cloupy.WalterLieth.dataframe'. Check 'cloupy.WalterLieth' docs for more info.
                 
                 If you have downloaded data on your own from IMGW database and set global dataframe, check if you have
-                chosen correct file format. Available file formats for 'cloudy.WalterLieth' from IMGW database are: 
+                chosen correct file format. Available file formats for 'cloupy.WalterLieth' from IMGW database are: 
                 ['s_m_d', 's_d'].
                 
-                cloudy.get_meteorological_data(..., file_format='s_m_d')
-                cloudy.get_meteorological_data(..., file_format='s_d')
+                cloupy.get_meteorological_data(..., file_format='s_m_d')
+                cloupy.get_meteorological_data(..., file_format='s_d')
                 """)
 
         if temp_axis_ticks[0] > 0:
@@ -895,7 +898,7 @@ class WalterLieth:
 
     @staticmethod
     def get_yticks_labels_for_precipitation(temp_yaxis_ticks):
-        """Return list for the secondary axis in WalterLieth graph"""
+        """Return a list of labels for the secondary axis in the WalterLieth graph"""
 
         preci_ticks = []
         for index, tick in enumerate(temp_yaxis_ticks):
@@ -908,7 +911,7 @@ class WalterLieth:
 
     @staticmethod
     def get_max_ytick_for_precipitation(precipitation):
-        """Return the highest tick for precipitation for the upper axis in WL graph"""
+        """Return the highest tick for precipitation for the upper axis in the WL graph"""
 
         available_ticks = [200, 300, 400, 500, 600,
                            700, 800, 900, 1000, 1100,
@@ -947,7 +950,7 @@ class WalterLieth:
     def interpolate_margins(
             mean_temperature, precipitation
     ):
-        """Interpolate given data to the edges of the WalterLieth graph"""
+        """Interpolate the given data to the edges of the WalterLieth graph"""
 
         temperature = list(mean_temperature)
         precipitation = list(precipitation)

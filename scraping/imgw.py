@@ -1,15 +1,15 @@
 """
 Functions for IMGW database analysis.
 
-get_meteorological_data(period, stations_kind, years_range, file_format_index=0,
+get_meteorological_data(interval, stations_kind, years_range, file_format_index=0,
                         file_format=None,   specific_columns=None, keywords=None,
                         merge_splitted_stations=True, optimize_memory_usage=False)
 
-get_file_formats(period, stations_kind, file_format_index)
+get_file_formats(interval, stations_kind, file_format_index)
 get_column_names(file_format)
 look_for_keywords_in_columns(keywords, file_format=None)
 
-get_urls(period, stations_kind, years_range)
+get_urls(interval, stations_kind, years_range)
 download_data(urls)
 concatenate_data(downloaded_files_names, file_formats, specific_columns,
                 keywords, optimize_memory_usage, years_range)
@@ -20,13 +20,14 @@ def get_file_formats(
         period, stations_kind, file_format_index
 ):
     """
-    Return available file formats for the given 'period' and 'stations_kind'.
+    Return the available file formats for the given 'interval' and 'stations_kind'.
 
     Keyword arguments:
-        period -- period kind of IMGW database ('monthly', 'daily', 'prompt')
+        interval -- data interval from the IMGW database ('monthly', 'daily', 'prompt')
         stations_kind -- stations' kind ('synop', 'climat', 'fall')
-        file_format_index -- which element from the list will be returned ('all',
-    1, 2)
+        file_format_index -- which element from the list of available formats will
+    be returned. Usually two file formats are available, so the length of the list
+    is 2 ('all', 0, 1)
     """
 
     if period == 'monthly':
@@ -84,10 +85,10 @@ def get_file_formats(
 
 def get_column_names(file_format):
     """
-    Return columns names for the given file format.
+    Return the column names for the given file format.
 
     Keyword arguments:
-        file_format -- file format of IMGW database (eg. 's_m_t'). Available file
+        file_format -- IMGW database file format (e.g. 's_m_t'). Available file
     formats: k_m_d, k_m_t, o_m, s_m_d, s_m_t, k_d, k_d_t, o_d, s_d, s_d_t, k_t,
     s_t
     """
@@ -247,13 +248,14 @@ def look_for_keywords_in_columns(
         keywords, file_format=None
 ):
     """
-    Look for the given keywords in the columns of IMGW database file formats.
+    Look for the given keywords in the columns of the IMGW database file formats.
 
     Keyword arguments:
         keywords -- keywords that will be looked for
-        file_format -- IMGW database file format of which columns will be taken to
-    look for keywords. If 'file_format' is None, then every column from every file
-    will be taken (default None)
+        file_format -- IMGW database file format, the columns of which will be
+    used to look for keywords. If 'file_format' is None, then every column from
+    every file will be taken and the function will show you exactly where the
+    keywords were found (default None)
     """
 
     if file_format is None:
@@ -307,13 +309,13 @@ def get_urls(
         period, stations_kind, years_range
 ):
     """
-    Return urls for IMGW database for the given 'period', 'stations_kind' and
-    'years_range'.
+    Return the urls to the IMGW database for the given 'interval', 'stations_kind'
+    and 'years_range'.
 
     Keyword arguments:
-        period -- period kind of IMGW database (monthly, daily, prompt)
+        interval -- data interval from the IMGW database (monthly, daily, prompt)
         stations_kind -- stations' kind (synop, climat, fall)
-        years_range -- years range
+        years_range -- years range (e.g. range(1966, 2021))
     """
 
     if period == 'monthly':
@@ -378,10 +380,10 @@ def get_urls(
 
 def download_data(urls):
     """
-    Download data from IMGW database.
+    Download data from the IMGW database.
 
     Keyword arguments:
-        urls -- urls for data which is wanted
+        urls -- urls for the data which is requested
     """
 
     import requests
@@ -419,16 +421,16 @@ def concatenate_data(
         merge_splitted_stations
 ):
     """
-    Merge tables from downloaded files and return merged pd.DataFrame.
+    Merge tables from downloaded files and return them as one merged pd.DataFrame.
 
     Keyword arguments:
-        downloaded_files_names -- names list of downloaded files
-        file_formats -- IMGW file formats which are in downloaded files
-        specific_columns -- specified columns which will be taken to merge
-        keywords -- words which have to be in column name if the column has to be
+        downloaded_files_names -- list of downloaded file names
+        file_formats -- IMGW file formats included in downloaded files
+        specific_columns -- which columns will be taken for merge
+        keywords -- words which must be in the column name if the column is to be
     merged
         optimize_memory_usage -- reduce pd.DataFrame memory usage
-        years_range -- filtr pd.DataFrame to given period
+        years_range -- filter pd.DataFrame up to the given period
     """
 
     import pandas as pd
@@ -549,19 +551,23 @@ def get_meteorological_data(
         return_coordinates=False
 ):
     """
-    Download IMGW data files and return data as one merged pd.DataFrame.
+    Download the IMGW data files and return them as one merged pd.DataFrame.
 
     Keyword arguments:
-        period -- period kind of IMGW database ('monthly', 'daily', 'prompt')
+        interval -- data interval from the IMGW database ('monthly', 'daily',
+    'prompt')
         stations_kind -- stations' kind ('synop', 'climat', 'fall')
-        years_range -- years range (eg. range(2010, 2021))
-        file_format_index -- which element from the list of file formats will be
-    returned (default 0)
-        file_format -- file format of IMGW database (default None)
-        specific_columns -- specified columns which will be taken to merge
-    (default None)
-        keywords -- words which have to be in a column name if a column has to be
-    merged (default None)
+        years_range -- years range (e.g. range(2010, 2021))
+        file_format_index -- for which element (from the list of the available file
+    formats in the IMGW database) the data will be downloaded. Usually the length of
+    the list is 2. Valid inputs: 0, 1, 'all' (default 0)
+        file_format -- IMGW database file format. The argument has priority over
+    'file_format_index'. If None, the data will be downloaded correspondingly to
+    'file_format_index' (default None)
+        specific_columns -- which columns from downloaded files will be taken
+    to merge. If None, take all columns (default None)
+        keywords -- words which must be in the column name if the column is to be
+    merged. If None, do not filter the column names (default None)
         merge_splitted_stations -- merge stations which are the same but have
     different names (default True)
         optimize_memory_usage -- reduce pd.DataFrame memory usage (default False)

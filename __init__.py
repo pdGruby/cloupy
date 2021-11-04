@@ -1,35 +1,35 @@
 """
-Enjoy easy data scraping from websites and its management. What's more, enjoy
+Enjoy easy data scraping from websites and its processing. What's more, enjoy
 even easier data visualization!
 
---------DATA MANAGEMENT FUNCTIONS-------
-    set_global_df() -- set global data frame from which data can be imported in
-any time.
+--------DATA PROCESSING FUNCTIONS-------
+    set_global_df() -- set a global dataframe from which data can be imported at
+any time and place
     read_global_df() -- return the global data frame as pandas.DataFrame
 ----------------------------------------
 
 ---------DATA SCRAPING FUNCTIONS--------
-    d_imgw_data() -- download IMGW data files from the IMGW website and return it
+    d_imgw_data() -- download IMGW data files from the IMGW website and return them
 as one merged pd.DataFrame
-    d_wmo_data() -- download meteorological data for specified station/stations
+    d_wmo_data() -- download climatological data for specified station/stations
 from the WMO website
     i_wmo_stations() -- return pandas.DataFrame with WMO stations information (WMO
 ids, coordinates, etc.)
-    i_wmo_near_station() -- return the nearest stations from WMO database for
-specified coordinates
+    i_wmo_near_station() -- return the nearest stations from the WMO database for
+the given coordinates
 ----------------------------------------
 
 -------DATA VISUALIZATION FUNCTIONS------
-    choose_diagStyle() -- choose global style for diagrams
+    choose_diagStyle() -- choose a global style for diagrams
     change_diagStyle_params() -- change global parameters for drawing diagrams
 -----------------------------------------
 
 --------DATA VISUALIZATION CLASSES-------
 # Note that every class for drawing diagrams contains above functions as its
-methods (for data scraping and management)
+methods (for data scraping and processing)
 
-    WalterLieth() -- create a WalterLieth object where data for drawing Walter-Lieth
-diagram can be downloaded, modified, manually provided
+    WalterLieth() -- create a WalterLieth object in which data for drawing a
+Walter-Lieth diagram can be downloaded, modified, manually provided
 -----------------------------------------
 """
 
@@ -104,7 +104,7 @@ def change_diagStyle_params(diagStyle_dict):
 
     Keyword arguments:
         diagStyle_dict -- a dictionary in which the keys are parameters that have
-    to be changed; values are values to which default values have to be changed.
+    to be changed; values are the values to which default values have to be changed
 
     ---------------NOTE THAT---------------
     For available parameters and their valid values you can check matplotlib's
@@ -120,10 +120,10 @@ def change_diagStyle_params(diagStyle_dict):
 
 def choose_diagStyle(diag_style='default'):
     """
-    Choose global style for diagrams.
+    Choose a global style for diagrams.
 
     Keyword arguments:
-        diag_style -- the style for diagrams. Available styles: 'default', 'retro'
+        diag_style -- a style for diagrams. Available styles: 'default', 'retro'
     (default 'default')
     """
     if diag_style == 'default':
@@ -142,10 +142,10 @@ def set_global_df(
         pd_DataFrame
 ):
     """
-    Set global data frame from which data can be imported in any time.
+    Set global dataframe from which data can be imported at any time and place.
 
     Keyword arguments:
-        pd_DataFrame -- a pandas DataFrame object which will be global DataFrame
+        pd_DataFrame -- a pandas DataFrame object which will be the global DataFrame
     """
 
     path = str(__file__).replace('__init__.py', '')
@@ -168,7 +168,7 @@ def set_global_df(
 
 def read_global_df():
     """
-    Return the global data frame which was previously set by 'set_global_df'
+    Return the global dataframe which was previously set by the 'set_global_df'
     function.
     """
     path = str(__file__).replace('__init__.py', '')
