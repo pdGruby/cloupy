@@ -3,7 +3,7 @@ def get_wmo_stations_info():
 
     import pandas as pd
 
-    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_pop2.csv')
+    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
     return ids_coords
 
@@ -36,7 +36,7 @@ def return_wmoid_or_coord(
     import pandas as pd
 
     station_name = str(station_name)
-    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_pop2.csv')
+    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
 
     station_name = station_name.upper()
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
@@ -253,7 +253,7 @@ def look_for_the_nearest_station(
 
     import pandas as pd
 
-    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_pop2.csv')
+    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
 
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
 
