@@ -24,7 +24,7 @@ class TestDrawingWithDailyData:
     def test_drawing_and_daily_data_downloading(
             self, path_for_saving
     ):
-        wl = cl.WalterLieth('POZNAŃ')
+        wl = cl.g_WalterLieth('POZNAŃ')
         wl.d_imgw_data(interval='daily', stations_kind='synop', years_range=range(2010, 2011))
         wl.draw()
 
@@ -51,7 +51,7 @@ class TestDrawingWithDailyData:
 
     @staticmethod
     def draw_and_return_file_size(station_name):
-        wl = cl.WalterLieth(station_name)
+        wl = cl.g_WalterLieth(station_name)
         wl.import_global_df('imgw_daily')
         wl.draw()
 
