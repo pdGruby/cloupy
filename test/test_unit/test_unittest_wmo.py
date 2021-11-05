@@ -44,7 +44,7 @@ class TestReturningWmoidOrCoord:
             'PARIS', 'elv', contains_station_name=False
         ) == {'PARIS': 165.2}
 
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValueError):
             wmo.get_wmoid_or_coord('LAS VEGAS', 'elv', contains_station_name=False)
 
         assert wmo.get_wmoid_or_coord(

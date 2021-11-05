@@ -19,7 +19,7 @@ class TestFileFormats:
         assert imgw.get_file_formats('monthly', 'climat', 'all') == ['k_m_d', 'k_m_t']
 
         # stations_kind is invalid
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValueError):
             imgw.get_file_formats('monthly', 'abc', 0)
 
     def test_daily_arg(self):
@@ -38,7 +38,7 @@ class TestFileFormats:
         assert imgw.get_file_formats('daily', 'climat', 'all') == ['k_d', 'k_d_t']
 
         # stations_kind is invalid
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValueError):
             imgw.get_file_formats('daily', 'abc', 0)
 
     def test_prompt_arg(self):
@@ -52,7 +52,7 @@ class TestFileFormats:
             imgw.get_file_formats('prompt', 'fall', 0)
 
         # stations_kind is invalid
-        with pytest.raises(AttributeError):
+        with pytest.raises(ValueError):
             imgw.get_file_formats('prompt', 'abc', 0)
 
 

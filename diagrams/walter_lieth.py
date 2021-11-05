@@ -100,8 +100,8 @@ class WalterLieth:
         if self.dataframe is None or self.dataframe.empty:
             raise AttributeError(
                 """
-                No data in WalterLieth.dataframe. Input data on your own or use WalterLieth's methods: WalterLieth.d_imgw_data,
-                WalterLieth.d_wmo_data, WalterLieth.import_global_df
+                No data in WalterLieth.dataframe. Input the data yourself or use the WalterLieth's methods: 
+                WalterLieth.d_imgw_data, WalterLieth.d_wmo_data, WalterLieth.import_global_df
                 """)
 
         ls_prop_cycle = rcParams['axes.prop_cycle'].by_key()['linestyle']
@@ -217,14 +217,14 @@ class WalterLieth:
         else:
             raise AttributeError(
                 f"""
-                Data in clopy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 
-                or 6 columns depending on the data interval.
+                Data in cloupy.WalterLieth.dataframe has {len(self.dataframe.columns)} columns which is invalid. Input 5 
+                or 6 columns, depending on the data interval.
                 """)
 
         if precipitation.min() < 0:
             raise ValueError(
                 f"""
-                Value below 0 mm occured in precipitation series. Invalid value: {precipitation.min()}
+                A value below 0 mm occured in the precipitation series. Invalid value: {precipitation.min()}
                 """)
 
         if mean_temperature.max() > 50:
@@ -493,17 +493,17 @@ class WalterLieth:
             if data.empty:
                 raise ValueError(
                     """
-                    No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
-                    are valid.
+                    No data found for the specified parameters. Check if the input arguments in the 'WalterLieth.d_imgw_data' 
+                    method are valid.
                     """)
 
         elif interval == 'daily':
             if not filter_station:
-                raise AttributeError(
+                raise ValueError(
                     """
                     'cloupy.WalterLieth.d_imgw_data' does not support given combination: interval='daily', 
-                    filter_station=False. Use interval='monthly' instead or stick with daily interval and input 
-                    filter_station=True.
+                    filter_station=False. Use interval='monthly' instead or stick with the daily interval and change 
+                    the 'filter_station' argument to True.
                     """)
 
             data = imgw_scraping.download_imgw_climatological_data(
@@ -528,14 +528,14 @@ class WalterLieth:
             if data.empty:
                 raise ValueError(
                     """
-                    No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
-                    are valid.
+                    No data found for the specified parameters. Check if the input arguments in the 'WalterLieth.d_imgw_data' 
+                    method are valid.
                     """)
         else:
             raise ValueError(
                 """
-                    No data for specified parameters found. Check if input arguments in 'WalterLieth.d_imgw_data' method
-                    are valid. Check 'interval' argument.
+                    No data found for the specified parameters. Check if the input arguments in the 'WalterLieth.d_imgw_data' 
+                    method are valid. Check the 'interval' argument.
                     """)
 
         if return_coordinates:
@@ -598,10 +598,10 @@ class WalterLieth:
                 data[element]
             except KeyError:
                 if element == 'preci' or element == 'temp':
-                    raise AttributeError(
+                    raise FileNotFoundError(
                         f"""
-                        No essential data for '{element}' was downloaded - please, try again. If it does not fix the 
-                        problem, there's a high possibility of required data lack on the WMO website.
+                        No essential data for '{element}' was downloaded - please, try again. If this does not fix the 
+                        problem, there's a high probability that the required data is missing on the WMO website.
                         """
                     )
                 else:
@@ -612,7 +612,7 @@ class WalterLieth:
         for element in ['temp', 'preci', 'temp_max', 'temp_min']:
             if data[element].isnull().all():
                 if element == 'temp' or element == 'preci':
-                    raise AttributeError(
+                    raise ValueError(
                         f"""
                         No required data for '{element}'. It seems like the data was downloaded, but actually the column 
                         contains only None values.
@@ -708,26 +708,26 @@ class WalterLieth:
         from cloupy import read_global_df
 
         if isinstance(columns_order, list) and not isinstance(columns_order[0], int):
-            raise AttributeError(
+            raise ValueError(
                 """
-                1. Use list of ints to specify which columns from global pandas.DataFrame are necessary for drawing.
-                2. Remember that you can get accurate info about required data structure in cloupy.WalterLieth docs.
-                3. Alternatively, if your data's source is IMGW database you can use 'imgw_monthly' or 'imgw_daily' 
-                strings for your input.
+                1. Use a list of ints to specify which columns from the global pandas.DataFrame are necessary for drawing.
+                2. Remember that you can get accurate info on the required data structure in the cloupy.WalterLieth docs.
+                3. Alternatively, if your data source is the IMGW database you can use the 'imgw_monthly' or 'imgw_daily' 
+                strings as input.
                 """)
 
         if columns_order != 'imgw_monthly' and columns_order != 'imgw_daily' and not isinstance(columns_order, list):
-            raise AttributeError(
+            raise ValueError(
                 """
-                Valid inputs for 'columns_order': 'imgw_monthly', 'imgw_daily', [list of ints]
-                If your data's source is IMGW database and the default columns order of the data frame is preserved,
-                you can input 'imgw_monthly' or 'imgw_daily' values for 'columns_order' argument (depending on data interval).
+                Valid inputs for the 'columns_order' argument: 'imgw_monthly', 'imgw_daily', a list of ints
+                If the data source is the IMGW database and the default columns order is preserved, you can input the
+                'imgw_monthly' or 'imgw_daily' strings for the 'columns_order' argument (depending on the data interval).
                 """)
 
         if not isinstance(station_in_column, int) or not isinstance(years_in_column, int):
-            raise AttributeError(
+            raise ValueError(
                 """
-                For 'station_in_column' and 'years_in_column' only single integers are valid values.
+                For the 'station_in_column' and 'years_in_column' arguments only integers are valid inputs.
                 """
             )
 
@@ -744,18 +744,20 @@ class WalterLieth:
                 if df_for_object.empty:
                     raise ValueError(
                         """
-                        Dataframe has just been filtered and the output was empty. Check your inputs which may affect 
+                        The dataframe has just been filtered and the output was empty. Check your inputs which may affect 
                         filtering.
                         
-                        1. It is possible that input for 'station_name' in 'cloupy.WalterLieth' is invalid.
-                        2. You can also be looking for the station which is not available in global pandas.DataFrame.
-                        3. If you have changed default column order from IMGW database the function will return this exception.
-                        4. Check if your DataFrame does not contain any unnecessary column. It is possible that 'index_col=0'
-                        argument will handle the problem if you have read csv file by pandas.read_csv() for setting the global
-                        DataFrame.
-                        5. If you're willing not to filtr data by 'station_name', you can set 'filter_station' argument to
-                        False. However, it is not recommended to draw WalterLieth diagram if the data does not come from 
-                        a single station.
+                        1. It is possible that the input for the 'station_name' argument in 'cloupy.WalterLieth' is invalid.
+                        2. You may be looking for a station which is not available in the global pandas.DataFrame.
+                        3. If you have changed default column order from the IMGW database, the function will return this 
+                        exception.
+                        4. Check if the global dataframe does not contain any unnecessary column. If you read a .csv file 
+                        by pandas.read_csv() and set it as a global dataframe, the function may have added an unwanted
+                        column to the dataframe. It is possible that passing int(0) for the 'index_col' argument 
+                        (in the 'pandas.read_csv()' function) will handle the exception.
+                        5. If you're willing not to filter data by the 'station_name' argument, you can set 'filter_station' 
+                        argument to False. Note that it is not recommended to draw a Walter-Lieth diagram if the data does not 
+                        come from a single station.
                         """
                     )
 
@@ -776,9 +778,9 @@ class WalterLieth:
                     df_for_object = df_for_object[df_for_object.iloc[:, station_in_column] == self.station_name]
                     df_for_object.drop(df_for_object.columns[station_in_column], axis=1, inplace=True)
                 else:
-                    raise AttributeError(
+                    raise ValueError(
                         """
-                        If you want to filter by station in specified column ('station_in_column'), please set
+                        If you want to filter by station name in the specified column ('station_in_column'), please set
                         'filter_station' argument to True.
                         """
                     )
@@ -786,8 +788,8 @@ class WalterLieth:
                 if df_for_object.empty:
                     raise ValueError(
                         """
-                        The data frame after filtering is empty. Check if WalterLieth.station_name is in global data frame
-                        and if 'station_in_column' argument is valid.
+                        The dataframe after filtering is empty. Check if the WalterLieth.station_name is in global 
+                        dataframe and if the 'station_in_column' argument is valid.
                         """
                     )
 
@@ -803,10 +805,10 @@ class WalterLieth:
                     self.years_range = range(year_min, year_max + 1)
                     df_for_object.drop(df_for_object.columns[years_in_column], axis=1, inplace=True)
                 else:
-                    raise AttributeError(
+                    raise ValueError(
                         """
-                        If you want to update WalterLieth.years_range by specified column ('years_in_column'), please set 
-                        'check_years' argument to True.
+                        If you want to update the WalterLieth.years_range by the specified column ('years_in_column'), 
+                        please set the 'check_years' argument to True.
                         """
                     )
 
@@ -849,14 +851,14 @@ class WalterLieth:
         except KeyError:
             raise ValueError(
                 """
-                Invalid data structure in 'cloupy.WalterLieth.dataframe'. Check 'cloupy.WalterLieth' docs for more info.
+                Invalid data structure in the 'cloupy.WalterLieth.dataframe'. See the 'cloupy.WalterLieth' docs for more info.
                 
-                1. Check if you haven't mistaken column order in 'cloupy.WalterLieth.dataframe'. 
-                2. It's also possible that you have tried to pass daily interval and there's a lack of column/columns.
-                Note that daily interval data must contain 6 columns - for more info about required data structure check 
-                'cloupy.WalterLieth' docs. If you have used 'cloupy.WalterLieth.import_global_df' method for data from IMGW
-                database, check values for argument 'columns_order' (if 'imgw_monthly' or 'imgw_daily' have been used properly,
-                depending on IMGW data interval).
+                1. Check if you haven't mistaken columns order in the 'cloupy.WalterLieth.dataframe'. 
+                2. It's also possible that you have tried to pass daily interval and there's a lack of required column/columns.
+                Note that the daily interval data must contain 6 columns - for more info on the required data structure 
+                see the 'cloupy.WalterLieth' docs. If you used 'cloupy.WalterLieth.import_global_df' method for data 
+                which comes from the IMGW database, check the values passed to the 'columns_order' argument (if the values 
+                'imgw_monthly' or 'imgw_daily' were used correctly, depending on the IMGW data interval).
                 """)
 
     @staticmethod
@@ -879,16 +881,17 @@ class WalterLieth:
                 else:
                     temp_axis_ticks.append(avail_temp_tick)
         except IndexError:
-            raise ValueError(
+            raise AttributeError(
                 """
-                Invalid data structure in 'cloupy.WalterLieth.dataframe'. Check 'cloupy.WalterLieth' docs for more info.
+                Invalid data structure in the 'cloupy.WalterLieth.dataframe'. Check the 'cloupy.WalterLieth' docs for more 
+                info on the required data structure.
                 
-                If you have downloaded data on your own from IMGW database and set global dataframe, check if you have
-                chosen correct file format. Available file formats for 'cloupy.WalterLieth' from IMGW database are: 
-                ['s_m_d', 's_d'].
+                If you have downloaded the data yourself from the IMGW database and set it as a global dataframe, check 
+                if you have chosen the correct file format to download. The available file formats for the 'cloupy.WalterLieth' 
+                from the IMGW database are: ['s_m_d', 's_d'].
                 
-                cloupy.get_meteorological_data(..., file_format='s_m_d')
-                cloupy.get_meteorological_data(..., file_format='s_d')
+                cloupy.d_imgw_data(..., file_format='s_m_d')
+                cloupy.d_imgw_data(..., file_format='s_d')
                 """)
 
         if temp_axis_ticks[0] > 0:
@@ -922,7 +925,7 @@ class WalterLieth:
         for tick in available_ticks:
             if tick >= max_tick:
                 return tick
-        raise Exception(f"Precipitation is too high! {max_tick}")
+        raise ValueError(f"Precipitation is too high! {max_tick}")
 
     @staticmethod
     def determine_if_freeze(abs_min_temp):

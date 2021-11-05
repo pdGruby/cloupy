@@ -151,7 +151,7 @@ def choose_diagStyle(diag_style='default'):
         for retro_param, retro_value in retro_style.items():
             diagStyle[retro_param] = retro_value
     else:
-        raise AttributeError(
+        raise ValueError(
             "Invalid 'diag_style' argument. Available arguments: 'default', 'retro'"
         )
 
@@ -174,9 +174,9 @@ def set_global_df(
         pass
 
     if not isinstance(pd_DataFrame, pd.DataFrame):
-        raise AttributeError(
+        raise ValueError(
             """
-            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame'. More info about creating pandas.DataFrame() 
+            Invalid object type for 'pd_DataFrame' which must be 'pandas.DataFrame'. More info on creating pandas.DataFrame() 
             object is available here: 'https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html'
             """
         )
@@ -195,6 +195,6 @@ def read_global_df():
         df = pd.read_csv(path + r'global_df.csv', index_col=0)
     except FileNotFoundError:
         raise FileNotFoundError(
-            "Use cloudy.set_global_df to set global dataframe and then use cloudy.read_global_df again.")
+            "Use cloudy.set_global_df to set a global dataframe and then use cloudy.read_global_df again.")
     else:
         return df

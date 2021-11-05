@@ -39,7 +39,7 @@ def get_file_formats(
         elif stations_kind == 'climat':
             available_files_formats = ['k_m_d', 'k_m_t']
         else:
-            raise AttributeError(
+            raise ValueError(
                 "Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     elif interval == 'daily':
@@ -50,7 +50,7 @@ def get_file_formats(
         elif stations_kind == 'climat':
             available_files_formats = ['k_d', 'k_d_t']
         else:
-            raise AttributeError(
+            raise ValueError(
                 "Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     elif interval == 'prompt':
@@ -61,11 +61,11 @@ def get_file_formats(
         elif stations_kind == 'climat':
             available_files_formats = ['k_t']
         else:
-            raise AttributeError(
+            raise ValueError(
                 "Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     else:
-        raise AttributeError("Invalid 'interval' input. Available inputs: 'monthly', 'daily', 'prompt'.")
+        raise ValueError("Invalid 'interval' input. Available inputs: 'monthly', 'daily', 'prompt'.")
 
     if file_format_index == 'all':
         chosen_file_format = available_files_formats
@@ -76,11 +76,14 @@ def get_file_formats(
             if len(available_files_formats) == 1:
                 chosen_file_format = [available_files_formats[0]]
             else:
-                raise Exception("Something wrong with file format.")
+                raise Exception("Something's wrong with the file format.")
     else:
-        raise AttributeError(
-            "{} file formats for given 'interval' and 'stations_kind' available. Use index of the file format or 'all' "
-            "for 'file_format_index' (both file formats will be taken): {}".format(len(available_files_formats), available_files_formats))
+        raise ValueError(
+            "{} file formats for the given 'interval' and 'stations_kind' available. Use index of the file format or 'all' "
+            "for 'file_format_index' argument (if 'all', both file formats will be taken): {}".format(
+                len(available_files_formats), available_files_formats
+            )
+        )
     return chosen_file_format
 
 
@@ -288,7 +291,7 @@ def search_for_keywords_in_columns(
                                 except KeyError:
                                     keywords_in_files[str(interval_stkind) + ", " + "file_format=" + str(file)] = [name]
         else:
-            raise AttributeError("Invalid input for 'keywords'. Use list of strs or str.")
+            raise ValueError("Invalid input for 'keywords'. Use a list of strings or a single str.")
         return keywords_in_files
 
     else:
@@ -301,9 +304,9 @@ def search_for_keywords_in_columns(
                         if keyword.upper() in name.upper():
                             keywords_in_columns.append(name)
                 else:
-                    raise AttributeError("Invalid input for 'keywords'. Use list of strs or str.")
+                    raise ValueError("Invalid input for 'keywords'. Use a list of strings or a single str.")
         else:
-            raise AttributeError("Invalid input for 'file_format'. Use single str.")
+            raise ValueError("Invalid input for the 'file_format' argument. Use a single str.")
         return keywords_in_columns
 
 
@@ -329,7 +332,7 @@ def get_urls(
         if stations_kind == 'fall':
             raise NotADirectoryError("There's no '/dane_meteorologiczne/terminowe/opad/' directory.")
     else:
-        raise AttributeError("Invalid 'interval' input. Available inputs: 'monthly', 'daily', 'prompt'.")
+        raise ValueError("Invalid 'interval' input. Available inputs: 'monthly', 'daily', 'prompt'.")
 
     if stations_kind == 'synop':
         stations_kind = 'synop/'
@@ -338,7 +341,7 @@ def get_urls(
     elif stations_kind == 'climat':
         stations_kind = 'klimat/'
     else:
-        raise AttributeError("Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
+        raise ValueError("Invalid 'stations_kind' input. Available inputs: 'synop', 'fall', 'climat'.")
 
     years_endings = []
     for year in years_range:
@@ -368,7 +371,7 @@ def get_urls(
                 if years_endings.count('1960_1965/') == 0:
                     years_endings.append('1960_1965/')
             else:
-                raise AttributeError("No data for {}. Available years range: 1960-2021.".format(str(year)))
+                raise ValueError("No data for {}. Available years range: 1960-2021.".format(str(year)))
         else:
             years_endings.append(str(year) + '/')
 
@@ -440,7 +443,7 @@ def concatenate_data(
 
     if isinstance(file_formats, list) and len(file_formats) > 1:
         raise ValueError(
-            f"""Invalid value for 'file_format'. Data downloading is possible only for a single file. 
+            f"""Invalid value for the 'file_format' argument. Data downloading is possible only for a single file. 
             {len(file_formats)} files given ({file_formats}).
             """
         )
@@ -475,7 +478,7 @@ def concatenate_data(
                     if type(specific_columns) is list:
                         csv_DataFrame = csv_DataFrame[specific_columns]
                     else:
-                        raise AttributeError("Invalid 'specific_columns' type. Use list of strs or single str.")
+                        raise ValueError("Invalid 'specific_columns' type. Use a list of strs or a single str.")
 
                 if keywords is not None and len(keywords_in_columns) == 0:
                     columns = get_column_names(file_format)
@@ -584,7 +587,7 @@ def download_imgw_climatological_data(
     if file_format not in get_file_formats(interval, stations_kind, 'all') and file_format is not None:
         raise ValueError(
             f"""
-            There's no such file format ({file_format}) for specified combination of 'interval' and 'stations_kind'
+            There's no such file format ({file_format}) for the specified combination of 'interval' and 'stations_kind'
             """
         )
 
@@ -600,7 +603,7 @@ def download_imgw_climatological_data(
         elif type(file_format) == list:
             file_formats = [format_ for format_ in file_format]
         else:
-            raise AttributeError("Invalid input for 'file_format'. Use str or list of strs.")
+            raise ValueError("Invalid input for the 'file_format' argument. Use a signle str or a list of strs.")
     else:
         file_formats = get_file_formats(interval, stations_kind, file_format_index)
 

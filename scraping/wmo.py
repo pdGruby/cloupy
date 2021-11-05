@@ -51,7 +51,7 @@ def get_wmoid_or_coord(
             data = ids_coords[ids_coords['station'] == station_name]
 
     if len(data.index) == 0:
-        raise AttributeError(
+        raise ValueError(
             """
             No data found for the given 'station_name'.
             """
