@@ -1,8 +1,8 @@
 cff-version: 1.0.0
 message: "If you use cloupy, I would appreciate if you cited cloupy as below."
 authors:
-- family-names: "Kamil"
-  given-names: "Grala"
+- family-names: "Grala"
+  given-names: "Kamil"
   orcid: "https://orcid.org/0000-0003-4973-6759"
 title: "cloupy - Climatological Data Downloading, Processing and Visualizing"
 version: 1.0.0
