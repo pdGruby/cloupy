@@ -21,13 +21,13 @@ git clone https://github.com/pdGruby/cloupy.git
 import cloupy as cl
 ```
 
-2. Download climatological data for a single station and for the whole country from the WMO database.
+2. Download climatological data for a single station and for the whole country from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere).
 ```python
 single_station = cl.d_wmo_data(station_name='TOKYO', elements_to_scrape=['temp', 'preci'])
 whole_country = cl.d_wmo_data(station_name='couJAPAN', elements_to_scrape=['temp', 'preci'])
 ```
 
-3. Download climatological data for the station in Poznań (WMO ID: 12330) from the IMGW database and draw a Walter-Lieth diagram.
+3. Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram.
 ```python
 wl = cl.WalterLieth(station_name='POZNAŃ')
 wl.d_imgw_data(years_range=range(1966, 2020))
