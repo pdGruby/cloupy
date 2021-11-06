@@ -1,11 +1,8 @@
-import pathlib
 from setuptools import setup, find_packages
-
-HERE = pathlib.Path(__file__).parent
 
 VERSION = '1.0.0'
 DESCRIPTION = 'The package allows to download, process and visualize climatological data from reliable sources'
-README = (HERE / 'README.md').read_text()
+README = open('README.md', 'r', encoding='utf8').read()
 
 setup(
     name='cloupy',
@@ -17,7 +14,7 @@ setup(
     author_email='kamil.grala32466@gmail.com',
     url='https://github.com/pdGruby/cloupy',
     license='MIT',
-    packages=find_packages(include=['src', 'src.*']),
+    packages=find_packages(),
     install_requires=[
         'pandas==1.1.4',
         'matplotlib==3.3.2',
@@ -30,9 +27,21 @@ setup(
         'mock==4.0.3'
     ],
     package_data={
-        'src': [
-            'scraping/imgw_coordinates.csv',
-            'scraping/wmo_ids_and_coords.csv'
-        ]
-    }
+        'cloupy': [
+            'scraping/*',
+            'diagrams/*',
+            'test/test_integration/*',
+            'test/test_unit/*'
+        ],
+                  },
+    include_package_data=True,
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Intended Audience :: Education',
+        'Intended Audience :: Science/Research',
+        'Framework :: Matplotlib',
+        'Topic :: Scientific/Engineering :: Atmospheric Science'
+    ]
 )
