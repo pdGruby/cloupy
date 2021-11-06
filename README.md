@@ -9,10 +9,7 @@ cloupy is a Python library for climatological data downloading, processing and v
 Use the git function [clone](https://git-scm.com/docs/git-clone/) to install cloupy.
 
 ```bash
-# your local path to Python's libraries
-cd c:/Python/Lib/site-packages
- 
-git clone https://github.com/pdGruby/cloupy.git
+pip install cloupy
 ```
     
 ## Usage/Examples
