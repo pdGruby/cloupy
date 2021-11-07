@@ -1,5 +1,5 @@
 import pytest
-from scraping import wmo
+from cloupy.scraping import wmo
 import mock
 import builtins
 from random import shuffle

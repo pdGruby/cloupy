@@ -1,4 +1,4 @@
-from scraping import imgw
+from cloupy.scraping import imgw
 import pytest
 
 

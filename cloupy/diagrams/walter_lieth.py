@@ -468,7 +468,7 @@ class WalterLieth:
         name in WalterLieth.station_name (default True)
         """
 
-        import cloupy.scraping.imgw as imgw_scraping
+        from cloupy.scraping import imgw as imgw_scraping
 
         if interval == 'monthly':
             data = imgw_scraping.download_imgw_climatological_data(
@@ -568,7 +568,7 @@ class WalterLieth:
         (default True)
         """
 
-        import cloupy.scraping.wmo as wmo_scraping
+        from cloupy.scraping import wmo as wmo_scraping
 
         data = wmo_scraping.download_wmo_climatological_data(
             self.station_name, ['temp', 'preci', 'temp_max', 'temp_min'], nearby_stations=nearby_stations,

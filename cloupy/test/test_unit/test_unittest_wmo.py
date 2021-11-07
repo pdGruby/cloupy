@@ -1,4 +1,4 @@
-from scraping import wmo
+from cloupy.scraping import wmo
 import pytest
 import mock
 import builtins
