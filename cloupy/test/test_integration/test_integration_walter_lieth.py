@@ -1,7 +1,6 @@
 import cloupy as cl
 import pytest
 import matplotlib.pyplot as plt
-import os
 import urllib.request
 import urllib.error
 
