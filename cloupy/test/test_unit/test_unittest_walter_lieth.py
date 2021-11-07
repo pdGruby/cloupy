@@ -2,7 +2,6 @@ from cloupy.diagrams.walter_lieth import WalterLieth
 import pytest
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
 
 
 class TestDrawing:
@@ -50,22 +49,14 @@ class TestDrawing:
             'yearly_means_box': False, 'extremes_box': False, 'legend_box': False
         }
 
-    @pytest.fixture
-    def path_for_saving(self):
-        return str(__file__).replace('test_unittest_walter_lieth.py', 'check_size.jpg')
-
     def test_humid_period_and_elements_viewing(
             self, default_settings, opposite_settings,
-            data_for_humid_period, path_for_saving
+            data_for_humid_period
     ):
-        valid_bytes = {
-            0: 105374, 1: 112557, 2: 100299, 3: 93739, 4: 93467, 5: 86343,
-            6: 82451, 7: 80671, 8: 73267
-        }
-        index = 0
         for setting, value in opposite_settings.items():
             default_settings[setting] = value
 
+            plotted_figures_before = plt.gcf().number
             wl = WalterLieth(
                 'POZNAŃ', dataframe=data_for_humid_period, years_range=range(1951, 2020),
                 lat=52.42, lon=16.83, elevation=92
@@ -77,43 +68,38 @@ class TestDrawing:
                 yearly_means_box=default_settings['yearly_means_box'], extremes_box=default_settings['extremes_box'],
                 legend_box=default_settings['legend_box']
             )
+            plotted_figures_after = plt.gcf().number
 
-            plt.savefig(path_for_saving, dpi=100)
-            size = os.path.getsize(path_for_saving)
-            assert size == valid_bytes[index]
-            index += 1
-        os.remove(path_for_saving)
+            assert plotted_figures_before < plotted_figures_after
 
     def test_dry_period(
-            self, data_for_humid_period, path_for_saving
+            self, data_for_humid_period
     ):
         data_for_dry_period = data_for_humid_period
         data_for_dry_period.preci = [0] * 12
 
+        plotted_figures_before = plt.gcf().number
         wl = WalterLieth(
             'POZNAŃ', dataframe=data_for_dry_period, years_range=range(1951, 2020),
             lat=52.42, lon=16.83, elevation=92
         )
         wl.draw()
+        plotted_figures_after = plt.gcf().number
 
-        plt.savefig(path_for_saving, dpi=100)
-        size = os.path.getsize(path_for_saving)
-        assert size == 113968
-        os.remove(path_for_saving)
+        assert plotted_figures_before < plotted_figures_after
 
     def test_mixed_all_periods(
-            self, data_for_humid_period, path_for_saving
+            self, data_for_humid_period
     ):
         data_for_mixed_periods = data_for_humid_period
         data_for_mixed_periods['preci'] = [110, 70, 50, 40, 30, 20, 0, 0, 20, 30, 70, 110]
 
+        plotted_figures_before = plt.gcf().number
         wl = WalterLieth(
             'POZNAŃ', dataframe=data_for_mixed_periods, years_range=range(1951, 2020),
             lat=52.42, lon=16.83, elevation=92
         )
         wl.draw()
+        plotted_figures_after = plt.gcf().number
 
-        plt.savefig(path_for_saving, dpi=100)
-        size = os.path.getsize(path_for_saving)
-        assert size == 131139
-        os.remove(path_for_saving)
+        assert plotted_figures_before < plotted_figures_after
