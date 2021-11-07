@@ -1,12 +1,14 @@
 
-# cloupy
-![logo](https://i.ibb.co/X7jjYn1/logo1.png)
+#
+<p align="left">
+  <img src="https://i.ibb.co/YpN6MVS/logo-update3.png" />
+</p>
 
-cloupy is a Python library for climatological data downloading, processing and visualizing. The main goal of the library is to help its author in writing a BA thesis. The library is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloupy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the library usage.
+cloupy is a Python package for climatological data downloading, processing and visualizing. The main goal of the package is to help its author in writing a BA thesis. The package is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloupy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the library usage.
 
 ## Installation
 
-Use the git function [clone](https://git-scm.com/docs/git-clone/) to install cloupy.
+Run the following command on the command line:
 
 ```bash
 pip install cloupy
@@ -105,10 +107,10 @@ wl.draw()
 - [Pytest](https://docs.pytest.org/en/latest/) version: 6.2.5 (only for running tests)
 - [Mock](http://mock.readthedocs.org/en/latest/) version: 4.0.3 (only for running tests)
 
-The library has been created in the **Windows 10 OS** and **Python 3.8.2**
+The package has been created in the **Windows 10 OS** and **Python 3.8.2**
 ## Running Tests
 
-To run tests, run the following command:
+To run tests, run the following command from the root directory:
 
 ```bash
 # change directory to the cloupy root directory
