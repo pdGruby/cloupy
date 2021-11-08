@@ -35,7 +35,8 @@ class TestDataDownloading:
 
         y_range = range(2018, 2019)
         files_reading_dir_path = str(__file__).replace(
-            'test\\test_integration\\test_integration_imgw.py', 'scraping\\files_reading_folder'
+            join('test', 'test_integration', 'test_integration_imgw.py'),
+            join('scraping', 'files_reading_folder')
         )
 
         for interval in intervals:

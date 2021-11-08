@@ -440,6 +440,7 @@ def concatenate_data(
 
     import pandas as pd
     import numpy as np
+    import os
 
     if isinstance(file_formats, list) and len(file_formats) > 1:
         raise ValueError(
@@ -468,8 +469,8 @@ def concatenate_data(
 
             if file_format in file and avoid_file_format not in file:
 
-                path = files_reading_dir_path + '/' + file
-                csv_DataFrame = pd.read_csv(path, encoding="ANSI", header=None)
+                path = os.path.join(files_reading_dir_path, file)
+                csv_DataFrame = pd.read_csv(path, encoding="windows-1250", header=None)
 
                 if specific_columns is not None and keywords is None:
                     if type(specific_columns) == str:
