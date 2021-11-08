@@ -18,10 +18,16 @@ cloupy is a Python package for climatological data downloading, processing and v
 
 ## Installation
 
-Run the following command on the command line:
+Run the following command on the command line.
 
+**Windows:**
 ```bash
 pip install cloupy
+```
+
+**Linux:**
+```bash
+pip3 install cloupy
 ```
     
 ## Usage/Examples
