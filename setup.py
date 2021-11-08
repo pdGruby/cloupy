@@ -16,15 +16,15 @@ setup(
     license='MIT',
     packages=find_packages(),
     install_requires=[
-        'pandas>=1.3.4',
-        'matplotlib>=3.4.3',
-        'requests>=2.26.0',
-        'beautifulsoup4>=4.10.0',
-        'numpy>=1.21.4'
+        'pandas=>1.3.4',
+        'matplotlib=>3.4.3,<3.5',
+        'requests=>2.26.0',
+        'beautifulsoup4=>4.10.0',
+        'numpy=>1.21.4'
     ],
     tests_require=[
-        'pytest>=6.2.5',
-        'mock>=4.0.3'
+        'pytest=>6.2.5',
+        'mock=>4.0.3'
     ],
     package_data={
         'cloupy': [
