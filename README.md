@@ -1,10 +1,20 @@
-
 #
 <p align="center">
   <img src="https://i.ibb.co/YpN6MVS/logo-update3.png" />
 </p>
 
 cloupy is a Python package for climatological data downloading, processing and visualizing. The main goal of the package is to help its author in writing a BA thesis. The package is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloupy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the library usage.
+
+![python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
+![windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+
+![downloads](https://img.shields.io/github/downloads/pdgruby/cloupy/total)
+![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
+![last_commit](https://img.shields.io/github/last-commit/pdgruby/cloupy) 
+
+![license](https://img.shields.io/github/license/pdgruby/cloupy)
+
 
 ## Installation
 
