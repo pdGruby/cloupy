@@ -186,15 +186,11 @@ python -m pytest test\test_integration
 python -m pytest -k "not downloading"
 ```
 
-## Contributing
-
-Contributions are always welcome!
-
-See `CONTRIBUTING.md` for ways to get started.
-
 ## Support
 
 For support, please contact me via email: kamil.grala32466@gmail.com
+
+If you want to report a bug, see `CONTRIBUTING.md`
 
 
 ## License
