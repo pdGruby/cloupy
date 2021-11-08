@@ -15,30 +15,30 @@ pip install cloupy
 ```
     
 ## Usage/Examples
-1. Import cloupy library.
+### 1. Import cloupy library.
 ```python
 import cloupy as cl
 ```
 
-2. Download climatological data for a single station and for the whole country from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere).
+### 2. Download climatological data for a single station and for the whole country from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere).
 ```python
 single_station = cl.d_wmo_data(station_name='TOKYO', elements_to_scrape=['temp', 'preci'])
 whole_country = cl.d_wmo_data(station_name='couJAPAN', elements_to_scrape=['temp', 'preci'])
 ```
 
-3. Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram.
+### 3. Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram.
 ```python
 wl = cl.g_WalterLieth(station_name='POZNAŃ')
 wl.d_imgw_data(years_range=range(1966, 2020))
 wl.draw()
 ```
 
-4. How does the graph look like?
+### 4. How does the graph look like?
 <p align="center">
   <img src="https://i.ibb.co/JdR4rV5/poznan.png" />
 </p>
 
-5. Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe.
+### 5. Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe.
 ```python
 global_df = cl.d_imgw_data(
     interval='monthly', 
@@ -56,7 +56,7 @@ wl.draw()
   <img src="https://i.ibb.co/NYVgSCP/war.png" />
 </p>
 
-6. The graph style that better fits a scientific article.
+### 6. The graph style that better fits a scientific article.
 ```python
 cl.choose_diagStyle('retro')
 wl.draw()
@@ -65,7 +65,7 @@ wl.draw()
   <img src="https://i.ibb.co/XjyWQ6j/war-retro.png" />
 </p>
 
-7. Select which graph elements are to be drawn.
+### 7. Select which graph elements are to be drawn.
 
 As you can see, the graph for POZNAŃ displays information about the coordinates, while the graphs for WARSZAWA do not. The coordinates for POZNAŃ are automatically imported when the `wl.d_imgw_data()` method is used. However, when we import data from the global dataframe for WARSZAWA, the `wl.import_global_df()` method does not add coordinates automatically and the coordinates have to be added manually when the `cl.g_WalterLieth()` object is being created. In our case, for the graph for WARSZAWA it would be: 
 
@@ -80,7 +80,7 @@ Now the `cl.draw()` method will display the coordinates box. So, **if the `cl.g_
 wl.draw(title_text=False, yearly_means_box=False, freeze_rectangles=False)
 ```
 
-8. Provide drawing data manually.
+### 8. Provide drawing data manually.
 
 cloupy graphs can be drawn from the data provided manually. Every graph has its required data structure which must be preserved in the `pandas.DataFrame()` object. For a Walter-Lieth graph, the `pandas.DataFrame()` object must contain 5 or 6 columns, depending on the data interval (5 for a monthly interval, 6 for a daily interval). Data can be passed to the `dataframe` argument in the `cl.g_WalterLieth()` object. For example, the process might look like this:
 
@@ -101,18 +101,12 @@ wl.draw()
 
 **More detailed information on the required data structure is available in the graphs classes docstrings.**
 
-9. Recap of the drawing process.
+### 9. Recap of the drawing process.
 **cloupy drawing system is easy and can be summarized as follows:**
 - create a graph object, provide data for further processing and drawing (follow required data structure)
 - optionally, use the graph object methods to download and process data
 - use the `draw()` method to specify which elements of the graph will be displayed. Enjoy the graph!
 
-
-## Future Features
-
-- more climatological data processing functions (e.g. completing missing data)
-- more climatological graphs
-- **drawing maps (e.g. interpolation maps)**
 ## Brief Documentation (the most important functions and classes)
 
 **DATA PROCESSING FUNCTIONS/CLASSES**
@@ -143,7 +137,13 @@ wl.draw()
 
 - `g_WalterLieth(...)` -> create a WalterLieth object where data for drawing a Walter-Lieth diagram can be downloaded, modified, manually provided.
 
-**More detailed documentation for every function, method and class is available in the cloupy's Python files**
+**More detailed documentation for every function, class and method is available in the cloupy's Python files**
+
+## Future Features
+
+- more climatological data processing functions (e.g. completing missing data)
+- more climatological graphs
+- **drawing maps (e.g. interpolation maps)**
 
 ## Dependencies
 **Packages/libraries**:
@@ -159,7 +159,7 @@ wl.draw()
 
 **OS**: Windows; Linux
 
-All of the above versions of packages/Python have been tested. **Note that** everything should work on the versions between the mentioned as well (e.g. cloupy should work on any Pandas version between 1.1.4 and 1.3.4 and on any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries**. At this moment, Python versions after 3.9.6 do not compile with some of the required packages, so **Python 3.9.6 is recommended for using cloupy**.
+All of the above versions of packages/Python have been tested. **Note that** cloupy should also be compatible with the versions between mentioned (e.g. cloupy should work fine on any Pandas version between 1.1.4 and 1.3.4; any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries**. At this moment, Python versions after 3.9.6 do not compile with some of the required packages, so **Python 3.9.6 is recommended for using cloupy**.
 ## Running Tests
 
 To run tests, run the following command from the root directory:
@@ -186,10 +186,15 @@ python -m pytest test\test_integration
 python -m pytest -k "not downloading"
 ```
 
+## Contributing
+
+Contributions are always welcome!
+
+See `CONTRIBUTING.md` for ways to get started.
 
 ## Support
 
-If you find any bug, encounter a problem or just would like to ask a question, please contact me via email: kamil.grala32466@gmail.com
+For support, please contact me via email: kamil.grala32466@gmail.com
 
 
 ## License
