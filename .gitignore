@@ -4,3 +4,4 @@
 **__pycache__/
 *.pyc
 global_df.csv
+*.ipynb

@@ -20,7 +20,10 @@ setup(
         'matplotlib>=3.4.3,<=3.4.3',
         'requests>=2.26.0,<=2.26.0',
         'beautifulsoup4>=4.9.3,<=4.9.3',
-        'numpy>=1.21.4,<=1.21.4'
+        'numpy>=1.21.4,<=1.21.4',
+        'pyproj',
+        'scipy',
+        'Pillow'
     ],
     tests_require=[
         'pytest>=6.2.5',
