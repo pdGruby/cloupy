@@ -5,3 +5,4 @@
 *.pyc
 global_df.csv
 *.ipynb
+*.png
