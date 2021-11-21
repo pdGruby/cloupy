@@ -30,6 +30,7 @@ def draw_map_from_shapefile_and_return_extreme_points(
     all_xs = []
     all_ys = []
 
+    starting_point = None
     for element in shape:
         x_for_plotting = []
         y_for_plotting = []
@@ -39,32 +40,26 @@ def draw_map_from_shapefile_and_return_extreme_points(
             y = coords[1]
             x, y = transformer.transform(x, y)
 
-            x_for_plotting.append(x)  # #######
-            y_for_plotting.append(y)  # #######
+            x_for_plotting.append(x)
+            y_for_plotting.append(y)
 
-            # check if points are close to each other
-            if len(x_for_plotting) > 1 and len(y_for_plotting) > 1:
+            if starting_point is None:
+                starting_point = (x, y)
+                continue
 
-                the_distance = calc_the_distance(
-                    (x, y),
-                    (x_for_plotting[-2], y_for_plotting[-2])
-                )
-                if the_distance > 0.2:
-                    del x_for_plotting[-1]
-                    del y_for_plotting[-1]
+            if starting_point == (x, y):
 
-                    ax.plot(x_for_plotting, y_for_plotting, color='black', lw=1)
-                    if mask:
-                        ax.fill(x_for_plotting, y_for_plotting, color=color_to_be_transparent)
+                ax.plot(x_for_plotting, y_for_plotting, color='black', lw=1)
+                if mask:
+                    ax.fill(x_for_plotting, y_for_plotting, color=color_to_be_transparent)
 
-                    for x_ in x_for_plotting:
-                        all_xs.append(x_)
+                for i, x_ in enumerate(x_for_plotting):
+                    all_xs.append(x_)
+                    all_ys.append(y_for_plotting[i])
 
-                    for y_ in y_for_plotting:
-                        all_ys.append(y_)
-
-                    x_for_plotting.clear()
-                    y_for_plotting.clear()
+                x_for_plotting.clear()
+                y_for_plotting.clear()
+                starting_point = None
 
         ax.plot(x_for_plotting, y_for_plotting, color='black', lw=1)
         if mask:
