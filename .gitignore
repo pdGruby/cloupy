@@ -7,3 +7,4 @@ global_df.csv
 *.ipynb
 *.png
 /_shape/
+/germany.csv

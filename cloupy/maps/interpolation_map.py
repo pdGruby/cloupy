@@ -40,9 +40,11 @@ class MapInterpolation:
     def draw(
             self, figsize=(10, 10), numcols=240,
             numrows=240, interpolation_method='cubic',
-            levels=None, cmap='coolwarm', add_shape=None,
-            save=False
+            levels=None, cmap='coolwarm', show_points=False,
+            show_contours=True, fill_contours=True,
+            add_shape=None, save=False
     ):
+        """"""
         import matplotlib.pyplot as plt
         import numpy as np
         from scipy.interpolate import griddata
@@ -119,10 +121,18 @@ class MapInterpolation:
             method=interpolation_method
         )
 
-        ax.contour(xi, yi, zi, levels=levels, linewidths=0.5, colors='k')
-        cntr = ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
-        ax.scatter(df.lon, df.lat, s=10, c='k')
-        plt.colorbar(cntr, ax=ax)
+        if show_contours:
+            clabels = ax.contour(xi, yi, zi, levels=levels, linewidths=0.5, colors='k')
+            # ax.clabel(clabels, levels=[6, 7, 8, 9], fontsize=6, fmt='%1.0f') # przyjrzyj się temu, może się da to zrobić bardziej zaawansowanie
+        if fill_contours:
+            cntr = ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
+            plt.colorbar(cntr, ax=ax)
+        else:
+            cntr = None
+
+        if show_points:
+            ax.scatter(df.lon, df.lat, s=10, c='k')
+
         plt.close()
 
         lower_left = boundary_points[5]
@@ -256,7 +266,9 @@ class MapInterpolation:
 
         ax.set_xlim(lower_left[0], upper_right[0])
         ax.set_ylim(lower_left[1], upper_right[1])
-        plt.colorbar(colorbar, ax=ax)
+
+        if colorbar is not None:
+            plt.colorbar(colorbar, ax=ax)
 
         fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
         MapInterpolation.create_mask('mask.png', rgba)
