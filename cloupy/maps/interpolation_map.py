@@ -40,7 +40,7 @@ class MapInterpolation:
     def draw(
             self, figsize=(10, 10), numcols=240,
             numrows=240, interpolation_method='cubic',
-            levels=None, cmap='coolwarm'
+            levels=None, cmap='coolwarm', add_shape=None
     ):
         import matplotlib.pyplot as plt
         import numpy as np
@@ -62,13 +62,28 @@ class MapInterpolation:
         elif self.shapefile_path is not None and self.country is None:
             pass
 
+        elif self.shapefile_path is not None and self.country is not None:
+            if self.shapefile_path == str(__file__).replace(
+                'interpolation_map.py',
+                f'world{os.sep}ne_50m_admin_0_countries.shp'
+            ):
+                pass
+            else:
+                raise ValueError(
+                    """
+                    Invalid argument combination. The 'country' argument is valid only for the default cloupy shapefile.
+                    Set 'country' back to None or 'shapefile_path' back to None.
+                    """
+                )
+
         else:
             self.country = None
 
         fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
         extreme_points = draw_map_from_shapefile_and_return_extreme_points(
             ax, self.shapefile_path,
-            self.epsg_crs, country=self.country
+            self.epsg_crs, country=self.country,
+            add_shape=add_shape
         )
 
         df = self.dataframe
@@ -109,8 +124,10 @@ class MapInterpolation:
         plt.colorbar(cntr, ax=ax)
         plt.close()
 
-        lower_left = (ax.get_xlim()[0], ax.get_ylim()[0])
-        upper_right = (ax.get_xlim()[1], ax.get_ylim()[1])
+        lower_left = boundary_points[5]
+        upper_right = boundary_points[-1]
+        ax.set_xlim(lower_left[0], upper_right[0])
+        ax.set_ylim(lower_left[1], upper_right[1])
 
         rgba = (121, 128, 0, 1)
         MapInterpolation.get_raster_mask(

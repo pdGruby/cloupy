@@ -147,11 +147,97 @@ def get_countries_list_for_default_shape():
             ('Netherlands', 'Sint Maarten', 'SXM')]
 
 
+def draw_additional_shapes(add_shape, ax):
+    """"""
+    import shapefile as shp
+    from pyproj import Transformer
+
+    for shapefile_path, args in add_shape.items():
+
+        coordinates_system = None
+        linewidth = None
+        linestyle = None
+        color = None
+        fill_color = None
+
+        args = args.split(',')
+        for arg in args:
+            if 'crs=' in arg:
+                coordinates_system = arg.split('=')[-1].strip()
+
+            elif 'linewidth=' in arg or 'lw=' in arg:
+                linewidth = float(arg.split('=')[-1].strip())
+
+            elif 'linestyle=' in arg or 'ls=' in arg:
+                linestyle = arg.split('=')[-1].strip()
+
+            elif 'fill_color=' in arg or 'fc=' in arg:
+                fill_color = arg.split('=')[-1].strip()
+
+            elif 'color=' in arg or 'c=' in arg:
+                color = arg.split('=')[-1].strip()
+
+            else:
+                print(f'Unknown argument for drawing additional shapes! -> {arg}')
+
+        if coordinates_system is None:
+            coordinates_system = 'epsg:4326'
+        if color is None:
+            color = 'k'
+        if linestyle is None:
+            linestyle = 'solid'
+        if linewidth is None:
+            linewidth = 1
+
+        shape = shp.Reader(shapefile_path)
+        shape = shape.shapes()
+        transformer = Transformer.from_crs(coordinates_system, 'epsg:4326', always_xy=True)
+
+        starting_point = None
+        for element in shape:
+            x_for_plotting = []
+            y_for_plotting = []
+            for coords in element.points:
+
+                x = coords[0]
+                y = coords[1]
+                x, y = transformer.transform(x, y)
+
+                x_for_plotting.append(x)
+                y_for_plotting.append(y)
+
+                if starting_point is None:
+                    starting_point = (x, y)
+                    continue
+
+                if starting_point == (x, y):
+                    ax.plot(
+                        x_for_plotting, y_for_plotting, color=color,
+                        lw=linewidth, linestyle=linestyle
+                    )
+
+                    if fill_color is not None:
+                        ax.fill(x_for_plotting, y_for_plotting, color=fill_color)
+
+                    x_for_plotting.clear()
+                    y_for_plotting.clear()
+                    starting_point = None
+
+            ax.plot(
+                x_for_plotting, y_for_plotting, color=color,
+                lw=linewidth, linestyle=linestyle
+            )
+
+            if fill_color is not None:
+                ax.fill(x_for_plotting, y_for_plotting, color=fill_color)
+
+
 def draw_map_from_shapefile_and_return_extreme_points(
         ax, shapefile_path, coordinates_system,
         country=None, mask=False, color_to_be_transparent=None,
+        add_shape=None
 ):
-    """Draw map contours from the given shapefile"""
+    """Draw contours from the given shapefile"""
     import shapefile as shp
     from pyproj import Transformer
 
@@ -165,14 +251,14 @@ def draw_map_from_shapefile_and_return_extreme_points(
 
         if country == 'EUROPE':
             country = [
-                'PRT', 'ESP', 'GBR', 'FRA', 'DEU', 'POL', 'CZE',
+                'PRT', 'ESP', 'GBR', 'FRA', 'DEU', 'POL', 'CZE', 'ARM'
                 'BEL', 'NLD', 'LUX', 'AND', 'CHE', 'ITA', 'AUT', 'SVN',
                 'HRV', 'BIH', 'MNE', 'ALB', 'GRC', 'TUR', 'CYP', 'CYN',
                 'MLT', 'SMR', 'BGR', 'MKD', 'KOS', 'SRB', 'HUN', 'SVK',
                 'UKR', 'ROU', 'BLR', 'MDA', 'RUS', 'LVA', 'LTU', 'EST',
                 'FIN', 'SWE', 'NOR', 'DNK', 'GEO', 'FRO', 'ISL', 'MAR',
                 'DZA', 'TUN', 'LBY', 'EGY', 'ISR', 'PSX', 'LBN', 'SYR',
-                'JOR', 'SAU', 'IRQ', 'IRN', 'ARM'
+                'JOR', 'SAU', 'IRQ', 'IRN'
             ]
             ax.set_ylim(30, 73)
             ax.set_xlim(-25, 45)
@@ -248,5 +334,8 @@ def draw_map_from_shapefile_and_return_extreme_points(
     the_high_x = max(all_xs)
     the_low_y = min(all_ys)
     the_high_y = max(all_ys)
+
+    if add_shape is not None:
+        draw_additional_shapes(add_shape, ax)
 
     return the_low_x, the_high_x, the_low_y, the_high_y
