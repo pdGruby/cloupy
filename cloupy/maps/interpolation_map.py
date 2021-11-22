@@ -29,8 +29,8 @@ class MapInterpolation:
     """
 
     def __init__(
-            self, country=None, shapefile_path=None,
-            epsg_crs=None, dataframe=None
+            self, country=None, dataframe=None,
+            shapefile_path=None, epsg_crs=None,
     ):
         self.country = country
         self.shapefile_path = shapefile_path
