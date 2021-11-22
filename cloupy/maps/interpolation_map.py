@@ -40,7 +40,8 @@ class MapInterpolation:
     def draw(
             self, figsize=(10, 10), numcols=240,
             numrows=240, interpolation_method='cubic',
-            levels=None, cmap='coolwarm', add_shape=None
+            levels=None, cmap='coolwarm', add_shape=None,
+            save=False
     ):
         import matplotlib.pyplot as plt
         import numpy as np
@@ -138,7 +139,17 @@ class MapInterpolation:
 
         fig.savefig('map.png')
         MapInterpolation.merge_map_with_mask()
-        return Image.open('masked_map.png')
+        done_map = Image.open('masked_map.png')
+
+        image_size = done_map.size
+        resized_map = done_map.resize(
+            (700, int(round(image_size[1]*(700/image_size[0]))))
+        )
+
+        if save:
+            done_map.save(save)
+
+        return resized_map
 
     @staticmethod
     def get_boundary_box(
