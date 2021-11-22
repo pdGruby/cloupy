@@ -29,9 +29,10 @@ class MapInterpolation:
     """
 
     def __init__(
-            self, shapefile_path=None, epsg_crs=None,
-            dataframe=None
+            self, country=None, shapefile_path=None,
+            epsg_crs=None, dataframe=None
     ):
+        self.country = country
         self.shapefile_path = shapefile_path
         self.epsg_crs = epsg_crs
         self.dataframe = dataframe
@@ -46,9 +47,29 @@ class MapInterpolation:
         from scipy.interpolate import griddata
         from PIL import Image
         from cloupy.maps.drawing_shapes import draw_map_from_shapefile_and_return_extreme_points
+        import os
+
+        if self.shapefile_path is None and self.country is None:  # przeanalizuj wszystkie możliwe przypadki, porób błędy itd.
+            raise ValueError
+
+        elif self.shapefile_path is None and self.country is not None:
+            self.shapefile_path = str(__file__).replace(
+                'interpolation_map.py',
+                f'world{os.sep}ne_50m_admin_0_countries.shp'
+            )
+            self.epsg_crs = 'epsg:4326'
+
+        elif self.shapefile_path is not None and self.country is None:
+            pass
+
+        else:
+            self.country = None
 
         fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
-        extreme_points = draw_map_from_shapefile_and_return_extreme_points(ax, self.shapefile_path, self.epsg_crs)
+        extreme_points = draw_map_from_shapefile_and_return_extreme_points(
+            ax, self.shapefile_path,
+            self.epsg_crs, country=self.country
+        )
 
         df = self.dataframe
         df.columns = ['value', 'lon', 'lat']
@@ -95,7 +116,7 @@ class MapInterpolation:
         MapInterpolation.get_raster_mask(
             self.shapefile_path, rgba, figsize,
             self.epsg_crs, cntr, lower_left,
-            upper_right
+            upper_right, self.country
         )
 
         fig.savefig('map.png')
@@ -191,7 +212,7 @@ class MapInterpolation:
     def get_raster_mask(
             shapefile_path, rgba, figsize,
             epsg_crs, colorbar, lower_left,
-            upper_right
+            upper_right, country
     ):
         """"""
         import matplotlib.pyplot as plt
@@ -201,7 +222,8 @@ class MapInterpolation:
         fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
         draw_map_from_shapefile_and_return_extreme_points(
             ax, shapefile_path, epsg_crs,
-            mask=True, color_to_be_transparent=transparent_color
+            mask=True, color_to_be_transparent=transparent_color,
+            country=country
         )
 
         ax.set_xlim(lower_left[0], upper_right[0])
