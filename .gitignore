@@ -8,3 +8,4 @@ global_df.csv
 *.png
 /_shape/
 /germany.csv
+venv/

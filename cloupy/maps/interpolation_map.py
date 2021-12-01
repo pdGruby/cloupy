@@ -283,17 +283,17 @@ class MapInterpolation:
         img = img.convert("RGBA")
         datas = img.getdata()
 
-        newData = []
+        new_data = []
         for item in datas:
             if item[0] == rgba[0] and rgba[1] == rgba[1] and item[2] == rgba[2]:
-                newData.append((255, 255, 255, 0))
+                new_data.append((255, 255, 255, 0))
             else:
-                newData.append(item)
+                new_data.append(item)
 
-        img.putdata(newData)
+        img.putdata(new_data)
         img.save(fname, "PNG")
 
-        return newData
+        return new_data
 
     @staticmethod
     def merge_map_with_mask():
