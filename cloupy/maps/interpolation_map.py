@@ -42,14 +42,15 @@ class MapInterpolation:
             numrows=240, interpolation_method='cubic',
             levels=None, cmap='coolwarm', show_points=False,
             show_contours=True, fill_contours=True,
-            add_shape=None, save=False
+            add_shape=None, save=None
     ):
         """"""
+        from cloupy.maps.drawing_shapes import get_shapes_for_plotting
+        from cloupy.maps.drawing_shapes import draw_additional_shapes
         import matplotlib.pyplot as plt
         import numpy as np
         from scipy.interpolate import griddata
         from PIL import Image
-        from cloupy.maps.drawing_shapes import draw_map_from_shapefile_and_return_extreme_points
         import os
 
         if self.shapefile_path is None and self.country is None:  # przeanalizuj wszystkie możliwe przypadki, porób błędy itd.
@@ -83,11 +84,44 @@ class MapInterpolation:
             self.country = None
 
         fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
-        extreme_points = draw_map_from_shapefile_and_return_extreme_points(
+        shapes_for_plotting = get_shapes_for_plotting(
             ax, self.shapefile_path,
             self.epsg_crs, country=self.country,
-            add_shape=add_shape
         )
+
+        rgba = MapInterpolation.suit_rgba_to_matplotlib((121, 128, 0, 1))
+        for shape in shapes_for_plotting:
+            ax.plot(shape[0], shape[1], color='black', lw=1, zorder=3)
+            ax.fill(shape[0], shape[1], color=rgba, zorder=1)
+        if add_shape is not None:
+            draw_additional_shapes(add_shape, ax)
+
+        the_low_x = None
+        the_high_x = None
+        the_low_y = None
+        the_high_y = None
+
+        for shape in shapes_for_plotting:
+            high_x = max(shape[0])
+            low_x = min(shape[0])
+            high_y = max(shape[1])
+            low_y = min(shape[1])
+
+            if the_low_x is None:
+                the_low_x = low_x
+                the_high_x = high_x
+                the_low_y = low_y
+                the_high_y = high_y
+                continue
+
+            if the_low_x > low_x:
+                the_low_x = low_x
+            if the_high_x < high_x:
+                the_high_x = high_x
+            if the_low_y > low_y:
+                the_low_y = low_y
+            if the_high_y < high_y:
+                the_high_y = high_y
 
         df = self.dataframe
         df.columns = ['value', 'lon', 'lat']
@@ -97,8 +131,8 @@ class MapInterpolation:
         z = list(df.value)
 
         nodes = MapInterpolation.get_boundary_box(
-            extreme_points[0], extreme_points[1],
-            extreme_points[2], extreme_points[3]
+            the_low_x, the_high_x,
+            the_low_y, the_high_y
         )
         x_node = nodes[0]
         y_node = nodes[1]
@@ -121,18 +155,9 @@ class MapInterpolation:
             method=interpolation_method
         )
 
-        if show_contours:
-            clabels = ax.contour(xi, yi, zi, levels=levels, linewidths=0.5, colors='k')
-            # ax.clabel(clabels, levels=[6, 7, 8, 9], fontsize=6, fmt='%1.0f') # przyjrzyj się temu, może się da to zrobić bardziej zaawansowanie
-        if fill_contours:
-            cntr = ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
-            plt.colorbar(cntr, ax=ax)
-        else:
-            cntr = None
-
-        if show_points:
-            ax.scatter(df.lon, df.lat, s=10, c='k')
-
+        fig_for_colorbar, ax1 = plt.subplots()
+        cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap, zorder=2)
+        plt.colorbar(cntr, ax=ax)
         plt.close()
 
         lower_left = boundary_points[5]
@@ -140,12 +165,19 @@ class MapInterpolation:
         ax.set_xlim(lower_left[0], upper_right[0])
         ax.set_ylim(lower_left[1], upper_right[1])
 
-        rgba = (121, 128, 0, 1)
-        MapInterpolation.get_raster_mask(
-            self.shapefile_path, rgba, figsize,
-            self.epsg_crs, cntr, lower_left,
-            upper_right, self.country
-        )
+        fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
+        MapInterpolation.create_mask('mask.png')
+
+        if show_contours:
+            clabels = ax.contour(xi, yi, zi, levels=levels, linewidths=0.5, colors='k')
+            ax.clabel(clabels, levels=[6, 7, 8, 9], fontsize=6, fmt='%1.0f') # przyjrzyj się temu, może się da to
+            # zrobić bardziej zaawansowanie
+        if fill_contours:
+            ax.contourf(xi, yi, zi, levels=levels, cmap=cmap, zorder=2)
+        if show_points:
+            ax.scatter(df.lon, df.lat, s=10, c='k')
+
+        plt.close()
 
         fig.savefig('map.png')
         MapInterpolation.merge_map_with_mask()
@@ -156,7 +188,7 @@ class MapInterpolation:
             (700, int(round(image_size[1]*(700/image_size[0]))))
         )
 
-        if save:
+        if save is not None:
             done_map.save(save)
 
         return resized_map
@@ -247,53 +279,21 @@ class MapInterpolation:
         return red, green, blue, alpha
 
     @staticmethod
-    def get_raster_mask(
-            shapefile_path, rgba, figsize,
-            epsg_crs, colorbar, lower_left,
-            upper_right, country
-    ):
-        """"""
-        import matplotlib.pyplot as plt
-        from cloupy.maps.drawing_shapes import draw_map_from_shapefile_and_return_extreme_points
-
-        transparent_color = MapInterpolation.suit_rgba_to_matplotlib(rgba)
-        fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
-        draw_map_from_shapefile_and_return_extreme_points(
-            ax, shapefile_path, epsg_crs,
-            mask=True, color_to_be_transparent=transparent_color,
-            country=country
-        )
-
-        ax.set_xlim(lower_left[0], upper_right[0])
-        ax.set_ylim(lower_left[1], upper_right[1])
-
-        if colorbar is not None:
-            plt.colorbar(colorbar, ax=ax)
-
-        fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
-        MapInterpolation.create_mask('mask.png', rgba)
-        plt.close()
-
-    @staticmethod
-    def create_mask(fname, rgba):
+    def create_mask(fname):
         """"""
         from PIL import Image
 
         img = Image.open(fname)
         img = img.convert("RGBA")
-        datas = img.getdata()
 
-        new_data = []
-        for item in datas:
-            if item[0] == rgba[0] and rgba[1] == rgba[1] and item[2] == rgba[2]:
-                new_data.append((255, 255, 255, 0))
-            else:
-                new_data.append(item)
+        pixdata = img.load()
+        width, height = img.size
+        for y in range(height):
+            for x in range(width):
+                if pixdata[x, y] == (121, 128, 0, 255):
+                    pixdata[x, y] = (255, 255, 255, 0)
 
-        img.putdata(new_data)
         img.save(fname, "PNG")
-
-        return new_data
 
     @staticmethod
     def merge_map_with_mask():

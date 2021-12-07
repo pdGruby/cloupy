@@ -232,10 +232,9 @@ def draw_additional_shapes(add_shape, ax):
                 ax.fill(x_for_plotting, y_for_plotting, color=fill_color)
 
 
-def draw_map_from_shapefile_and_return_extreme_points(
+def get_shapes_for_plotting(
         ax, shapefile_path, coordinates_system,
-        country=None, mask=False, color_to_be_transparent=None,
-        add_shape=None
+        country=None
 ):
     """Draw contours from the given shapefile"""
     import shapefile as shp
@@ -286,9 +285,7 @@ def draw_map_from_shapefile_and_return_extreme_points(
 
         shape = new_shape
 
-    all_xs = []
-    all_ys = []
-
+    shapes_for_plotting = []
     starting_point = None
     for element in shape:
         x_for_plotting = []
@@ -308,34 +305,13 @@ def draw_map_from_shapefile_and_return_extreme_points(
 
             if starting_point == (x, y):
 
-                ax.plot(x_for_plotting, y_for_plotting, color='black', lw=1)
-                if mask:
-                    ax.fill(x_for_plotting, y_for_plotting, color=color_to_be_transparent)
-
-                for i, x_ in enumerate(x_for_plotting):
-                    all_xs.append(x_)
-                    all_ys.append(y_for_plotting[i])
+                shapes_for_plotting.append(([] + x_for_plotting, [] + y_for_plotting))
 
                 x_for_plotting.clear()
                 y_for_plotting.clear()
                 starting_point = None
 
-        ax.plot(x_for_plotting, y_for_plotting, color='black', lw=1)
-        if mask:
-            ax.fill(x_for_plotting, y_for_plotting, color=color_to_be_transparent)
+        if x_for_plotting and y_for_plotting:
+            shapes_for_plotting.append(([] + x_for_plotting, [] + y_for_plotting))
 
-        for x_ in x_for_plotting:
-            all_xs.append(x_)
-
-        for y_ in y_for_plotting:
-            all_ys.append(y_)
-
-    the_low_x = min(all_xs)
-    the_high_x = max(all_xs)
-    the_low_y = min(all_ys)
-    the_high_y = max(all_ys)
-
-    if add_shape is not None:
-        draw_additional_shapes(add_shape, ax)
-
-    return the_low_x, the_high_x, the_low_y, the_high_y
+    return shapes_for_plotting
