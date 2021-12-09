@@ -290,7 +290,7 @@ class MapInterpolation:
         width, height = img.size
         for y in range(height):
             for x in range(width):
-                if pixdata[x, y] == (121, 128, 0, 255):
+                if 80 <= pixdata[x, y][0] <= 210 and 80 <= pixdata[x, y][1] <= 210 and 0 <= pixdata[x, y][2] <= 70:
                     pixdata[x, y] = (255, 255, 255, 0)
 
         img.save(fname, "PNG")
