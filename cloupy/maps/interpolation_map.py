@@ -41,8 +41,10 @@ class MapInterpolation:
             self, figsize=(10, 10), numcols=240,
             numrows=240, interpolation_method='cubic',
             levels=None, cmap='coolwarm', show_points=False,
-            show_contours=True, fill_contours=True,
-            add_shape=None, save=None
+            show_contours=True, show_clabels=False, clabels_decimal_place=0,
+            fill_contours=True, add_shape=None, save=None,
+            clabels_levels=None, clabels_add=None, clabels_inline_spacing=-3,
+            contour_levels=None, text_size=10
     ):
         """"""
         from cloupy.maps.drawing_shapes import get_shapes_for_plotting
@@ -83,11 +85,17 @@ class MapInterpolation:
         else:
             self.country = None
 
+        if contour_levels is None:
+            contour_levels = levels
+
         fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
         shapes_for_plotting = get_shapes_for_plotting(
             ax, self.shapefile_path,
             self.epsg_crs, country=self.country,
         )
+
+        ax.tick_params(labelsize=text_size)
+        clabels_size = text_size * 0.6
 
         rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
         for shape in shapes_for_plotting:
@@ -154,8 +162,10 @@ class MapInterpolation:
         )
 
         fig_for_colorbar, ax1 = plt.subplots()
-        cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
-        plt.colorbar(cntr, ax=ax)
+        if fill_contours:
+            cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
+            cbar = plt.colorbar(cntr, ax=ax)
+            cbar.ax.tick_params(labelsize=text_size)
         plt.close()
 
         lower_left = boundary_points[5]
@@ -169,8 +179,27 @@ class MapInterpolation:
             ax.fill(shape[0], shape[1], color='white', zorder=0)
 
         if show_contours:
-            clabels = ax.contour(xi, yi, zi, levels=levels, linewidths=0.5, colors='k')
-            ax.clabel(clabels, fontsize=6, fmt='%1.0f', inline_spacing=-3)  # manual=[(17.5, 53.2)]
+            clabels = ax.contour(xi, yi, zi, levels=contour_levels, linewidths=0.5, colors='k')
+
+            if show_clabels:
+                ax.clabel(
+                    clabels, fontsize=clabels_size, fmt=f'%1.{clabels_decimal_place}f',
+                    levels=clabels_levels, inline_spacing=clabels_inline_spacing
+                    )
+
+            if clabels_add:
+                ax.clabel(
+                    clabels, fontsize=clabels_size, fmt=f'%1.{clabels_decimal_place}f',
+                    inline_spacing=clabels_inline_spacing, manual=clabels_add
+                )
+
+        if clabels_add and not show_contours:
+            clabels = ax.contour(xi, yi, zi, levels=contour_levels, linewidths=0, colors='k')
+            ax.clabel(
+                clabels, fontsize=clabels_size, fmt=f'%1.{clabels_decimal_place}f',
+                inline_spacing=clabels_inline_spacing, manual=clabels_add
+            )
+
         if fill_contours:
             ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
         if show_points:
