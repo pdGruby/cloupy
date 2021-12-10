@@ -89,12 +89,10 @@ class MapInterpolation:
             self.epsg_crs, country=self.country,
         )
 
-        rgba = MapInterpolation.suit_rgba_to_matplotlib((121, 128, 0, 1))
+        rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
         for shape in shapes_for_plotting:
-            ax.plot(shape[0], shape[1], color='black', lw=1, zorder=3)
-            ax.fill(shape[0], shape[1], color=rgba, zorder=1)
-        if add_shape is not None:
-            draw_additional_shapes(add_shape, ax)
+            ax.plot(shape[0], shape[1], color='k', lw=1, zorder=3)
+            ax.fill(shape[0], shape[1], color=rgba, zorder=0)
 
         the_low_x = None
         the_high_x = None
@@ -156,7 +154,7 @@ class MapInterpolation:
         )
 
         fig_for_colorbar, ax1 = plt.subplots()
-        cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap, zorder=2)
+        cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
         plt.colorbar(cntr, ax=ax)
         plt.close()
 
@@ -167,15 +165,18 @@ class MapInterpolation:
 
         fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
         MapInterpolation.create_mask('mask.png')
+        for shape in shapes_for_plotting:
+            ax.fill(shape[0], shape[1], color='white', zorder=0)
 
         if show_contours:
             clabels = ax.contour(xi, yi, zi, levels=levels, linewidths=0.5, colors='k')
-            ax.clabel(clabels, levels=[6, 7, 8, 9], fontsize=6, fmt='%1.0f') # przyjrzyj się temu, może się da to
-            # zrobić bardziej zaawansowanie
+            ax.clabel(clabels, fontsize=6, fmt='%1.0f', inline_spacing=-3)  # manual=[(17.5, 53.2)]
         if fill_contours:
-            ax.contourf(xi, yi, zi, levels=levels, cmap=cmap, zorder=2)
+            ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
         if show_points:
             ax.scatter(df.lon, df.lat, s=10, c='k')
+        if add_shape is not None:
+            draw_additional_shapes(add_shape, ax)
 
         plt.close()
 
@@ -290,7 +291,7 @@ class MapInterpolation:
         width, height = img.size
         for y in range(height):
             for x in range(width):
-                if 80 <= pixdata[x, y][0] <= 210 and 80 <= pixdata[x, y][1] <= 210 and 0 <= pixdata[x, y][2] <= 70:
+                if pixdata[x, y][0] == 1 and pixdata[x, y][1] == 0 and pixdata[x, y][2] == 0:
                     pixdata[x, y] = (255, 255, 255, 0)
 
         img.save(fname, "PNG")
