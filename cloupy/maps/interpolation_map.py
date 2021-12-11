@@ -44,7 +44,8 @@ class MapInterpolation:
             show_contours=True, show_clabels=False, clabels_decimal_place=0,
             fill_contours=True, add_shape=None, save=None,
             clabels_levels=None, clabels_add=None, clabels_inline_spacing=-3,
-            contour_levels=None, text_size=10
+            contour_levels=None, text_size=10, show_grid=False,
+            grid_lw=0.1, grid_ls='solid'
     ):
         """"""
         from cloupy.maps.drawing_shapes import get_shapes_for_plotting
@@ -84,23 +85,18 @@ class MapInterpolation:
 
         else:
             self.country = None
+        clabels_size = text_size * 0.6
 
         if contour_levels is None:
             contour_levels = levels
 
-        fig, ax = plt.subplots(nrows=1, figsize=figsize, facecolor='white')
+        fig, ax = plt.subplots(figsize=figsize, facecolor='white')
         shapes_for_plotting = get_shapes_for_plotting(
             ax, self.shapefile_path,
             self.epsg_crs, country=self.country,
         )
 
         ax.tick_params(labelsize=text_size)
-        clabels_size = text_size * 0.6
-
-        rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
-        for shape in shapes_for_plotting:
-            ax.plot(shape[0], shape[1], color='k', lw=1, zorder=3)
-            ax.fill(shape[0], shape[1], color=rgba, zorder=0)
 
         the_low_x = None
         the_high_x = None
@@ -161,17 +157,27 @@ class MapInterpolation:
             method=interpolation_method
         )
 
-        fig_for_colorbar, ax1 = plt.subplots()
-        if fill_contours:
-            cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
-            cbar = plt.colorbar(cntr, ax=ax)
-            cbar.ax.tick_params(labelsize=text_size)
-        plt.close()
-
         lower_left = boundary_points[5]
         upper_right = boundary_points[-1]
         ax.set_xlim(lower_left[0], upper_right[0])
         ax.set_ylim(lower_left[1], upper_right[1])
+
+        fig_for_colorbar, ax1 = plt.subplots()
+        if fill_contours:
+            cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
+            cbar = plt.colorbar(cntr, ax=ax)
+            cbar.ax.tick_params(labelsize=text_size*0.8)
+
+        if show_grid:
+            ax.grid(lw=grid_lw, ls=grid_ls)
+            fig.savefig('grid_mask.png', transparent=True)
+            ax.grid(False)
+        plt.close()
+
+        rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
+        for shape in shapes_for_plotting:
+            ax.plot(shape[0], shape[1], color='k', lw=1)
+            ax.fill(shape[0], shape[1], color=rgba, zorder=0)
 
         fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
         MapInterpolation.create_mask('mask.png')
@@ -210,7 +216,7 @@ class MapInterpolation:
         plt.close()
 
         fig.savefig('map.png')
-        MapInterpolation.merge_map_with_mask()
+        MapInterpolation.merge_map_with_mask(show_grid)
         done_map = Image.open('masked_map.png')
 
         image_size = done_map.size
@@ -326,12 +332,16 @@ class MapInterpolation:
         img.save(fname, "PNG")
 
     @staticmethod
-    def merge_map_with_mask():
+    def merge_map_with_mask(show_grid):
         """"""
         from PIL import Image
 
         background = Image.open("map.png")
         foreground = Image.open("mask.png")
         background.paste(foreground, (0, 0), foreground)
+
+        if show_grid:
+            grid = Image.open('grid_mask.png')
+            background.paste(grid, (0, 0), grid)
 
         background.save('masked_map.png')
