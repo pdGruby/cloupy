@@ -38,14 +38,10 @@ class MapInterpolation:
         self.dataframe = dataframe
 
     def draw(
-            self, figsize=(10, 10), numcols=240,
-            numrows=240, interpolation_method='cubic',
-            levels=None, cmap='coolwarm', show_points=False,
-            show_contours=True, show_clabels=False, clabels_decimal_place=0,
-            fill_contours=True, add_shape=None, save=None,
-            clabels_levels=None, clabels_add=None, clabels_inline_spacing=-3,
-            contour_levels=None, text_size=10, show_grid=False,
-            grid_lw=0.1, grid_ls='solid'
+            self, levels=None, cmap='coolwarm',
+            fill_contours=True, show_contours=True, show_clabels=False,
+            show_points=False, show_grid=False, save=None,
+            add_shape=None, **kwargs
     ):
         """"""
         from cloupy.maps.drawing_shapes import get_shapes_for_plotting
@@ -55,6 +51,29 @@ class MapInterpolation:
         from scipy.interpolate import griddata
         from PIL import Image
         import os
+
+        properties = {
+            'text_size': 10,
+            'numcols': 240,
+            'numrows': 240,
+            'interpolation_method': 'cubic',
+            'contour_levels': None,
+            'clabels_levels': None,
+            'clabels_add': None,
+            'clabels_inline_spacing': -3,
+            'clabels_decimal_place': 0,
+            'grid_lw': 0.1,
+            'grid_ls': 'solid',
+            'figsize': (4, 4),
+        }
+
+        for param, arg in kwargs.items():
+            try:
+                properties[param]
+            except KeyError:
+                raise ValueError(f'Invalid parameter: {param}')
+            else:
+                properties[param] = arg
 
         if self.shapefile_path is None and self.country is None:  # przeanalizuj wszystkie możliwe przypadki, porób błędy itd.
             raise ValueError
@@ -85,18 +104,21 @@ class MapInterpolation:
 
         else:
             self.country = None
-        clabels_size = text_size * 0.6
 
-        if contour_levels is None:
+        clabels_size = properties['text_size'] * 0.6
+
+        if properties['contour_levels'] is None:
             contour_levels = levels
+        else:
+            contour_levels = properties['contour_levels']
 
-        fig, ax = plt.subplots(figsize=figsize, facecolor='white')
+        fig, ax = plt.subplots(figsize=properties['figsize'], facecolor='white')
         shapes_for_plotting = get_shapes_for_plotting(
             ax, self.shapefile_path,
             self.epsg_crs, country=self.country,
         )
 
-        ax.tick_params(labelsize=text_size)
+        ax.tick_params(labelsize=properties['text_size'])
 
         the_low_x = None
         the_high_x = None
@@ -147,14 +169,14 @@ class MapInterpolation:
             y.append(point[1])
             z.append(closest_value[2])
 
-        xi = np.linspace(min(x), max(x), numcols)
-        yi = np.linspace(min(y), max(y), numrows)
+        xi = np.linspace(min(x), max(x), properties['numcols'])
+        yi = np.linspace(min(y), max(y), properties['numrows'])
         xi, yi = np.meshgrid(xi, yi)
         zi = griddata(
             (x, y),
             np.array(z),
             (xi, yi),
-            method=interpolation_method
+            method=properties['interpolation_method']
         )
 
         lower_left = boundary_points[5]
@@ -166,10 +188,10 @@ class MapInterpolation:
         if fill_contours:
             cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
             cbar = plt.colorbar(cntr, ax=ax)
-            cbar.ax.tick_params(labelsize=text_size*0.8)
+            cbar.ax.tick_params(labelsize=properties['text_size'] * 0.8)
 
         if show_grid:
-            ax.grid(lw=grid_lw, ls=grid_ls)
+            ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
             fig.savefig('grid_mask.png', transparent=True)
             ax.grid(False)
         plt.close()
@@ -189,21 +211,21 @@ class MapInterpolation:
 
             if show_clabels:
                 ax.clabel(
-                    clabels, fontsize=clabels_size, fmt=f'%1.{clabels_decimal_place}f',
-                    levels=clabels_levels, inline_spacing=clabels_inline_spacing
+                    clabels, fontsize=clabels_size, fmt=f'%1.{properties["clabels_decimal_place"]}f',
+                    levels=properties['clabels_levels'], inline_spacing=properties['clabels_inline_spacing']
                     )
 
-            if clabels_add:
+            if properties['clabels_add']:
                 ax.clabel(
-                    clabels, fontsize=clabels_size, fmt=f'%1.{clabels_decimal_place}f',
-                    inline_spacing=clabels_inline_spacing, manual=clabels_add
+                    clabels, fontsize=clabels_size, fmt=f'%1.{properties["clabels_decimal_place"]}f',
+                    inline_spacing=properties['clabels_inline_spacing'], manual=properties['clabels_add']
                 )
 
-        if clabels_add and not show_contours:
+        if properties['clabels_add'] and not show_contours:
             clabels = ax.contour(xi, yi, zi, levels=contour_levels, linewidths=0, colors='k')
             ax.clabel(
-                clabels, fontsize=clabels_size, fmt=f'%1.{clabels_decimal_place}f',
-                inline_spacing=clabels_inline_spacing, manual=clabels_add
+                clabels, fontsize=clabels_size, fmt=f'%1.{properties["clabels_decimal_place"]}f',
+                inline_spacing=properties['clabels_inline_spacing'], manual=properties['clabels_add']
             )
 
         if fill_contours:
