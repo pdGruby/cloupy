@@ -27,7 +27,7 @@ class MapInterpolation:
                             })
     --------------------------------------------
     """
-
+    # Zrób static method dla interpolacji oraz dla tworzenia maski + gridu
     def __init__(
             self, country=None, dataframe=None,
             shapefile_path=None, epsg_crs=None,
@@ -50,7 +50,13 @@ class MapInterpolation:
         import numpy as np
         from scipy.interpolate import griddata
         from PIL import Image
-        import os
+
+        attrs_to_be_updated = MapInterpolation.check_if_valid_args_and_update_class_attrs(
+            self.shapefile_path, self.country, self.epsg_crs
+        )
+        self.shapefile_path = attrs_to_be_updated['shapefile_path']
+        self.country = attrs_to_be_updated['country']
+        self.epsg_crs = attrs_to_be_updated['epsg_crs']
 
         properties = {
             'text_size': 10,
@@ -75,42 +81,17 @@ class MapInterpolation:
             else:
                 properties[param] = arg
 
-        if self.shapefile_path is None and self.country is None:  # przeanalizuj wszystkie możliwe przypadki, porób błędy itd.
-            raise ValueError
-
-        elif self.shapefile_path is None and self.country is not None:
-            self.shapefile_path = str(__file__).replace(
-                'interpolation_map.py',
-                f'world{os.sep}ne_50m_admin_0_countries.shp'
-            )
-            self.epsg_crs = 'epsg:4326'
-
-        elif self.shapefile_path is not None and self.country is None:
-            pass
-
-        elif self.shapefile_path is not None and self.country is not None:
-            if self.shapefile_path == str(__file__).replace(
-                'interpolation_map.py',
-                f'world{os.sep}ne_50m_admin_0_countries.shp'
-            ):
-                pass
-            else:
-                raise ValueError(
-                    """
-                    Invalid argument combination. The 'country' argument is valid only for the default cloupy shapefile.
-                    Set 'country' back to None or 'shapefile_path' back to None.
-                    """
-                )
-
-        else:
-            self.country = None
-
-        clabels_size = properties['text_size'] * 0.6
-
         if properties['contour_levels'] is None:
             contour_levels = levels
         else:
             contour_levels = properties['contour_levels']
+        clabels_size = properties['text_size'] * 0.6
+
+        df = self.dataframe
+        df.columns = ['value', 'lon', 'lat']
+        x = list(df.lon)
+        y = list(df.lat)
+        z = list(df.value)
 
         fig, ax = plt.subplots(figsize=properties['figsize'], facecolor='white')
         shapes_for_plotting = get_shapes_for_plotting(
@@ -118,52 +99,15 @@ class MapInterpolation:
             self.epsg_crs, country=self.country,
         )
 
-        ax.tick_params(labelsize=properties['text_size'])
+        # get extreme shape points and create an invisible box on which points for extrapolation will be placed
+        the_low_x, the_high_x, the_low_y, the_high_y = MapInterpolation.get_extreme_shape_points(shapes_for_plotting)
+        nodes = MapInterpolation.get_boundary_box(the_low_x, the_high_x, the_low_y, the_high_y)
+        x_nodes, y_nodes = nodes[0], nodes[1]
 
-        the_low_x = None
-        the_high_x = None
-        the_low_y = None
-        the_high_y = None
-
-        for shape in shapes_for_plotting:
-            high_x = max(shape[0])
-            low_x = min(shape[0])
-            high_y = max(shape[1])
-            low_y = min(shape[1])
-
-            if the_low_x is None:
-                the_low_x = low_x
-                the_high_x = high_x
-                the_low_y = low_y
-                the_high_y = high_y
-                continue
-
-            if the_low_x > low_x:
-                the_low_x = low_x
-            if the_high_x < high_x:
-                the_high_x = high_x
-            if the_low_y > low_y:
-                the_low_y = low_y
-            if the_high_y < high_y:
-                the_high_y = high_y
-
-        df = self.dataframe
-        df.columns = ['value', 'lon', 'lat']
-
-        x = list(df.lon)
-        y = list(df.lat)
-        z = list(df.value)
-
-        nodes = MapInterpolation.get_boundary_box(
-            the_low_x, the_high_x,
-            the_low_y, the_high_y
-        )
-        x_node = nodes[0]
-        y_node = nodes[1]
-
-        boundary_points = MapInterpolation.get_boundary_points(x_node, y_node)
+        # place the points to which data will be extrapolated on the invisible box boundaries and add them to the
+        # data before creating the meshgrid
+        boundary_points = MapInterpolation.get_boundary_points(x_nodes, y_nodes)
         the_closest_to_boundary_points = MapInterpolation.get_the_closest_points_to_boundary_points(boundary_points, df)
-
         for point, closest_value in the_closest_to_boundary_points.items():
             x.append(point[0])
             y.append(point[1])
@@ -181,12 +125,14 @@ class MapInterpolation:
 
         lower_left = boundary_points[5]
         upper_right = boundary_points[-1]
+
         ax.set_xlim(lower_left[0], upper_right[0])
         ax.set_ylim(lower_left[1], upper_right[1])
+        ax.tick_params(labelsize=properties['text_size'])
 
-        fig_for_colorbar, ax1 = plt.subplots()
+        fig_for_colorbar, ax_for_colorbar = plt.subplots()
         if fill_contours:
-            cntr = ax1.contourf(xi, yi, zi, levels=levels, cmap=cmap)
+            cntr = ax_for_colorbar.contourf(xi, yi, zi, levels=levels, cmap=cmap)
             cbar = plt.colorbar(cntr, ax=ax)
             cbar.ax.tick_params(labelsize=properties['text_size'] * 0.8)
 
@@ -252,6 +198,80 @@ class MapInterpolation:
         return resized_map
 
     @staticmethod
+    def check_if_valid_args_and_update_class_attrs(shapefile_path, country, epsg_crs):
+        import os
+
+        to_be_udpated = {
+            'shapefile_path': shapefile_path,
+            'country':  country,
+            'epsg_crs': epsg_crs
+        }
+
+        if shapefile_path is None and country is None:  # przeanalizuj wszystkie możliwe przypadki, porób błędy itd.
+            raise ValueError
+
+        elif shapefile_path is None and country is not None:
+            shapefile_path = str(__file__).replace('interpolation_map.py', f'world{os.sep}ne_50m_admin_0_countries.shp')
+            epsg_crs = 'epsg:4326'
+
+            to_be_udpated['shapefile_path'] = shapefile_path
+            to_be_udpated['epsg_crs'] = epsg_crs
+
+        elif shapefile_path is not None and country is None:
+            pass
+
+        elif shapefile_path is not None and country is not None:
+            if shapefile_path == str(__file__).replace(
+                'interpolation_map.py',
+                f'world{os.sep}ne_50m_admin_0_countries.shp'
+            ):
+                pass
+            else:
+                raise ValueError(
+                    """
+                    Invalid argument combination. The 'country' argument is valid only for the default cloupy shapefile.
+                    Set 'country' back to None or 'shapefile_path' back to None.
+                    """
+                )
+
+        else:
+            country = None
+            to_be_udpated['country'] = country
+
+        return to_be_udpated
+
+    @staticmethod
+    def get_extreme_shape_points(shapes_for_plotting):
+        the_low_x = None
+        the_high_x = None
+        the_low_y = None
+        the_high_y = None
+
+        for shape in shapes_for_plotting:
+            high_x = max(shape[0])
+            low_x = min(shape[0])
+            high_y = max(shape[1])
+            low_y = min(shape[1])
+
+            if the_low_x is None:
+                the_low_x = low_x
+                the_high_x = high_x
+                the_low_y = low_y
+                the_high_y = high_y
+                continue
+
+            if the_low_x > low_x:
+                the_low_x = low_x
+            if the_high_x < high_x:
+                the_high_x = high_x
+            if the_low_y > low_y:
+                the_low_y = low_y
+            if the_high_y < high_y:
+                the_high_y = high_y
+
+        return the_low_x, the_high_x, the_low_y, the_high_y
+
+    @staticmethod
     def get_boundary_box(
             low_x, high_x, low_y,
             high_y, distance=0.5
@@ -265,13 +285,13 @@ class MapInterpolation:
 
         nodes = [node_1, node_2, node_3, node_4, node_5]
 
-        x_node = []
-        y_node = []
+        x_nodes = []
+        y_nodes = []
         for node in nodes:
-            x_node.append(node[0])
-            y_node.append(node[1])
+            x_nodes.append(node[0])
+            y_nodes.append(node[1])
 
-        return x_node, y_node
+        return x_nodes, y_nodes
 
     @staticmethod
     def get_boundary_points(x_node, y_node):
