@@ -27,7 +27,6 @@ class MapInterpolation:
                             })
     --------------------------------------------
     """
-    # Zrób static method dla interpolacji oraz dla tworzenia maski + gridu
     def __init__(
             self, country=None, dataframe=None,
             shapefile_path=None, epsg_crs=None,
@@ -38,7 +37,7 @@ class MapInterpolation:
         self.dataframe = dataframe
 
     def draw(
-            self, levels=None, cmap='coolwarm',
+            self, levels=None, cmap='jet',
             fill_contours=True, show_contours=True, show_clabels=False,
             show_points=False, show_grid=False, save=None,
             add_shape=None, **kwargs
@@ -47,8 +46,6 @@ class MapInterpolation:
         from cloupy.maps.drawing_shapes import get_shapes_for_plotting
         from cloupy.maps.drawing_shapes import draw_additional_shapes
         import matplotlib.pyplot as plt
-        import numpy as np
-        from scipy.interpolate import griddata
         from PIL import Image
 
         attrs_to_be_updated = MapInterpolation.check_if_valid_args_and_update_class_attrs(
@@ -105,7 +102,7 @@ class MapInterpolation:
         x_nodes, y_nodes = nodes[0], nodes[1]
 
         # place the points to which data will be extrapolated on the invisible box boundaries and add them to the
-        # data before creating the meshgrid
+        # data before creating the interpolation
         boundary_points = MapInterpolation.get_boundary_points(x_nodes, y_nodes)
         the_closest_to_boundary_points = MapInterpolation.get_the_closest_points_to_boundary_points(boundary_points, df)
         for point, closest_value in the_closest_to_boundary_points.items():
@@ -113,15 +110,7 @@ class MapInterpolation:
             y.append(point[1])
             z.append(closest_value[2])
 
-        xi = np.linspace(min(x), max(x), properties['numcols'])
-        yi = np.linspace(min(y), max(y), properties['numrows'])
-        xi, yi = np.meshgrid(xi, yi)
-        zi = griddata(
-            (x, y),
-            np.array(z),
-            (xi, yi),
-            method=properties['interpolation_method']
-        )
+        xi, yi, zi = MapInterpolation.interpolate_data(x, y, z, properties)
 
         lower_left = boundary_points[5]
         upper_right = boundary_points[-1]
@@ -130,37 +119,20 @@ class MapInterpolation:
         ax.set_ylim(lower_left[1], upper_right[1])
         ax.tick_params(labelsize=properties['text_size'])
 
-        fig_for_colorbar, ax_for_colorbar = plt.subplots()
-        if fill_contours:
-            cntr = ax_for_colorbar.contourf(xi, yi, zi, levels=levels, cmap=cmap)
-            cbar = plt.colorbar(cntr, ax=ax)
-            cbar.ax.tick_params(labelsize=properties['text_size'] * 0.8)
-
-        if show_grid:
-            ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
-            fig.savefig('grid_mask.png', transparent=True)
-            ax.grid(False)
-        plt.close()
-
-        rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
-        for shape in shapes_for_plotting:
-            ax.plot(shape[0], shape[1], color='k', lw=1)
-            ax.fill(shape[0], shape[1], color=rgba, zorder=0)
-
-        fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
-        MapInterpolation.create_mask('mask.png')
-        for shape in shapes_for_plotting:
-            ax.fill(shape[0], shape[1], color='white', zorder=0)
+        MapInterpolation.adjust_ax_for_creating_masks_and_create_masks(
+            ax, fig, xi,
+            yi, zi, levels,
+            cmap, properties, shapes_for_plotting,
+            fill_contours, show_grid
+        )
 
         if show_contours:
             clabels = ax.contour(xi, yi, zi, levels=contour_levels, linewidths=0.5, colors='k')
-
             if show_clabels:
                 ax.clabel(
                     clabels, fontsize=clabels_size, fmt=f'%1.{properties["clabels_decimal_place"]}f',
                     levels=properties['clabels_levels'], inline_spacing=properties['clabels_inline_spacing']
                     )
-
             if properties['clabels_add']:
                 ax.clabel(
                     clabels, fontsize=clabels_size, fmt=f'%1.{properties["clabels_decimal_place"]}f',
@@ -176,8 +148,10 @@ class MapInterpolation:
 
         if fill_contours:
             ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
+
         if show_points:
             ax.scatter(df.lon, df.lat, s=10, c='k')
+
         if add_shape is not None:
             draw_additional_shapes(add_shape, ax)
 
@@ -198,7 +172,10 @@ class MapInterpolation:
         return resized_map
 
     @staticmethod
-    def check_if_valid_args_and_update_class_attrs(shapefile_path, country, epsg_crs):
+    def check_if_valid_args_and_update_class_attrs(
+            shapefile_path, country, epsg_crs
+    ):
+        """"""
         import os
 
         to_be_udpated = {
@@ -242,6 +219,8 @@ class MapInterpolation:
 
     @staticmethod
     def get_extreme_shape_points(shapes_for_plotting):
+        """"""
+
         the_low_x = None
         the_high_x = None
         the_low_y = None
@@ -277,6 +256,7 @@ class MapInterpolation:
             high_y, distance=0.5
     ):
         """"""
+
         node_1 = (high_x + distance, low_y - distance)
         node_2 = (low_x - distance, low_y - distance)
         node_3 = (low_x - distance, high_y + distance)
@@ -294,8 +274,11 @@ class MapInterpolation:
         return x_nodes, y_nodes
 
     @staticmethod
-    def get_boundary_points(x_node, y_node):
+    def get_boundary_points(
+            x_node, y_node
+    ):
         """"""
+
         x = x_node
         y = y_node
 
@@ -342,6 +325,58 @@ class MapInterpolation:
             the_closest_to_boundary_points[point] = the_closest_point
 
         return the_closest_to_boundary_points
+
+    @staticmethod
+    def interpolate_data(
+            x, y, z,
+            properties
+    ):
+        """"""
+        import numpy as np
+        from scipy.interpolate import griddata
+
+        xi = np.linspace(min(x), max(x), properties['numcols'])
+        yi = np.linspace(min(y), max(y), properties['numrows'])
+        xi, yi = np.meshgrid(xi, yi)
+        zi = griddata(
+            (x, y),
+            np.array(z),
+            (xi, yi),
+            method=properties['interpolation_method']
+        )
+
+        return xi, yi, zi
+
+    @staticmethod
+    def adjust_ax_for_creating_masks_and_create_masks(
+            ax, fig, xi, yi, zi,
+            levels, cmap, properties,
+            shapes_for_plotting, fill_contours, show_grid
+    ):
+        """"""
+        import matplotlib.pyplot as plt
+
+        fig_for_colorbar, ax_for_colorbar = plt.subplots()
+        if fill_contours:
+            cntr = ax_for_colorbar.contourf(xi, yi, zi, levels=levels, cmap=cmap)
+            cbar = plt.colorbar(cntr, ax=ax)
+            cbar.ax.tick_params(labelsize=properties['text_size'] * 0.8)
+
+        if show_grid:
+            ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
+            fig.savefig('grid_mask.png', transparent=True)
+            ax.grid(False)
+        plt.close()
+
+        rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
+        for shape in shapes_for_plotting:
+            ax.plot(shape[0], shape[1], color='k', lw=1)
+            ax.fill(shape[0], shape[1], color=rgba, zorder=0)
+
+        fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
+        MapInterpolation.create_mask('mask.png')
+        for shape in shapes_for_plotting:
+            ax.fill(shape[0], shape[1], color='white', zorder=0)
 
     @staticmethod
     def suit_rgba_to_matplotlib(rgba):
