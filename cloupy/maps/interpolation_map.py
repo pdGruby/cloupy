@@ -60,6 +60,7 @@ class MapInterpolation:
             'numcols': 240,
             'numrows': 240,
             'interpolation_method': 'cubic',
+            'interpolation_within_levels': False,
             'contour_levels': None,
             'clabels_levels': None,
             'clabels_add': None,
@@ -110,7 +111,7 @@ class MapInterpolation:
             y.append(point[1])
             z.append(closest_value[2])
 
-        xi, yi, zi = MapInterpolation.interpolate_data(x, y, z, properties)
+        xi, yi, zi = MapInterpolation.interpolate_data(x, y, z, properties, levels)
 
         lower_left = boundary_points[5]
         upper_right = boundary_points[-1]
@@ -329,11 +330,12 @@ class MapInterpolation:
     @staticmethod
     def interpolate_data(
             x, y, z,
-            properties
+            properties, levels
     ):
         """"""
         import numpy as np
         from scipy.interpolate import griddata
+        import pandas as pd
 
         xi = np.linspace(min(x), max(x), properties['numcols'])
         yi = np.linspace(min(y), max(y), properties['numrows'])
@@ -344,6 +346,32 @@ class MapInterpolation:
             (xi, yi),
             method=properties['interpolation_method']
         )
+
+        if properties['interpolation_within_levels']:
+            max_level = max(levels)
+            min_level = min(levels)
+
+            new_ndarray = []
+            for array in zi:
+                all_above_max_level = pd.Series(array, dtype='float64')
+                all_above_max_level = all_above_max_level[all_above_max_level > max_level]
+
+                all_below_min_level = pd.Series(array, dtype='float64')
+                all_below_min_level = all_below_min_level[all_below_min_level < min_level]
+
+                if all_above_max_level.empty:
+                    new_array = pd.Series(array)
+                else:
+                    new_array = pd.Series(array).replace(list(all_above_max_level), max_level)
+
+                if all_below_min_level.empty:
+                    pass
+                else:
+                    new_array = new_array.replace(list(all_below_min_level), min_level)
+
+                new_ndarray.append(new_array)
+
+            zi = new_ndarray
 
         return xi, yi, zi
 
