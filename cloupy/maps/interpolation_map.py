@@ -69,6 +69,14 @@ class MapInterpolation:
             'grid_lw': 0.1,
             'grid_ls': 'solid',
             'figsize': (4, 4),
+            'zoom_in': None,
+            'show_frame': True,
+            'show_coordinates': True,
+            'show_ticks': True,
+            'show_cbar': True,
+            'xticks': None,
+            'yticks': None,
+            'cbar_ticks': None
         }
 
         for param, arg in kwargs.items():
@@ -113,12 +121,36 @@ class MapInterpolation:
 
         xi, yi, zi = MapInterpolation.interpolate_data(x, y, z, properties, levels)
 
-        lower_left = boundary_points[5]
-        upper_right = boundary_points[-1]
+        # PLOT SETTINGS
+        if properties['zoom_in'] is not None:
+            x = properties['zoom_in'][0]
+            y = properties['zoom_in'][1]
+            ax.set_xlim(x[0], x[1])
+            ax.set_ylim(y[0], y[1])
+        else:
+            lower_left = boundary_points[5]
+            upper_right = boundary_points[-1]
+            ax.set_xlim(lower_left[0], upper_right[0])
+            ax.set_ylim(lower_left[1], upper_right[1])
 
-        ax.set_xlim(lower_left[0], upper_right[0])
-        ax.set_ylim(lower_left[1], upper_right[1])
         ax.tick_params(labelsize=properties['text_size'])
+
+        if not properties['show_frame']:
+            ax.set_frame_on(False)
+
+        if not properties['show_coordinates']:
+            ax.xaxis.set_visible(False)
+            ax.yaxis.set_visible(False)
+
+        if not properties['show_ticks']:
+            ax.tick_params(color=(0, 0, 0, 0))
+
+        if properties['xticks'] is not None:
+            ax.set_xticks(properties['xticks'])
+
+        if properties['yticks'] is not None:
+            ax.set_yticks(properties['yticks'])
+        # ///PLOT SETTINGS
 
         MapInterpolation.adjust_ax_for_creating_masks_and_create_masks(
             ax, fig, xi,
@@ -385,10 +417,13 @@ class MapInterpolation:
         import matplotlib.pyplot as plt
 
         fig_for_colorbar, ax_for_colorbar = plt.subplots()
-        if fill_contours:
+        if fill_contours and properties['show_cbar']:
             cntr = ax_for_colorbar.contourf(xi, yi, zi, levels=levels, cmap=cmap)
             cbar = plt.colorbar(cntr, ax=ax)
             cbar.ax.tick_params(labelsize=properties['text_size'] * 0.8)
+
+            if properties['cbar_ticks'] is not None:
+                cbar.set_ticks(properties['cbar_ticks'])
 
         if show_grid:
             ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
