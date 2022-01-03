@@ -61,6 +61,7 @@ class MapInterpolation:
             'numrows': 240,
             'interpolation_method': 'cubic',
             'interpolation_within_levels': False,
+            'extrapolate_into_zoomed_area': True,
             'contour_levels': None,
             'clabels_levels': None,
             'clabels_add': None,
@@ -107,7 +108,10 @@ class MapInterpolation:
 
         # get extreme shape points and create an invisible box on which points for extrapolation will be placed
         the_low_x, the_high_x, the_low_y, the_high_y = MapInterpolation.get_extreme_shape_points(shapes_for_plotting)
-        nodes = MapInterpolation.get_boundary_box(the_low_x, the_high_x, the_low_y, the_high_y)
+        nodes = MapInterpolation.get_boundary_box(
+            the_low_x, the_high_x, the_low_y, the_high_y,
+            properties['zoom_in'], properties['extrapolate_into_zoomed_area']
+        )
         x_nodes, y_nodes = nodes[0], nodes[1]
 
         # place the points to which data will be extrapolated on the invisible box boundaries and add them to the
@@ -160,7 +164,7 @@ class MapInterpolation:
         )
 
         if show_contours:
-            clabels = ax.contour(xi, yi, zi, levels=contour_levels, linewidths=0.5, colors='k')
+            clabels = ax.contour(xi, yi, zi, levels=contour_levels, linewidths=0.5, colors='k', linestyles='solid')
             if show_clabels:
                 ax.clabel(
                     clabels, fontsize=clabels_size, fmt=f'%1.{properties["clabels_decimal_place"]}f',
@@ -238,10 +242,8 @@ class MapInterpolation:
                 pass
             else:
                 raise ValueError(
-                    """
-                    Invalid argument combination. The 'country' argument is valid only for the default cloupy shapefile.
-                    Set 'country' back to None or 'shapefile_path' back to None.
-                    """
+                    "Invalid argument combination. The 'country' argument is valid only for the default cloupy shapefile. "
+                    " Set 'country' back to None or 'shapefile_path' back to None."
                 )
 
         else:
@@ -286,9 +288,15 @@ class MapInterpolation:
     @staticmethod
     def get_boundary_box(
             low_x, high_x, low_y,
-            high_y, distance=0.5
+            high_y, zoom_in, extrapolate_into_zoomed_area,
+            distance=0.5
     ):
         """"""
+        if zoom_in is not None and extrapolate_into_zoomed_area:
+            low_x = zoom_in[0][0]
+            high_x = zoom_in[0][1]
+            low_y = zoom_in[1][0]
+            high_y = zoom_in[1][1]
 
         node_1 = (high_x + distance, low_y - distance)
         node_2 = (low_x - distance, low_y - distance)
@@ -344,16 +352,16 @@ class MapInterpolation:
             the_closest_dist = None
             the_closest_point = None
             for i, y in enumerate(df.lat):
-                dist = calc_the_distance(point, (df.lon[i], y))
+                dist = calc_the_distance(point, (list(df.lon)[i], y))
 
                 if the_closest_dist is None:
                     the_closest_dist = dist
-                    the_closest_point = (df.lon[i], y, df.value[i])
+                    the_closest_point = (list(df.lon)[i], y, list(df.value)[i])
                     continue
 
                 if the_closest_dist > dist:
                     the_closest_dist = dist
-                    the_closest_point = (df.lon[i], y, df.value[i])
+                    the_closest_point = (list(df.lon)[i], y, list(df.value)[i])
 
             the_closest_to_boundary_points[point] = the_closest_point
 
