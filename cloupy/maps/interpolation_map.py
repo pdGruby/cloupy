@@ -208,6 +208,48 @@ class MapInterpolation:
 
         return resized_map
 
+    def d_imgw_data(
+            self, interval=None, stations_kind=None,
+            years_range=None, column_with_values=None, file_format_index=0,
+            file_format=None
+    ):
+        import cloupy as cl
+
+        if column_with_values == 'temp' or column_with_values == 'preci':
+            df = cl.d_imgw_data(
+                'monthly', 'synop', years_range,
+                file_format='s_m_d', return_coordinates=True
+            )
+
+            if column_with_values == 'temp':
+                df = df.iloc[:, [1, 12, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+                df = df.groupby('Nazwa stacji').mean()
+                self.dataframe = df
+
+            if column_with_values == 'preci':
+                df = df.iloc[:, [1, 2, 16, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+                for_lon_lat = df.groupby(['Rok', 'Nazwa stacji']).mean()
+                df = df.groupby(['Rok', 'Nazwa stacji']).sum()
+
+                df['lon'] = for_lon_lat.lon
+                df['lat'] = for_lon_lat.lat
+                df['station'] = df.index.get_level_values(1)
+
+                df = df.groupby('station').mean()
+                self.dataframe = df
+        else:
+            if not isinstance(column_with_values, int):
+                raise ValueError("Invalid 'columns_with_values' argument. Use a single int.")
+
+            df = cl.d_imgw_data(
+                interval, stations_kind, years_range,
+                file_format_index, file_format, return_coordinates=True
+            )
+
+            df = df.iloc[:, [1, column_with_values, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df = df.groupby('Nazwa stacji').mean()
+            self.dataframe = df
+
     @staticmethod
     def check_if_valid_args_and_update_class_attrs(
             shapefile_path, country, epsg_crs
