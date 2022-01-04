@@ -38,7 +38,7 @@ class MapInterpolation:
 
     def draw(
             self, levels=None, cmap='jet',
-            fill_contours=True, show_contours=True, show_clabels=False,
+            fill_contours=True, show_contours=False, show_clabels=False,
             show_points=False, show_grid=False, save=None,
             add_shape=None, **kwargs
     ):
@@ -56,28 +56,43 @@ class MapInterpolation:
         self.epsg_crs = attrs_to_be_updated['epsg_crs']
 
         properties = {
+            'title': None,
+            'title_bold': False,
+            'title_x_position': 0.13,
+            'title_y_position': 0.06,
+            'title_ha': 'left',
+            'xlabel': None,
+            'xlabel_bold': False,
+            'ylabel': None,
+            'ylabel_bold': False,
             'text_size': 10,
             'numcols': 240,
             'numrows': 240,
             'interpolation_method': 'cubic',
             'interpolation_within_levels': False,
-            'extrapolate_into_zoomed_area': True,
-            'contour_levels': None,
+            'extrapolation_into_zoomed_area': True,
+            'contours_levels': None,
             'clabels_levels': None,
             'clabels_add': None,
             'clabels_inline_spacing': -3,
             'clabels_decimal_place': 0,
-            'grid_lw': 0.1,
-            'grid_ls': 'solid',
-            'figsize': (4, 4),
+            'xticks': None,
+            'yticks': None,
+            'cbar_ticks': None,
+            'cbar_title': None,
+            'cbar_title_bold': True,
+            'cbar_labelpad': 10,
+            'cbar_position': 'top',
+            'cbar_pad': 0.02,
             'zoom_in': None,
             'show_frame': True,
             'show_coordinates': True,
             'show_ticks': True,
             'show_cbar': True,
-            'xticks': None,
-            'yticks': None,
-            'cbar_ticks': None
+            'grid_lw': 0.1,
+            'grid_ls': 'solid',
+            'figsize': (4, 4),
+            'figpad_inches': 0.1
         }
 
         for param, arg in kwargs.items():
@@ -88,11 +103,17 @@ class MapInterpolation:
             else:
                 properties[param] = arg
 
-        if properties['contour_levels'] is None:
+        if properties['contours_levels'] is None:
             contour_levels = levels
         else:
-            contour_levels = properties['contour_levels']
+            contour_levels = properties['contours_levels']
+        tick_labels_size = properties['text_size'] * 0.8
         clabels_size = properties['text_size'] * 0.6
+        cbar_tick_labels_size = properties['text_size'] * 0.8
+        cbar_title_size = properties['text_size'] * 0.8
+        title_size = properties['text_size'] * 1
+        xlabel_size = properties['text_size'] * 0.8
+        ylabel_size = properties['text_size'] * 0.8
 
         df = self.dataframe
         df.columns = ['value', 'lon', 'lat']
@@ -110,7 +131,7 @@ class MapInterpolation:
         the_low_x, the_high_x, the_low_y, the_high_y = MapInterpolation.get_extreme_shape_points(shapes_for_plotting)
         nodes = MapInterpolation.get_boundary_box(
             the_low_x, the_high_x, the_low_y, the_high_y,
-            properties['zoom_in'], properties['extrapolate_into_zoomed_area']
+            properties['zoom_in'], properties['extrapolation_into_zoomed_area']
         )
         x_nodes, y_nodes = nodes[0], nodes[1]
 
@@ -137,7 +158,7 @@ class MapInterpolation:
             ax.set_xlim(lower_left[0], upper_right[0])
             ax.set_ylim(lower_left[1], upper_right[1])
 
-        ax.tick_params(labelsize=properties['text_size'])
+        ax.tick_params(labelsize=tick_labels_size)
 
         if not properties['show_frame']:
             ax.set_frame_on(False)
@@ -160,7 +181,9 @@ class MapInterpolation:
             ax, fig, xi,
             yi, zi, levels,
             cmap, properties, shapes_for_plotting,
-            fill_contours, show_grid
+            fill_contours, show_grid, cbar_tick_labels_size,
+            cbar_title_size, title_size, xlabel_size,
+            ylabel_size
         )
 
         if show_contours:
@@ -194,7 +217,7 @@ class MapInterpolation:
 
         plt.close()
 
-        fig.savefig('map.png')
+        fig.savefig('map.png', bbox_inches='tight', pad_inches=properties['figpad_inches'])
         MapInterpolation.merge_map_with_mask(show_grid)
         done_map = Image.open('masked_map.png')
 
@@ -259,7 +282,7 @@ class MapInterpolation:
 
     def d_wmo_data(
             self, station_name, element_to_scrape,
-            what_to_calc='mean', check_continuity=False, continuity_precision=0.5
+            what_to_calc='mean', check_continuity=False, continuity_precision=0.3
     ):
         import cloupy as cl
         from cloupy.data_processing.check_data_continuity import check_data_continuity
@@ -269,13 +292,13 @@ class MapInterpolation:
             df = check_data_continuity(df, 0, continuity_precision)
 
         if element_to_scrape == 'preci':
-            df = df.iloc[:, [0, 1, 3, -2, -3]] # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df = df.iloc[:, [0, 1, 3, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
             df_lat_lon = df.groupby(['year', 'station']).mean().iloc[:, [-1, -2]]
             df = df.groupby(['year', 'station']).sum()
             df['lon'] = df_lat_lon['lon']
             df['lat'] = df_lat_lon['lat']
         elif element_to_scrape in ['temp', 'sl_press', 'temp_min', 'temp_max']:
-            df = df.iloc[:, [0, 3, -2, -3]] # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df = df.iloc[:, [0, 3, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
         else:
             raise ValueError(
                 "Invalid value for the 'element_to_scrape. Valid values: temp, preci, temp_max, temp_min, sl_press"
@@ -513,7 +536,9 @@ class MapInterpolation:
     def adjust_ax_for_creating_masks_and_create_masks(
             ax, fig, xi, yi, zi,
             levels, cmap, properties,
-            shapes_for_plotting, fill_contours, show_grid
+            shapes_for_plotting, fill_contours, show_grid,
+            cbar_tick_labels_size, cbar_title_size, title_size,
+            xlabel_size, ylabel_size
     ):
         """"""
         import matplotlib.pyplot as plt
@@ -521,15 +546,55 @@ class MapInterpolation:
         fig_for_colorbar, ax_for_colorbar = plt.subplots()
         if fill_contours and properties['show_cbar']:
             cntr = ax_for_colorbar.contourf(xi, yi, zi, levels=levels, cmap=cmap)
-            cbar = plt.colorbar(cntr, ax=ax)
-            cbar.ax.tick_params(labelsize=properties['text_size'] * 0.8)
+            cbar = plt.colorbar(
+                cntr, ax=ax, location=properties['cbar_position'],
+                pad=properties['cbar_pad']
+            )
+            cbar.ax.tick_params(labelsize=cbar_tick_labels_size)
 
             if properties['cbar_ticks'] is not None:
                 cbar.set_ticks(properties['cbar_ticks'])
 
+            if properties['cbar_title'] is not None:
+                if properties['cbar_title_bold']:
+                    fontweight = 'bold'
+                else:
+                    fontweight = 'normal'
+                cbar.set_label(
+                    properties['cbar_title'], size=cbar_title_size,
+                    fontweight=fontweight, labelpad=properties['cbar_labelpad']
+                )
+
+        if properties['title'] is not None:
+
+            if properties['title_bold']:
+                fontweight = 'bold'
+            else:
+                fontweight = 'normal'
+
+            fig.suptitle(
+                properties['title'], size=title_size, ha=properties['title_ha'],
+                x=properties['title_x_position'], y=properties['title_y_position'],
+                fontweight=fontweight
+            )
+
+        if properties['xlabel'] is not None:
+            if properties['xlabel_bold']:
+                fontweight = 'bold'
+            else:
+                fontweight = 'normal'
+            ax.set_xlabel(properties['xlabel'], size=xlabel_size, fontweight=fontweight)
+
+        if properties['ylabel'] is not None:
+            if properties['ylabel_bold']:
+                fontweight = 'bold'
+            else:
+                fontweight = 'normal'
+            ax.set_ylabel(properties['ylabel'], size=ylabel_size, fontweight=fontweight)
+
         if show_grid:
             ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
-            fig.savefig('grid_mask.png', transparent=True)
+            fig.savefig('grid_mask.png', transparent=True, bbox_inches='tight', pad_inches=properties['figpad_inches'])
             ax.grid(False)
         plt.close()
 
@@ -538,7 +603,10 @@ class MapInterpolation:
             ax.plot(shape[0], shape[1], color='k', lw=1)
             ax.fill(shape[0], shape[1], color=rgba, zorder=0)
 
-        fig.savefig('mask.png', facecolor=fig.get_facecolor(), transparent=True)
+        fig.savefig(
+            'mask.png', facecolor=fig.get_facecolor(), transparent=True,
+            bbox_inches='tight', pad_inches=properties['figpad_inches']
+        )
         MapInterpolation.create_mask('mask.png')
         for shape in shapes_for_plotting:
             ax.fill(shape[0], shape[1], color='white', zorder=0)
