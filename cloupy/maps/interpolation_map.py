@@ -89,6 +89,8 @@ class MapInterpolation:
             'show_coordinates': True,
             'show_ticks': True,
             'show_cbar': True,
+            'boundaries_lw': 1,
+            'boundaries_ls': 'solid',
             'grid_lw': 0.1,
             'grid_ls': 'solid',
             'figsize': (4, 4),
@@ -103,6 +105,10 @@ class MapInterpolation:
             else:
                 properties[param] = arg
 
+        if save is None:
+            fig_dpi = 150
+        else:
+            fig_dpi = 300
         if properties['contours_levels'] is None:
             contour_levels = levels
         else:
@@ -183,7 +189,7 @@ class MapInterpolation:
             cmap, properties, shapes_for_plotting,
             fill_contours, show_grid, cbar_tick_labels_size,
             cbar_title_size, title_size, xlabel_size,
-            ylabel_size
+            ylabel_size, fig_dpi
         )
 
         if show_contours:
@@ -217,7 +223,7 @@ class MapInterpolation:
 
         plt.close()
 
-        fig.savefig('map.png', bbox_inches='tight', pad_inches=properties['figpad_inches'])
+        fig.savefig('map.png', bbox_inches='tight', pad_inches=properties['figpad_inches'], dpi=fig_dpi)
         MapInterpolation.merge_map_with_mask(show_grid)
         done_map = Image.open('masked_map.png')
 
@@ -538,7 +544,7 @@ class MapInterpolation:
             levels, cmap, properties,
             shapes_for_plotting, fill_contours, show_grid,
             cbar_tick_labels_size, cbar_title_size, title_size,
-            xlabel_size, ylabel_size
+            xlabel_size, ylabel_size, fig_dpi
     ):
         """"""
         import matplotlib.pyplot as plt
@@ -594,18 +600,21 @@ class MapInterpolation:
 
         if show_grid:
             ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
-            fig.savefig('grid_mask.png', transparent=True, bbox_inches='tight', pad_inches=properties['figpad_inches'])
+            fig.savefig(
+                'grid_mask.png', transparent=True, bbox_inches='tight',
+                pad_inches=properties['figpad_inches'], dpi=fig_dpi
+            )
             ax.grid(False)
         plt.close()
 
         rgba = MapInterpolation.suit_rgba_to_matplotlib((1, 0, 0, 1))
         for shape in shapes_for_plotting:
-            ax.plot(shape[0], shape[1], color='k', lw=1)
+            ax.plot(shape[0], shape[1], color='k', lw=properties['boundaries_lw'], ls=properties['boundaries_ls'])
             ax.fill(shape[0], shape[1], color=rgba, zorder=0)
 
         fig.savefig(
             'mask.png', facecolor=fig.get_facecolor(), transparent=True,
-            bbox_inches='tight', pad_inches=properties['figpad_inches']
+            bbox_inches='tight', pad_inches=properties['figpad_inches'], dpi=fig_dpi
         )
         MapInterpolation.create_mask('mask.png')
         for shape in shapes_for_plotting:
