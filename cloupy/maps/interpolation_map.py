@@ -292,9 +292,16 @@ class MapInterpolation:
         else:
             raise ValueError("Invalid value for the 'what_to_calc' argument.")
 
-
         self.dataframe = df
 
+    def import_global_df(self, columns_order):
+        """"""
+        from cloupy import read_global_df
+
+        df = read_global_df()
+        df = df.iloc[:, columns_order]
+        self.dataframe = df
+    
     @staticmethod
     def check_if_valid_args_and_update_class_attrs(
             shapefile_path, country, epsg_crs
