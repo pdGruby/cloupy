@@ -211,15 +211,19 @@ class MapInterpolation:
     def d_imgw_data(
             self, interval=None, stations_kind=None,
             years_range=None, column_with_values=None, file_format_index=0,
-            file_format=None
+            file_format=None, check_continuity=False, continuity_precision=0.8
     ):
         import cloupy as cl
+        from cloupy.data_processing.check_data_continuity import check_data_continuity
 
         if column_with_values == 'temp' or column_with_values == 'preci':
+
             df = cl.d_imgw_data(
                 'monthly', 'synop', years_range,
                 file_format='s_m_d', return_coordinates=True
             )
+            if check_continuity:
+                df = check_data_continuity(df, 1, continuity_precision)
 
             if column_with_values == 'temp':
                 df = df.iloc[:, [1, 12, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
@@ -236,6 +240,7 @@ class MapInterpolation:
                 df['station'] = df.index.get_level_values(1)
 
                 df = df.groupby('station').mean()
+
         else:
             if not isinstance(column_with_values, int):
                 raise ValueError("Invalid 'columns_with_values' argument. Use a single int.")
@@ -244,6 +249,8 @@ class MapInterpolation:
                 interval, stations_kind, years_range,
                 file_format_index, file_format, return_coordinates=True
             )
+            if check_continuity:
+                df = check_data_continuity(df, 1, continuity_precision)
 
             df = df.iloc[:, [1, column_with_values, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
             df = df.groupby('Nazwa stacji').mean()
@@ -252,11 +259,14 @@ class MapInterpolation:
 
     def d_wmo_data(
             self, station_name, element_to_scrape,
-            what_to_calc='mean'
+            what_to_calc='mean', check_continuity=False, continuity_precision=0.5
     ):
         import cloupy as cl
+        from cloupy.data_processing.check_data_continuity import check_data_continuity
 
         df = cl.d_wmo_data(station_name, element_to_scrape, return_coordinates=True)
+        if check_continuity:
+            df = check_data_continuity(df, 0, continuity_precision)
 
         if element_to_scrape == 'preci':
             df = df.iloc[:, [0, 1, 3, -2, -3]] # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
@@ -281,6 +291,7 @@ class MapInterpolation:
             df = df.groupby('station').median()
         else:
             raise ValueError("Invalid value for the 'what_to_calc' argument.")
+
 
         self.dataframe = df
 
