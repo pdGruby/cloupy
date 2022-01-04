@@ -236,7 +236,6 @@ class MapInterpolation:
                 df['station'] = df.index.get_level_values(1)
 
                 df = df.groupby('station').mean()
-                self.dataframe = df
         else:
             if not isinstance(column_with_values, int):
                 raise ValueError("Invalid 'columns_with_values' argument. Use a single int.")
@@ -248,7 +247,42 @@ class MapInterpolation:
 
             df = df.iloc[:, [1, column_with_values, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
             df = df.groupby('Nazwa stacji').mean()
-            self.dataframe = df
+
+        self.dataframe = df
+
+    def d_wmo_data(
+            self, station_name, element_to_scrape,
+            what_to_calc='mean'
+    ):
+        import cloupy as cl
+
+        df = cl.d_wmo_data(station_name, element_to_scrape, return_coordinates=True)
+
+        if element_to_scrape == 'preci':
+            df = df.iloc[:, [0, 1, 3, -2, -3]] # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df_lat_lon = df.groupby(['year', 'station']).mean().iloc[:, [-1, -2]]
+            df = df.groupby(['year', 'station']).sum()
+            df['lon'] = df_lat_lon['lon']
+            df['lat'] = df_lat_lon['lat']
+        elif element_to_scrape in ['temp', 'sl_press', 'temp_min', 'temp_max']:
+            df = df.iloc[:, [0, 3, -2, -3]] # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+        else:
+            raise ValueError(
+                "Invalid value for the 'element_to_scrape. Valid values: temp, preci, temp_max, temp_min, sl_press"
+            )
+
+        if what_to_calc == 'mean':
+            df = df.groupby('station').mean()
+        elif what_to_calc == 'max':
+            df = df.groupby('station').max()
+        elif what_to_calc == 'min':
+            df = df.groupby('station').min()
+        elif what_to_calc == 'median':
+            df = df.groupby('station').median()
+        else:
+            raise ValueError("Invalid value for the 'what_to_calc' argument.")
+
+        self.dataframe = df
 
     @staticmethod
     def check_if_valid_args_and_update_class_attrs(
