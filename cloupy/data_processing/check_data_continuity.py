@@ -1,6 +1,20 @@
 
 def check_data_continuity(df, main_column, precision):
+    """
+    Check data continuity and return a dataframe with the filtered values
 
+    Keyword arguments:
+        df -- a pandas.DataFrame object that stores the data
+        main_column -- the column by which the data will be filtered (unique values,
+    usually station names)
+        precision -- required precision for checking data continuity.The values
+    must be in the 0-1 range. If the value is 1, then individual stations in the
+    dataframe must have the same number of records as the station that has the
+    longest data continuity. If the value is 0.5, then individual stations in the
+    dataframe must have at least 50% of the number of records of the station that
+    has the longest data continuity (eg. if the largest number of records is 100,
+    then at least 50 records are required) (default 0.3)
+    """
     hm_records = df.iloc[:, main_column].value_counts()
     max_records = max(hm_records)
 

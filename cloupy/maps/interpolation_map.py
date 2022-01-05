@@ -403,10 +403,33 @@ class MapInterpolation:
         return resized_map
 
     def d_imgw_data(
-            self, interval=None, stations_kind=None,
-            years_range=None, column_with_values=None, file_format_index=0,
-            file_format=None, check_continuity=False, continuity_precision=0.8
+            self, years_range, column_with_values,
+            interval='monthly', stations_kind='synop', check_continuity=False,
+            continuity_precision=0.8
     ):
+        """
+         Download data for a drawing from the IMGW database.
+
+        Keyword arguments
+            years_range -- years range (eg. range(2010, 2021))
+            column_with_values -- the column index where the values for interpolation
+        are located (single integer)
+            interval -- the data interval ('monthly', 'daily', 'prompt') (default
+        'monthly')
+            stations_kind -- stations kind from the IMGW database ('synop', 'climat',
+        'fall') (default 'synop')
+            check_continuity -- if data continuity is to be checked. If the
+        continuity is not satisfactory, the data will be filtered appropriately
+        (default False)
+            continuity_precision -- required precision for checking data continuity.
+        The values must be in the 0-1 range. If the value is 1, then individual
+        stations in the dataframe must have the same number of records as the station
+        that has the longest data continuity. If the value is 0.5, then individual
+        stations in the dataframe must have at least 50% of the number of records
+        of the station that has the longest data continuity (eg. if the largest
+        number of records is 100, then at least 50 records are required) (default
+        0.8)
+        """
         import cloupy as cl
         from cloupy.data_processing.check_data_continuity import check_data_continuity
 
@@ -441,7 +464,7 @@ class MapInterpolation:
 
             df = cl.d_imgw_data(
                 interval, stations_kind, years_range,
-                file_format_index, file_format, return_coordinates=True
+                file_format_index=0, return_coordinates=True
             )
             if check_continuity:
                 df = check_data_continuity(df, 1, continuity_precision)
@@ -455,6 +478,42 @@ class MapInterpolation:
             self, station_name, element_to_scrape,
             what_to_calc='mean', check_continuity=False, continuity_precision=0.3
     ):
+        """
+        Download data for a drawing from the WMO database.
+
+        Keywords arguments:
+            station_name -- name of the station for which the data will to downloaded.
+        If 'cou' prefix added to 'station_name' and a country name appears after the
+        prefix, the function will search for all stations in the specified country
+            element_to_scrape -- which element from the WMO website will be scraped
+        Available elements: 'temp', 'preci', 'temp_min', 'temp_max', 'sl_press'
+            what_to_calc -- what to calculate from the downloaded data. Available
+        values: 'max', 'min', 'median', 'mean' (default 'mean')
+            check_continuity -- if data continuity is to be checked. If the
+        continuity is not satisfactory, the data will be filtered appropriately
+        (default False)
+            continuity_precision -- required precision for checking data continuity.
+        The values must be in the 0-1 range. If the value is 1, then individual
+        stations in the dataframe must have the same number of records as the station
+        that has the longest data continuity. If the value is 0.5, then individual
+        stations in the dataframe must have at least 50% of the number of records
+        of the station that has the longest data continuity (eg. if the largest
+        number of records is 100, then at least 50 records are required) (default
+        0.3)
+
+        ---------------NOTE THAT---------------
+        Checking continuity of the data downloaded from the WMO website may not
+        be correct. In the WMO database, many stations from the same country have
+        significantly different data strings - for one station the string may start
+        in 1850 and end in 2010, in another station the string may start in 1950
+        and end in 2020. In such case, both stations have a decent data string and
+        probably are representative, but the latter one will be dropped if the
+        continuity precision is too high. Some stations have also a long data string,
+        but many None values, which can also result in incorrect filtering.
+        However, a properly selected 'continuity_precision" argument may be
+        still be useful, but the data should always be checked manually.
+        ---------------------------------------
+        """
         import cloupy as cl
         from cloupy.data_processing.check_data_continuity import check_data_continuity
 
@@ -488,8 +547,47 @@ class MapInterpolation:
 
         self.dataframe = df
 
-    def import_global_df(self, columns_order):
-        """"""
+    def import_global_df(
+            self, columns_order, what_to_calc='mean',
+            check_continuity=False, continuity_precision=0.8
+    ):
+        """
+        Import data for WalterLieth.MapInterpolation from the global dataframe.
+
+        Keyword arguments:
+            columns_order -- specify which columns from the global dataframe are
+        to be taken (a list of indexes). The first column must be a list of unique
+        values for which calculations will be executed (station names), the second
+        column must be a list of values which will be interpolated, the third column
+        must be a list of longitudes (x axis) and the fourth column must be a list
+        of latitudes (y axis). Some data requires special data processing, eg.
+        precipitation, for which a column with year is required. If you want to
+        process precipitation data, please insert a column with years into the
+        first place (before the unique values)
+            what_to_calc -- what to calculate from the downloaded data. Available
+        values: 'max', 'min', 'median', 'mean' (default 'mean')
+            check_continuity -- if data continuity is to be checked. If the
+        continuity is not satisfactory, the data will be filtered appropriately
+        (default False)
+            continuity_precision -- required precision for checking data continuity.
+        The values must be in the 0-1 range. If the value is 1, then individual
+        stations in the dataframe must have the same number of records as the station
+        that has the longest data continuity. If the value is 0.5, then individual
+        stations in the dataframe must have at least 50% of the number of records
+        of the station that has the longest data continuity (eg. if the largest
+        number of records is 100, then at least 50 records are required) (default
+        0.3)
+
+        ---------------NOTE THAT---------------
+        When the length of the list from the 'columns_order' argument is 5, then
+        the data will be firstly grouped by years and unique values. After that,
+        the sum of the values will be calculated for individual stations in
+        individual years. When the sum is calculated, the dataframe will be grouped
+        again by unique values again and the selected statistic will be calculated.
+        The discussed data processing will result in proper values for elements
+        such as precipitation in the monthly data interval.
+        ---------------------------------------
+        """
         from cloupy import read_global_df
 
         df = read_global_df()
@@ -500,7 +598,10 @@ class MapInterpolation:
     def check_if_valid_args_and_update_class_attrs(
             shapefile_path, country, epsg_crs
     ):
-        """"""
+        """
+        Check that the input values do not conflict with each other and return a
+        dictionary with the attributes that will be updated if the check is positive
+        """
         import os
 
         to_be_udpated = {
@@ -542,7 +643,7 @@ class MapInterpolation:
 
     @staticmethod
     def get_extreme_shape_points(shapes_for_plotting):
-        """"""
+        """Return extreme points of the shapes"""
 
         the_low_x = None
         the_high_x = None
@@ -579,7 +680,10 @@ class MapInterpolation:
             high_y, zoom_in, extrapolate_into_zoomed_area,
             distance=0.5
     ):
-        """"""
+        """
+        Return points to draw an invisible box outside the shapes to which the
+        values will be extrapolated
+        """
         if zoom_in is not None and extrapolate_into_zoomed_area:
             low_x = zoom_in[0][0]
             high_x = zoom_in[0][1]
@@ -606,7 +710,10 @@ class MapInterpolation:
     def get_boundary_points(
             x_node, y_node
     ):
-        """"""
+        """
+        Return points (located on the invisible box) on which the extrapolation
+        process will be based
+        """
 
         x = x_node
         y = y_node
@@ -632,7 +739,12 @@ class MapInterpolation:
     def get_the_closest_points_to_boundary_points(
             boundary_points, df
     ):
-        """"""
+        """
+        Identify which points from the data are the closest to the points on which
+        the extrapolation process will be based and return a dictionary in which
+        keys are the extrapolation points and values are the values that the points
+        take
+        """
         from cloupy.maps.drawing_shapes import calc_the_distance
 
         the_closest_to_boundary_points = {}
@@ -660,7 +772,7 @@ class MapInterpolation:
             x, y, z,
             properties, levels
     ):
-        """"""
+        """Interpolate the data and return xi, yi, zi values"""
         import numpy as np
         from scipy.interpolate import griddata
         import pandas as pd
@@ -711,7 +823,7 @@ class MapInterpolation:
             cbar_tick_labels_size, cbar_title_size, title_size,
             xlabel_size, ylabel_size, fig_dpi
     ):
-        """"""
+        """Adjust the map for creating masks and create necessary masks"""
         import matplotlib.pyplot as plt
 
         fig_for_colorbar, ax_for_colorbar = plt.subplots()
@@ -787,7 +899,7 @@ class MapInterpolation:
 
     @staticmethod
     def suit_rgba_to_matplotlib(rgba):
-        """"""
+        """Convert typical RGBA values for the values which matplotlib accepts"""
         red = rgba[0] / 255
         green = rgba[1] / 255
         blue = rgba[2] / 255
@@ -800,7 +912,7 @@ class MapInterpolation:
 
     @staticmethod
     def create_mask(fname):
-        """"""
+        """Create the map mask"""
         from PIL import Image
 
         img = Image.open(fname)
@@ -817,7 +929,7 @@ class MapInterpolation:
 
     @staticmethod
     def merge_map_with_mask(show_grid):
-        """"""
+        """Merge completed map with the previously created masks"""
         from PIL import Image
 
         background = Image.open("map.png")
