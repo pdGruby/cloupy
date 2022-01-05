@@ -4,12 +4,12 @@ class WalterLieth:
     can be downloaded, modified, manually provided.
 
     Keyword arguments:
-    station_name -- name of the station for which data will be drawn
-    years_range -- years range for which data will be drawn (default None)
-    dataframe -- data for the drawing (default None)
-    lat -- latitude of the station (default None)
-    lon -- longitude of the station (default None)
-    elevation -- elevation of the station (default None)
+        station_name -- name of the station for which data will be drawn
+        years_range -- years range for which data will be drawn (default None)
+        dataframe -- data for the drawing (default None)
+        lat -- latitude of the station (default None)
+        lon -- longitude of the station (default None)
+        elevation -- elevation of the station (default None)
 
     ---------------METHODS---------------
     draw()
@@ -54,7 +54,6 @@ class WalterLieth:
     can not be drawn.
     ---------------------------------------
     """
-
     def __init__(
             self, station_name, years_range=None,
             dataframe=None, lat=False, lon=False,
@@ -74,7 +73,7 @@ class WalterLieth:
             legend_box=True
     ):
         """
-        Specify which elements have to be drawn and draw Walter-Lieth diagram.
+        Specify which elements have to be drawn and draw a Walter-Lieth diagram.
 
         Keyword arguments:
             figsize -- figure size (default (7.74, 7.74))
@@ -92,7 +91,6 @@ class WalterLieth:
         (default True)
             legend_box -- if legend has to be drawn (default True)
         """
-
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
         from matplotlib import rcParams
@@ -676,7 +674,7 @@ class WalterLieth:
         or check if the years range in the imported data matches WalterLieth.years_range,
         you also have to pass proper columns from the global dataframe to the
         'columns_order' argument. When you do that, you have to set the indexes of
-        the columns in which the years or the station name are located ('station_in_column'
+        the columns in which the years or the station names are located ('station_in_column'
         and 'years_in_column' arguments). Remember that these indexes must be for
         a new dataframe which originates after the data filtering by 'columns_order'.
 

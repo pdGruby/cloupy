@@ -4,12 +4,28 @@ class MapInterpolation:
     map can be downloaded, modified, manually provided.
 
     Keyword arguments:
-        shapefile_path -- a path to the shapefile from which contours will be
-    drawn (default None)
-        dataframe -- data for the drawing (default None)
+        country -- a country or a list of countries for which the shapefile will
+    be drawn. Alternatively, if you pass 'EUROPE' value, all european countries
+    will be drawn on the map (default None)
+        dataframe -- data for the interpolation (default None)
+        shapefile_path -- a path to the non-default shapefile from which boundaries
+    will be drawn (default None)
+        epsg_crs -- the imported shapefile's coordinates system (default None).
+    This argument is required when specifying a path to the non-default shapefile
+    (in the 'shapefile_path' argument). If the 'shapefile_path' argument is
+    specified and the 'epsg_crs' argument is None, the boundaries will be drawn
+    for the EPSG:4326 coordinates system. If it is not valid coordinates system,
+    the coordinates on the map may be bizzare
+
+    ---------------METHODS---------------
+    draw()
+    d_imgw_data()
+    d_wmo_data()
+    import_global_df()
+    -------------------------------------
 
     ---------------DATA STRUCTURE---------------
-    The supported data structure for MapInterpolation.dataframe is 4 columns of
+    The supported data structure for MapInterpolation.dataframe is 3 columns of
     pandas.DataFrame object.
 
     1st column: values,
@@ -19,30 +35,179 @@ class MapInterpolation:
     Exemplary dataframe:
     import pandas as pd
     dataframe = pd.DataFrame({
-                'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                'temp': [-2, -1, 0, 7, 15, 18, 19, 20, 18, 14, 8, 3],
-                'preci': [50, 25, 55, 60, 70, 80, 90, 80, 68, 50, 45, 49],
-                'max_temp': [10, 15, 17, 18, 19, 20, 35, 34, 25, 20, 15, 10],
-                'min_temp': [-36, -29, -20, -15, -5, -1, 1, 2, -1, -4, -18, -22]
+                'values': [7.9, 7.6, 7.4, 8.0, 8.6, 7.7, 8.4],
+                'longitude': [19.4, 18.6, 16.2, 19.8, 14.6, 21.0, 16.9],
+                'latitude': [54.2, 54.4, 54.2, 50.1, 53.4, 52.2, 51.1]
                             })
+
+    The exemplary data is an air temperature and comes from a couple of synoptic
+    stations from Poland.
     --------------------------------------------
+
+    ---------------NOTE THAT---------------
+    You can choose country boundaries from the default shapefile by setting the
+    'country' argument. The default shapefile comes from the Natural Earth Data
+    website (https://www.naturalearthdata.com/about/terms-of-use/), which shares
+    many shapefiles for free use. However, the 'shapefile_path' and 'epsg_crs'
+    arguments allow you to choose non-default boundaries from your PC. If you
+    specify non-default shapefile, the 'country' argument does not change anything.
+    ---------------------------------------
     """
     def __init__(
             self, country=None, dataframe=None,
             shapefile_path=None, epsg_crs=None,
     ):
         self.country = country
+        self.dataframe = dataframe
         self.shapefile_path = shapefile_path
         self.epsg_crs = epsg_crs
-        self.dataframe = dataframe
 
     def draw(
             self, levels=None, cmap='jet',
             fill_contours=True, show_contours=False, show_clabels=False,
-            show_points=False, show_grid=False, save=None,
-            add_shape=None, **kwargs
+            show_points=False, show_grid=False, add_shape=None,
+            save=None, **kwargs
     ):
-        """"""
+        """
+        Specify which elements are to be drawn and draw an interpolation map.
+
+        Keyword arguments:
+            levels -- levels for which interpolated data will be displayed. If
+        None, the levels will be adjusted automatically, but it may result in
+        poor map's look, so it is recommended to specify the levels on your
+        own. Exemplary 'levels' input: numpy.arange(5, 15, 0.5) (default None)
+            cmap -- a colormap which will be used for displaying interpolated
+        data. To see the available colormaps, see: https://matplotlib.org/stable
+        /tutorials/colors/colormaps.html (default 'jet')
+            fill_contours -- if interpolated contours are to be filled with the
+        choosen colormap (default True)
+            show_contours -- if interpolated contours are to be shown (default
+        False)
+            show_clabels -- if interpolated contours are to be labeled (default
+        False)
+            show_points -- if the points for which data was interpolated are to
+        be shown (default False)
+            show_grid -- if a grid for the coordinates is to be shown (default
+        False)
+            add_shape -- if additional shapes are to be drawn. The argument takes
+        a dictionary in which keys are the paths to the additional shapefile and
+        values are style/coordinates system settings - the value must be a single
+        string in which commas seperate consecutive style/coordinates system
+        arguments. There are 5 settings that may be changed: coordinates system
+        (crs), linewidth (lw or linewidth), linestyle (ls or linestyle), fill color
+        (fc or fill_color), boundaries color (c or color). The coordinates system
+        must be passed in EPSG code (if the coordinates system is not specified,
+        then EPSG:4326 code will be taken). Exemplary 'add_shape' input: {'home/
+        python/test.shp': 'crs=2180, ls=dotted, lw=2, fc=black, c=yellow'}. Note
+        that: inside the string which specifies settings no quotes should be used
+        (default None)
+            save -- if the interpolation map is to be saved. A string in which
+        file name must be passed, for example: 'interpolated_map.png'. Note that
+        other picture formats can also be passed, e.g. 'interpolated_map.jpg'
+            **kwargs -- the rest of arguments which are less relevant the the
+        above arguments (for setting the interpolation map style)
+
+        **kwargs:
+            title -- the map title (default None)
+            title_bold -- if the map title font weight is to be bold (default
+        False)
+            title_x_position -- the map title relative position on the x axis of
+        the figure (default 0.13)
+            title_y_position -- the map title relative position on the y axis of
+        the figure (default 0.06)
+            title_ha -- the map title horizontal alignment. Valid inputs are:
+        'left', 'right', 'center' (default 'left')
+            xlabel -- the map x axis title (default None)
+            xlabel_bold -- if the map x axis title font weight is to be bold
+        (default False)
+            ylabel -- the map y axis title (default None)
+            ylabel_bold -- if the map y axis title font weight is to be bold
+        (default False)
+            text_size -- the map title text size. Another text elements will be
+        adjusted automatically respectively to the 'text_size' value (default 10)
+            numcols -- number of columns for creating an interpolation grid.
+        Depending on the figure' sides ratio, the contours shape may be changed
+        slightly (default 240)
+            numrows -- number of rows for creating an interpolation grid.
+        Depending on the figure' sides ratio, the contours shape may be changed
+        slightly (default 240)
+            interpolation_method -- the interpolation method to be applied.
+        Available interpolation methods: 'linear', 'nearest', 'cubic' (default
+        'cubic')
+            interpolation_within_levels -- if interpolated values must be within
+        the given levels range specified in the 'levels' argument. It may be handy
+        when interpolation process returns values which can not be returned, e.g.
+        negative values for the number of cases. It is also useful when white
+        polygons appear on the map, which means that the given levels range does
+        not cover all interpolated values (default False)
+            extrapolation_into_zoomed_area -- if the 'zoom_in' argument is
+        specified, the extrapolation process will be conducted to the corners of
+        the zoomed-in area. It is handy when a country with the overseas territories
+        was chosen and the data concerns only a specific part of the shapefile -
+        in such case, the map may be zoomed in the proper area and the extrapolation
+        will be conducted to the corners of the zoomed-in area, not to the corners
+        of the whole shapefile (default True)
+            contours_levels -- non-default levels for the contours. If the argument
+        is None, then the 'contours_levels' argument will be the same as the
+        'levels' argument (default None)
+            clabels_levels -- non-default levels for the contour labels. If the
+        argument is None, then the 'clabels_levels' argument will be the same as
+        the 'contours_levels' argument (default None)
+            clabels_add -- add non-default contour labels to the map. Non-default
+        contour labels can be placed by specifying coordinates in a list of tuples,
+        in which tuples are x and y coordinates (e.g. [(15, 50)] will place a
+        label on the closest contour to the given coordinates, in the closest point
+        to the given coordinates). Note that the 'clabels_add' argument can be
+        used even when the 'show_contours' argument is set to False. In such case,
+        the labels will be placed on the invisible contours that respond to the
+        'levels' argument (default None)
+            clabels_inline_spacing -- the space between text on the contours and
+        the contours. Generally, the more marks the text on the contour has, the
+        less 'clabels_inline_spacing' value should be (default -3)
+            clabels_decimal_place -- decimal places of the contour labels (default
+        0)
+            xticks -- non-default x ticks. Available input: a list of ints/floats
+        (default None)
+            yticks -- non-default y ticks. Available input: a list of ints/floats
+        (default None)
+            cbar_ticks -- non-default colorbar ticks. Available input: a list of
+        ints/floats (default None)
+            cbar_title -- the colorbar title (default None)
+            cbar_title_bold -- if the colorbar title font weight is to be bold
+        (default True)
+            cbar_labelpad -- the space between the colorbar title and the colorbar
+        (default 10)
+            cbar_position -- the position of the colorbar. Availabe inputs: 'left',
+        'right', 'bottom', 'top' (default 'top')
+            cbar_pad -- the space between the colorbar and the axis (default 0.02)
+            zoom_in -- the area to which the map is to be zoomed in. The argument
+        takes a list of tuples, in which tuples are the minimum and maximum values
+        of the x and y coordinates, e.g. [(10, 20), (40, 50)] will zoom in the map
+        to the area that is located between 10 degrees and 20 degrees of the east
+        longitude; and between 40-50 degrees of the north latitude (default None)
+            show_frame -- if the frame of the axis is to be shown (default True)
+            show_coordinates -- if the coordinates are to be shown (default True)
+            show_ticks -- if the x and y ticks are to be shown (default True)
+            show_cbar -- if the colorbar is to be shown (default True)
+            boundaries_lw -- the line width of the shapefile boundaries (default
+        1)
+            boundaries_ls -- the line style of the shapefile boundaries (default
+        'solid')
+            grid_lw -- the line width of the grid (default 0.1)
+            grid_ls -- the line style of the grid. Available inputs: 'dashed',
+        'dotted', 'dash-dotted', 'solid' (default 'solid')
+            figsize -- the figure size in inches (default (4, 4))
+            figpad_inches -- the figure margin (default 0.1)
+
+        ---------------NOTE THAT---------------
+        The quality of the displayed maps may be poor, but when the map is saved,
+        the quality is much better. This is due to the different DPI of the image
+        when saving and when displaying the map (300 DPI is used for saving the
+        map, 150 DPI is used for displaying the map in an application). Different
+        DPIs are used for streamline the workflow - lower DPI makes the map
+        creation process much faster so it is used to preview the map.
+        ---------------------------------------
+        """
         from cloupy.maps.drawing_shapes import get_shapes_for_plotting
         from cloupy.maps.drawing_shapes import draw_additional_shapes
         import matplotlib.pyplot as plt
