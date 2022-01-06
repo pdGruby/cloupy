@@ -196,7 +196,7 @@ class MapInterpolation:
             grid_lw -- the line width of the grid (default 0.1)
             grid_ls -- the line style of the grid. Available inputs: 'dashed',
         'dotted', 'dash-dotted', 'solid' (default 'solid')
-            figsize -- the figure size in inches (default (4, 4))
+            figsize -- the figure size in inches (default (4, 5))
             figpad_inches -- the figure margin (default 0.1)
 
         ---------------NOTE THAT---------------
@@ -258,7 +258,7 @@ class MapInterpolation:
             'boundaries_ls': 'solid',
             'grid_lw': 0.1,
             'grid_ls': 'solid',
-            'figsize': (4, 4),
+            'figsize': (4, 5),
             'figpad_inches': 0.1
         }
 
@@ -589,9 +589,51 @@ class MapInterpolation:
         ---------------------------------------
         """
         from cloupy import read_global_df
+        from cloupy.data_processing.check_data_continuity import check_data_continuity
+        import pandas as pd
 
         df = read_global_df()
         df = df.iloc[:, columns_order]
+
+        if len(df.columns) == 5:
+            sort_by = 1
+        elif len(df.columns) == 4:
+            sort_by = 0
+        else:
+            raise ValueError(
+                "Invalid 'columns_order' argument. The 'columns_order' argument length must be 4 or 5 - see "
+                "cloupy.MapInterpolation docstring for more info."
+            )
+
+        if check_continuity:
+            df = check_data_continuity(df, sort_by, continuity_precision)
+
+        if len(df.columns) == 5:
+            df_lat_lon = df.groupby([df.columns[0], df.columns[1]]).mean().iloc[:, [-2, -1]]
+            df = df.groupby([df.columns[0], df.columns[1]]).sum()
+            stations = df.index.get_level_values(1)
+
+            df = pd.DataFrame({
+                0: stations,
+                1: list(df.iloc[:, 0]),
+                2: df_lat_lon.iloc[:, -2],
+                3: df_lat_lon.iloc[:, -1]
+            })
+
+        if what_to_calc == 'mean':
+            df = df.groupby(df.columns[0]).mean()
+        elif what_to_calc == 'median':
+            df = df.groupby(df.columns[0]).median()
+        elif what_to_calc == 'max':
+            df = df.groupby(df.columns[0]).max()
+        elif what_to_calc == 'min':
+            df = df.groupby(df.columns[0]).min()
+        else:
+            raise ValueError(
+                "Invalid input for the 'what_to_calc' argument. Valid values: 'max', 'min', 'median', 'mean'. See "
+                "MapInterpolation.import_global_df() docstring for more info."
+            )
+
         self.dataframe = df
     
     @staticmethod

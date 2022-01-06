@@ -5,8 +5,8 @@ def check_data_continuity(df, main_column, precision):
 
     Keyword arguments:
         df -- a pandas.DataFrame object that stores the data
-        main_column -- the column by which the data will be filtered (unique values,
-    usually station names)
+        main_column -- the column index by which the data will be filtered (unique
+    values, usually station names)
         precision -- required precision for checking data continuity.The values
     must be in the 0-1 range. If the value is 1, then individual stations in the
     dataframe must have the same number of records as the station that has the
