@@ -65,7 +65,7 @@ class MapInterpolation:
     def draw(
             self, levels=None, cmap='jet',
             fill_contours=True, show_contours=False, show_clabels=False,
-            show_points=False, show_grid=False, add_shape=None,
+            show_cbar=True, show_grid=False, show_frame=True, show_coordinates=True, show_ticks=True, add_shape=None,
             save=None, **kwargs
     ):
         """
@@ -85,18 +85,21 @@ class MapInterpolation:
         False)
             show_clabels -- if interpolated contours are to be labeled (default
         False)
-            show_points -- if the points for which data was interpolated are to
-        be shown (default False)
+            show_cbar -- if a colorbar for the interpolated data is to be shown
+        (default True)
             show_grid -- if a grid for the coordinates is to be shown (default
         False)
+            show_frame -- if the frame of the axis is to be shown (default True)
+            show_coordinates -- if the coordinates are to be shown (default True)
+            show_ticks -- if the x and y ticks are to be shown (default True)
             add_shape -- if additional shapes are to be drawn. The argument takes
         a dictionary in which keys are the paths to the additional shapefile and
         values are style/coordinates system settings - the value must be a single
-        string in which commas seperate consecutive style/coordinates system
+        string in which commas separate consecutive style/coordinates system
         arguments. There are 5 settings that may be changed: coordinates system
         (crs), linewidth (lw or linewidth), linestyle (ls or linestyle), fill color
-        (fc or fill_color), boundaries color (c or color). The coordinates system
-        must be passed in EPSG code (if the coordinates system is not specified,
+        (fc or fill_color), boundaries color (c or color). The coordinates' system
+        must be passed in EPSG code (if the coordinates' system is not specified,
         then EPSG:4326 code will be taken). Exemplary 'add_shape' input: {'home/
         python/test.shp': 'crs=2180, ls=dotted, lw=2, fc=black, c=yellow'}. Note
         that: inside the string which specifies settings no quotes should be used
@@ -104,24 +107,24 @@ class MapInterpolation:
             save -- if the interpolation map is to be saved. A string in which
         file name must be passed, for example: 'interpolated_map.png'. Note that
         other picture formats can also be passed, e.g. 'interpolated_map.jpg'
-            **kwargs -- the rest of arguments which are less relevant the the
+            **kwargs -- the rest of arguments which are less relevant than the
         above arguments (for setting the interpolation map style)
 
         **kwargs:
             title -- the map title (default None)
             title_bold -- if the map title font weight is to be bold (default
         False)
-            title_x_position -- the map title relative position on the x axis of
+            title_x_position -- the map title relative position on the x-axis of
         the figure (default 0.13)
-            title_y_position -- the map title relative position on the y axis of
+            title_y_position -- the map title relative position on the y-axis of
         the figure (default 0.06)
             title_ha -- the map title horizontal alignment. Valid inputs are:
         'left', 'right', 'center' (default 'left')
-            xlabel -- the map x axis title (default None)
-            xlabel_bold -- if the map x axis title font weight is to be bold
+            xlabel -- the map x-axis title (default None)
+            xlabel_bold -- if the map x-axis title font weight is to be bold
         (default False)
-            ylabel -- the map y axis title (default None)
-            ylabel_bold -- if the map y axis title font weight is to be bold
+            ylabel -- the map y-axis title (default None)
+            ylabel_bold -- if the map y-axis title font weight is to be bold
         (default False)
             text_size -- the map title text size. Another text elements will be
         adjusted automatically respectively to the 'text_size' value (default 10)
@@ -177,7 +180,7 @@ class MapInterpolation:
         (default True)
             cbar_labelpad -- the space between the colorbar title and the colorbar
         (default 10)
-            cbar_position -- the position of the colorbar. Availabe inputs: 'left',
+            cbar_position -- the position of the colorbar. Available inputs: 'left',
         'right', 'bottom', 'top' (default 'top')
             cbar_pad -- the space between the colorbar and the axis (default 0.02)
             zoom_in -- the area to which the map is to be zoomed in. The argument
@@ -185,10 +188,12 @@ class MapInterpolation:
         of the x and y coordinates, e.g. [(10, 20), (40, 50)] will zoom in the map
         to the area that is located between 10 degrees and 20 degrees of the east
         longitude; and between 40-50 degrees of the north latitude (default None)
-            show_frame -- if the frame of the axis is to be shown (default True)
-            show_coordinates -- if the coordinates are to be shown (default True)
-            show_ticks -- if the x and y ticks are to be shown (default True)
-            show_cbar -- if the colorbar is to be shown (default True)
+            show_points -- if the points for which data was interpolated are to
+        be shown (default False)
+            points_labels -- if the 'show_points' argument is set to True, the
+        points may also be labeled by the 'points_labels' argument. The labels may
+        be the points ids and the points values. It is only an auxiliary option, so
+        the labels are not pretty. Available inputs: 'ids', 'values' (default None)
             boundaries_lw -- the line width of the shapefile boundaries (default
         1)
             boundaries_ls -- the line style of the shapefile boundaries (default
@@ -250,10 +255,8 @@ class MapInterpolation:
             'cbar_position': 'top',
             'cbar_pad': 0.02,
             'zoom_in': None,
-            'show_frame': True,
-            'show_coordinates': True,
-            'show_ticks': True,
-            'show_cbar': True,
+            'show_points': False,
+            'points_labels': None,
             'boundaries_lw': 1,
             'boundaries_ls': 'solid',
             'grid_lw': 0.1,
@@ -331,14 +334,14 @@ class MapInterpolation:
 
         ax.tick_params(labelsize=tick_labels_size)
 
-        if not properties['show_frame']:
+        if not show_frame:
             ax.set_frame_on(False)
 
-        if not properties['show_coordinates']:
+        if not show_coordinates:
             ax.xaxis.set_visible(False)
             ax.yaxis.set_visible(False)
 
-        if not properties['show_ticks']:
+        if not show_ticks:
             ax.tick_params(color=(0, 0, 0, 0))
 
         if properties['xticks'] is not None:
@@ -354,7 +357,7 @@ class MapInterpolation:
             cmap, properties, shapes_for_plotting,
             fill_contours, show_grid, cbar_tick_labels_size,
             cbar_title_size, title_size, xlabel_size,
-            ylabel_size, fig_dpi
+            ylabel_size, fig_dpi, show_cbar
         )
 
         if show_contours:
@@ -380,8 +383,23 @@ class MapInterpolation:
         if fill_contours:
             ax.contourf(xi, yi, zi, levels=levels, cmap=cmap)
 
-        if show_points:
+        if properties['show_points']:
             ax.scatter(df.lon, df.lat, s=10, c='k')
+
+            if properties['points_labels'] is not None:
+                for i, lon in enumerate(df.lon):
+                    x = lon
+                    y = df.lat[i]
+                    if properties['points_labels'] == 'values' or properties['points_labels'] == 'value':
+                        text = str(round(df.value[i], 1))
+                    elif properties['points_labels'] == 'ids' or properties['points_labels'] == 'id':
+                        text = df.index[i]
+                    else:
+                        raise ValueError("Invalid input for the 'points_labels' argument. Available inputs: 'values', "
+                                         "'ids'"
+                                         )
+
+                    ax.text(x, y+0.2, text, size=clabels_size, ha='center')
 
         if add_shape is not None:
             draw_additional_shapes(add_shape, ax)
@@ -673,8 +691,8 @@ class MapInterpolation:
                 pass
             else:
                 raise ValueError(
-                    "Invalid argument combination. The 'country' argument is valid only for the default cloupy shapefile. "
-                    " Set 'country' back to None or 'shapefile_path' back to None."
+                    "Invalid argument combination. The 'country' argument is valid only for the default cloupy "
+                    "shapefile. Set 'country' back to None or 'shapefile_path' back to None."
                 )
 
         else:
@@ -863,13 +881,14 @@ class MapInterpolation:
             levels, cmap, properties,
             shapes_for_plotting, fill_contours, show_grid,
             cbar_tick_labels_size, cbar_title_size, title_size,
-            xlabel_size, ylabel_size, fig_dpi
+            xlabel_size, ylabel_size, fig_dpi,
+            show_cbar
     ):
         """Adjust the map for creating masks and create necessary masks"""
         import matplotlib.pyplot as plt
 
         fig_for_colorbar, ax_for_colorbar = plt.subplots()
-        if fill_contours and properties['show_cbar']:
+        if fill_contours and show_cbar:
             cntr = ax_for_colorbar.contourf(xi, yi, zi, levels=levels, cmap=cmap)
             cbar = plt.colorbar(
                 cntr, ax=ax, location=properties['cbar_position'],
