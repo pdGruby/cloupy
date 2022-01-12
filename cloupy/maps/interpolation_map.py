@@ -289,6 +289,8 @@ class MapInterpolation:
         xlabel_size = properties['text_size'] * 0.8
         ylabel_size = properties['text_size'] * 0.8
 
+        path = str(__file__)
+
         df = self.dataframe
         df.columns = ['value', 'lon', 'lat']
         x = list(df.lon)
@@ -357,7 +359,7 @@ class MapInterpolation:
             cmap, properties, shapes_for_plotting,
             fill_contours, show_grid, cbar_tick_labels_size,
             cbar_title_size, title_size, xlabel_size,
-            ylabel_size, fig_dpi, show_cbar
+            ylabel_size, fig_dpi, show_cbar, path
         )
 
         if show_contours:
@@ -406,9 +408,14 @@ class MapInterpolation:
 
         plt.close()
 
-        fig.savefig('map.png', bbox_inches='tight', pad_inches=properties['figpad_inches'], dpi=fig_dpi)
-        MapInterpolation.merge_map_with_mask(show_grid)
-        done_map = Image.open('masked_map.png')
+        fig.savefig(
+            path.replace('interpolation_map.py', 'map.png'),
+            bbox_inches='tight',
+            pad_inches=properties['figpad_inches'],
+            dpi=fig_dpi
+        )
+        MapInterpolation.merge_map_with_mask(show_grid, path)
+        done_map = Image.open(path.replace('interpolation_map.py', 'masked_map.png'))
 
         image_size = done_map.size
         resized_map = done_map.resize(
@@ -893,7 +900,7 @@ class MapInterpolation:
             shapes_for_plotting, fill_contours, show_grid,
             cbar_tick_labels_size, cbar_title_size, title_size,
             xlabel_size, ylabel_size, fig_dpi,
-            show_cbar
+            show_cbar, path
     ):
         """Adjust the map for creating masks and create necessary masks"""
         import matplotlib.pyplot as plt
@@ -950,8 +957,11 @@ class MapInterpolation:
         if show_grid:
             ax.grid(lw=properties['grid_lw'], ls=properties['grid_ls'])
             fig.savefig(
-                'grid_mask.png', transparent=True, bbox_inches='tight',
-                pad_inches=properties['figpad_inches'], dpi=fig_dpi
+                path.replace('interpolation_map.py', 'grid_mask.png'),
+                transparent=True,
+                bbox_inches='tight',
+                pad_inches=properties['figpad_inches'],
+                dpi=fig_dpi
             )
             ax.grid(False)
         plt.close()
@@ -962,10 +972,14 @@ class MapInterpolation:
             ax.fill(shape[0], shape[1], color=rgba, zorder=0)
 
         fig.savefig(
-            'mask.png', facecolor=fig.get_facecolor(), transparent=True,
-            bbox_inches='tight', pad_inches=properties['figpad_inches'], dpi=fig_dpi
+            path.replace('interpolation_map.py', 'mask.png'),
+            facecolor=fig.get_facecolor(),
+            transparent=True,
+            bbox_inches='tight',
+            pad_inches=properties['figpad_inches'],
+            dpi=fig_dpi
         )
-        MapInterpolation.create_mask('mask.png')
+        MapInterpolation.create_mask(path.replace('interpolation_map.py', 'mask.png'))
         for shape in shapes_for_plotting:
             ax.fill(shape[0], shape[1], color='white', zorder=0)
 
@@ -1000,16 +1014,16 @@ class MapInterpolation:
         img.save(fname, "PNG")
 
     @staticmethod
-    def merge_map_with_mask(show_grid):
+    def merge_map_with_mask(show_grid, path):
         """Merge completed map with the previously created masks"""
         from PIL import Image
 
-        background = Image.open("map.png")
-        foreground = Image.open("mask.png")
+        background = Image.open(path.replace("interpolation_map.py", "map.png"))
+        foreground = Image.open(path.replace("interpolation_map.py", "mask.png"))
         background.paste(foreground, (0, 0), foreground)
 
         if show_grid:
-            grid = Image.open('grid_mask.png')
+            grid = Image.open(path.replace('interpolation_map.py', 'grid_mask.png'))
             background.paste(grid, (0, 0), grid)
 
-        background.save('masked_map.png')
+        background.save(path.replace("interpolation_map.py", 'masked_map.png'))
