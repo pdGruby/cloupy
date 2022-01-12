@@ -15,6 +15,9 @@ def check_data_continuity(df, main_column, precision):
     has the longest data continuity (eg. if the largest number of records is 100,
     then at least 50 records are required) (default 0.3)
     """
+    if precision < 0 or precision > 1:
+        raise ValueError(f'Precision must be within 0-1 range (invalid value: {precision})')
+
     hm_records = df.iloc[:, main_column].value_counts()
     max_records = max(hm_records)
 

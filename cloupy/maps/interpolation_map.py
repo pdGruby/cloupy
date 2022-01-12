@@ -219,7 +219,7 @@ class MapInterpolation:
         from PIL import Image
 
         attrs_to_be_updated = MapInterpolation.check_if_valid_args_and_update_class_attrs(
-            self.shapefile_path, self.country, self.epsg_crs
+            self.shapefile_path, self.country, self.epsg_crs, self.dataframe
         )
         self.shapefile_path = attrs_to_be_updated['shapefile_path']
         self.country = attrs_to_be_updated['country']
@@ -656,7 +656,7 @@ class MapInterpolation:
     
     @staticmethod
     def check_if_valid_args_and_update_class_attrs(
-            shapefile_path, country, epsg_crs
+            shapefile_path, country, epsg_crs, dataframe
     ):
         """
         Check that the input values do not conflict with each other and return a
@@ -670,8 +670,13 @@ class MapInterpolation:
             'epsg_crs': epsg_crs
         }
 
-        if shapefile_path is None and country is None:  # przeanalizuj wszystkie możliwe przypadki, porób błędy itd.
-            raise ValueError
+        if shapefile_path is None and country is None:
+            raise ValueError(
+                "Specify which countries are to be drawn (by passing a string with the country name or a list of strings "
+                "with the country names). Alternatively, you can specify your non-default shapefile for which boundaries "
+                "will be drawn (by passing the shapefile's path to the 'shapefile_path' argument and passing the "
+                "shapefile's coordinates system to the 'epsg_crs' argument."
+            )
 
         elif shapefile_path is None and country is not None:
             shapefile_path = str(__file__).replace('interpolation_map.py', f'world{os.sep}ne_50m_admin_0_countries.shp')
@@ -698,6 +703,12 @@ class MapInterpolation:
         else:
             country = None
             to_be_udpated['country'] = country
+
+        if dataframe is None:
+            raise ValueError(
+                "No data specified. Please provide the data for the interpolation manually or use one of "
+                "the downloading methods"
+                             )
 
         return to_be_udpated
 

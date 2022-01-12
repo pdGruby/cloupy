@@ -35,7 +35,11 @@ def get_wmoid_or_coord(
 
     import pandas as pd
 
-    station_name = str(station_name)
+    if not isinstance(station_name, str):
+        raise ValueError(
+            f"The 'station_name' argument must be a single string (given type: {type(station_name)})"
+        )
+
     wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
 
     station_name = station_name.upper()
