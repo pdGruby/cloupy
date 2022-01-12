@@ -200,7 +200,7 @@ class MapInterpolation:
         'solid')
             grid_lw -- the line width of the grid (default 0.1)
             grid_ls -- the line style of the grid. Available inputs: 'dashed',
-        'dotted', 'dash-dotted', 'solid' (default 'solid')
+        'dotted', 'dashdot', 'solid' (default 'solid')
             figsize -- the figure size in inches (default (4, 5))
             figpad_inches -- the figure margin (default 0.1)
 
@@ -213,8 +213,8 @@ class MapInterpolation:
         creation process much faster so it is used to preview the map.
         ---------------------------------------
         """
-        from cloupy.maps.drawing_shapes import get_shapes_for_plotting
-        from cloupy.maps.drawing_shapes import draw_additional_shapes
+        from cloupy.maps.draw_shapes import get_shapes_for_plotting
+        from cloupy.maps.draw_shapes import draw_additional_shapes
         import matplotlib.pyplot as plt
         from PIL import Image
 
@@ -823,7 +823,7 @@ class MapInterpolation:
         keys are the extrapolation points and values are the values that the points
         take
         """
-        from cloupy.maps.drawing_shapes import calc_the_distance
+        from cloupy.maps.draw_shapes import calc_the_distance
 
         the_closest_to_boundary_points = {}
         for point in boundary_points:
