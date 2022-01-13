@@ -664,8 +664,8 @@ def download_imgw_climatological_data(
             lat.append(coordinates[0])
             elv.append(coordinates[2])
 
-        df['lat'] = lat
         df['lon'] = lon
+        df['lat'] = lat
         df['elv'] = elv
 
     return df

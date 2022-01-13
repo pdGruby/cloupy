@@ -431,7 +431,7 @@ def download_wmo_climatological_data(
                     filtered_columns_order.append(element)
 
             if return_coordinates:
-                filtered_columns_order += ['lat', 'lon', 'elv']
+                filtered_columns_order += ['lon', 'lat', 'elv']
             full_df = full_df[filtered_columns_order]
 
     print('Data downloaded.')
