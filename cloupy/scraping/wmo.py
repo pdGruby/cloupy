@@ -43,7 +43,7 @@ def get_wmoid_or_coord(
     wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
     station_name = str(station_name)
     station_name = station_name.upper()
-    
+
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
     if station_name.startswith('COU'):
         data = ids_coords[ids_coords['country'].str.contains(station_name.replace('COU', ''))]
@@ -416,8 +416,8 @@ def download_wmo_climatological_data(
             lon_series = [lon] * len(concatenated_df.index)
             elv_series = [elv] * len(concatenated_df.index)
 
-            concatenated_df['lat'] = lat_series
             concatenated_df['lon'] = lon_series
+            concatenated_df['lat'] = lat_series
             concatenated_df['elv'] = elv_series
 
         full_df = full_df.append(concatenated_df)

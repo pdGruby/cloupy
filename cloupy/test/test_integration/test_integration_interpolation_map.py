@@ -46,7 +46,7 @@ class TestDrawingWithDownloadedData:
         cl.set_global_df(df)
 
         imap = MapInterpolation('POLAND')
-        imap.import_global_df([1, 9, -2, -3])  # jak zmienisz kolejność zwracania lat/lon to zmień to też tutaj
+        imap.import_global_df([1, 9, -3, -2])
         imap.draw(figsize=(1, 1))
         TestDrawingWithDownloadedData.figures_plotted += 1
 

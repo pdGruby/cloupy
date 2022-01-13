@@ -70,14 +70,14 @@ class TestDataDownloading:
                     data = wmo.download_wmo_climatological_data(
                         station, elements, return_coordinates=True
                     )
-                    assert list(data.columns[-1:-4:-1]) == ['elv', 'lon', 'lat']
+                    assert list(data.columns[-1:-4:-1]) == ['elv', 'lat', 'lon']
                     for element in ['lat', 'lon', 'elv']:
                         assert not data[element].isnull().any()
             else:
                 data = wmo.download_wmo_climatological_data(
                     station, elements, return_coordinates=True
                 )
-                assert list(data.columns[-1:-4:-1]) == ['elv', 'lon', 'lat']
+                assert list(data.columns[-1:-4:-1]) == ['elv', 'lat', 'lon']
                 for element in ['lat', 'lon', 'elv']:
                     assert not data[element].isnull().any()
 

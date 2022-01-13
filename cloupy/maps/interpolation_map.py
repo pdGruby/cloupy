@@ -468,12 +468,12 @@ class MapInterpolation:
                 df = check_data_continuity(df, 1, continuity_precision)
 
             if column_with_values == 'temp':
-                df = df.iloc[:, [1, 12, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+                df = df.iloc[:, [1, 12, -3, -2]]
                 df = df.groupby('Nazwa stacji').mean()
                 self.dataframe = df
 
             if column_with_values == 'preci':
-                df = df.iloc[:, [1, 2, 16, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+                df = df.iloc[:, [1, 2, 16, -3, -2]]
                 for_lon_lat = df.groupby(['Rok', 'Nazwa stacji']).mean()
                 df = df.groupby(['Rok', 'Nazwa stacji']).sum()
 
@@ -494,7 +494,7 @@ class MapInterpolation:
             if check_continuity:
                 df = check_data_continuity(df, 1, continuity_precision)
 
-            df = df.iloc[:, [1, column_with_values, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df = df.iloc[:, [1, column_with_values, -3, -2]]
             df = df.groupby('Nazwa stacji').mean()
 
         self.dataframe = df
@@ -547,13 +547,13 @@ class MapInterpolation:
             df = check_data_continuity(df, 0, continuity_precision)
 
         if element_to_scrape == 'preci':
-            df = df.iloc[:, [0, 1, 3, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df = df.iloc[:, [0, 1, 3, -3, -2]]
             df_lat_lon = df.groupby(['year', 'station']).mean().iloc[:, [-1, -2]]
             df = df.groupby(['year', 'station']).sum()
             df['lon'] = df_lat_lon['lon']
             df['lat'] = df_lat_lon['lat']
         elif element_to_scrape in ['temp', 'sl_press', 'temp_min', 'temp_max']:
-            df = df.iloc[:, [0, 3, -2, -3]]  # jak zmienisz kolejność zwracania lat, lon i elv to zmień też tutaj
+            df = df.iloc[:, [0, 3, -3, -2]]
         else:
             raise ValueError(
                 "Invalid value for the 'element_to_scrape. Valid values: temp, preci, temp_max, temp_min, sl_press"
