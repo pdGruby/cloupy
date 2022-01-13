@@ -35,14 +35,15 @@ def get_wmoid_or_coord(
 
     import pandas as pd
 
-    if not isinstance(station_name, str):
+    if not isinstance(station_name, str) and not isinstance(station_name, int):
         raise ValueError(
-            f"The 'station_name' argument must be a single string (given type: {type(station_name)})"
+            f"The 'station_name' argument must be a single string or a single int (given type: {type(station_name)})"
         )
 
     wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
-
+    station_name = str(station_name)
     station_name = station_name.upper()
+    
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
     if station_name.startswith('COU'):
         data = ids_coords[ids_coords['country'].str.contains(station_name.replace('COU', ''))]
