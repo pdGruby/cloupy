@@ -93,7 +93,6 @@ class WalterLieth:
         """
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
-        from matplotlib import rcParams
 
         if self.dataframe is None or self.dataframe.empty:
             raise AttributeError(
@@ -102,9 +101,8 @@ class WalterLieth:
                 WalterLieth.d_imgw_data, WalterLieth.d_wmo_data, WalterLieth.import_global_df
                 """)
 
-        ls_prop_cycle = rcParams['axes.prop_cycle'].by_key()['linestyle']
-        color_prop_cycle = rcParams['axes.prop_cycle'].by_key()['color']
-        if WalterLieth.check_cloudy_graphs_chosen_style(ls_prop_cycle, color_prop_cycle) == 'retro':
+        if WalterLieth.check_cloupy_graphs_chosen_style() == 'retro':
+            print(1)
             temp_linecolor = 'k'
             temp_linestyle = '-.'
 
@@ -813,17 +811,36 @@ class WalterLieth:
         self.dataframe = df_for_object
 
     @staticmethod
-    def check_cloudy_graphs_chosen_style(
-            ls_prop_cycle, color_prop_cycle
-    ):
+    def check_cloupy_graphs_chosen_style():
         """Return which style has been set globally for cloupy"""
+        from matplotlib import rcParams
+        from cycler import cycler
+        import os
 
-        if ls_prop_cycle.count('-') == 10:
-            return 'default'
-        elif ls_prop_cycle.count('-') == 1 and color_prop_cycle.count('k') == 6:
-            return 'retro'
+        with open(str(__file__).replace(f'diagrams{os.sep}walter_lieth.py', 'current_diagStyle.txt'), 'r') as f:
+            style = f.readline()
+
+        if style == 'default':
+            rcParams['axes.prop_cycle'] = (
+                    cycler(color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+                                  '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']) +
+                    cycler(linestyle=['-' for solid in range(0, 10)])
+            )
+
+        elif style == 'retro':
+            rcParams['axes.prop_cycle'] = (
+                    cycler(color=['k' for k in range(0, 6)]) +
+                    cycler(linestyle=['-', '--', '-.',
+                                  (0, (1, 5)),
+                                  (0, (3, 1, 1, 1)),
+                                  (0, (3, 10, 1, 10, 1, 10))
+                                  ])
+            )
+
         else:
-            return 'customized'
+            raise ValueError("Invalid style value in the 'current_diagStyle.txt file!'")
+
+        return style
 
     @staticmethod
     def get_max_twm_and_min_tcm(

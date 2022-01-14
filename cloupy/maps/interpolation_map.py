@@ -78,7 +78,8 @@ class MapInterpolation:
         own. Exemplary 'levels' input: numpy.arange(5, 15, 0.5) (default None)
             cmap -- a colormap which will be used for displaying interpolated
         data. To see the available colormaps, see: https://matplotlib.org/stable
-        /tutorials/colors/colormaps.html (default 'jet')
+        /tutorials/colors/colormaps.html (default for default style 'jet';
+        default for retro style 'Greys_r')
             fill_contours -- if interpolated contours are to be filled with the
         choosen colormap (default True)
             show_contours -- if interpolated contours are to be shown (default
@@ -122,12 +123,13 @@ class MapInterpolation:
         'left', 'right', 'center' (default 'left')
             xlabel -- the map x-axis title (default None)
             xlabel_bold -- if the map x-axis title font weight is to be bold
-        (default False)
+        (default True)
             ylabel -- the map y-axis title (default None)
             ylabel_bold -- if the map y-axis title font weight is to be bold
-        (default False)
+        (default True)
             text_size -- the map title text size. Another text elements will be
-        adjusted automatically respectively to the 'text_size' value (default 10)
+        adjusted automatically respectively to the 'text_size' value (default
+        for default style: 8; default for retro style: 10)
             numcols -- number of columns for creating an interpolation grid.
         Depending on the figure' sides ratio, the contours shape may be changed
         slightly (default 240)
@@ -232,10 +234,10 @@ class MapInterpolation:
             'title_y_position': 0.06,
             'title_ha': 'left',
             'xlabel': None,
-            'xlabel_bold': False,
+            'xlabel_bold': True,
             'ylabel': None,
-            'ylabel_bold': False,
-            'text_size': 10,
+            'ylabel_bold': True,
+            'text_size': 8,
             'numcols': 240,
             'numrows': 240,
             'interpolation_method': 'cubic',
@@ -264,6 +266,15 @@ class MapInterpolation:
             'figsize': (4, 5),
             'figpad_inches': 0.1
         }
+
+        style = MapInterpolation.check_cloupy_graphs_chosen_style()
+        if style == 'default':
+            pass
+        elif style == 'retro':
+            properties['text_size'] = 10
+            cmap = 'Greys_r'
+        else:
+            raise ValueError("Invalid style value in the 'current_diagStyle.txt file!'")
 
         for param, arg in kwargs.items():
             try:
@@ -718,6 +729,15 @@ class MapInterpolation:
                              )
 
         return to_be_udpated
+
+    @staticmethod
+    def check_cloupy_graphs_chosen_style():
+        import os
+
+        with open(str(__file__).replace(f'maps{os.sep}interpolation_map.py', 'current_diagStyle.txt'), 'r') as f:
+            style = f.readline()
+
+        return style
 
     @staticmethod
     def get_extreme_shape_points(shapes_for_plotting):

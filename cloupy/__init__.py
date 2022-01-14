@@ -28,7 +28,7 @@ for the given coordinates
 ----------------------------------------
 
 -------DATA VISUALIZATION FUNCTIONS------
-    choose_diagStyle() -- choose a global style for diagrams
+    set_diagStyle() -- choose a global style for diagrams
     change_diagStyle_params() -- change global parameters for drawing diagrams
 
     save_graph() -- save created graph (it is the function 'savefig' from the
@@ -74,40 +74,25 @@ except FileNotFoundError:
 
 #  dictionaries of styles for drawing
 default_style = {
-    'font.family': 'Calibri',
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['Dejavu Sans', 'Tahoma', 'Lucida Grande', 'Verdana'],
     'axes.titleweight': 'bold',
     'axes.labelweight': 'bold',
-    'figure.figsize': (6, 6 / 1.618),
     'axes.edgecolor': 'black',
     'axes.labelsize': 10,
-    'axes.prop_cycle':
-        (
-                cycler(color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-                              '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']) +
-                cycler(linestyle=['-' for solid in range(0, 10)])
-        )
 }
 
 retro_style = {
     'font.family': 'Times New Roman',
     'axes.titleweight': 'bold',
     'axes.labelweight': 'light',
-    'figure.figsize': (6, 6 / 1.618),
     'axes.edgecolor': 'black',
     'axes.labelsize': 12,
-    'axes.prop_cycle':
-        (
-                cycler(color=['k' for k in range(0, 6)]) +
-                cycler(linestyle=['-', '--', '-.',
-                                  (0, (1, 5)),
-                                  (0, (3, 1, 1, 1)),
-                                  (0, (3, 10, 1, 10, 1, 10))
-                                  ]
-                       )
-        )
 }
 
 #  set default style for cloudy
+with open(str(__file__).replace('__init__.py', '') + os.sep + 'current_diagStyle.txt', 'w+') as f:
+    f.write('default')
 diagStyle = rcParams
 diagStyle['savefig.dpi'] = 300
 diagStyle['savefig.bbox'] = 'tight'
@@ -136,7 +121,7 @@ def change_diagStyle_params(diagStyle_dict):
         diagStyle[changed_param] = changed_value
 
 
-def choose_diagStyle(diag_style='default'):
+def set_diagStyle(diag_style='default'):
     """
     Choose a global style for diagrams.
 
@@ -147,9 +132,15 @@ def choose_diagStyle(diag_style='default'):
     if diag_style == 'default':
         for default_param, default_value in default_style.items():
             diagStyle[default_param] = default_value
+        with open(str(__file__).replace('__init__.py', '') + os.sep + 'current_diagStyle.txt', 'w+') as file:
+            file.write('default')
+
     elif diag_style == 'retro':
         for retro_param, retro_value in retro_style.items():
             diagStyle[retro_param] = retro_value
+        with open(str(__file__).replace('__init__.py', '') + os.sep + 'current_diagStyle.txt', 'w+') as file:
+            file.write('retro')
+
     else:
         raise ValueError(
             "Invalid 'diag_style' argument. Available arguments: 'default', 'retro'"

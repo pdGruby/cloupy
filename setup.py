@@ -23,7 +23,7 @@ setup(
         'numpy>=1.21.4,<=1.21.4',
         'pyproj',
         'scipy',
-        'Pillow'
+        'Pillow', 'cycler'
     ],
     tests_require=[
         'pytest>=6.2.5',
