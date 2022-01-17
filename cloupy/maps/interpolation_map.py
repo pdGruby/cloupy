@@ -166,9 +166,12 @@ class MapInterpolation:
         used even when the 'show_contours' argument is set to False. In such case,
         the labels will be placed on the invisible contours that respond to the
         'levels' argument (default None)
-            clabels_inline_spacing -- the space between text on the contours and
-        the contours. Generally, the more marks the text on the contour has, the
-        less 'clabels_inline_spacing' value should be (default -3)
+            clabels_inline_spacing -- the spacing between text on the contours and
+        the contours. Generally, the more characters the text on the contour has,
+        the less 'clabels_inline_spacing' value should be. Note the that DPI value
+        also affects the spacing between the text on the contours and the contours,
+        so the space may be different while previewing the map and while saving the
+        map (default 0)
             clabels_decimal_place -- decimal places of the contour labels (default
         0)
             xticks -- non-default x ticks. Available input: a list of ints/floats
@@ -246,7 +249,7 @@ class MapInterpolation:
             'contours_levels': None,
             'clabels_levels': None,
             'clabels_add': None,
-            'clabels_inline_spacing': -3,
+            'clabels_inline_spacing': 0,
             'clabels_decimal_place': 0,
             'xticks': None,
             'yticks': None,
