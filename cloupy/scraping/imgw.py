@@ -262,12 +262,12 @@ def search_for_keywords_in_columns(
     every file will be taken and the function will show you exactly where the
     keywords were found (default None)
     """
+    if type(keywords) == str:
+        keywords = [keywords]
 
     if file_format is None:
         intervals = ['monthly', 'daily', 'prompt']
         stations_kinds = ['synop', 'climat', 'fall']
-        if type(keywords) == str:
-            keywords = [keywords]
 
         found_file_formats = {}
         for interval in intervals:
@@ -451,6 +451,9 @@ def concatenate_data(
 
     if isinstance(file_formats, str):
         file_formats = [file_formats]
+
+    if isinstance(keywords, str):
+        keywords = [keywords]
 
     df = pd.DataFrame()
     keywords_in_columns = []
