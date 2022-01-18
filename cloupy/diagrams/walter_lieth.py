@@ -70,7 +70,7 @@ class WalterLieth:
             self, figsize=(7.74, 7.74), language=None,
             freeze_rectangles=True, title_text=True, years_text=True,
             coordinates_box=True, yearly_means_box=True, extremes_box=True,
-            legend_box=True
+            legend_box=True, save=None
     ):
         """
         Specify which elements have to be drawn and draw a Walter-Lieth diagram.
@@ -90,6 +90,10 @@ class WalterLieth:
             extremes_box -- if box with extreme temperatures has to be drawn
         (default True)
             legend_box -- if legend has to be drawn (default True)
+            save -- if the Walter-Lieth graph is to be saved. A string in which
+        file name must be passed, for example: 'walter_lieth.png'. Note that
+        other picture formats can also be passed, e.g. 'walter_lieth.jpg' (default
+        None)
         """
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -102,7 +106,6 @@ class WalterLieth:
                 """)
 
         if WalterLieth.check_cloupy_graphs_chosen_style() == 'retro':
-            print(1)
             temp_linecolor = 'k'
             temp_linestyle = '-.'
 
@@ -441,6 +444,9 @@ class WalterLieth:
                 NCOL = 4
 
             fig.legend(handles, labels, loc='lower center', ncol=NCOL, bbox_to_anchor=(0.52, 0))
+
+            if save is not None:
+                plt.savefig(save)
 
     def d_imgw_data(
             self, years_range, interval='monthly',

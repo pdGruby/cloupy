@@ -109,6 +109,7 @@ class MapInterpolation:
             save -- if the interpolation map is to be saved. A string in which
         file name must be passed, for example: 'interpolated_map.png'. Note that
         other picture formats can also be passed, e.g. 'interpolated_map.jpg'
+        (default None)
             **kwargs -- the rest of arguments which are less relevant than the
         above arguments (for setting the interpolation map style)
 
