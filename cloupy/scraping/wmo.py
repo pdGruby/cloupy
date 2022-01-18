@@ -245,14 +245,14 @@ def transpose_table(table):
 
 
 def search_for_the_nearest_station(
-        lat, lon, degrees_range=0.5
+        lon, lat, degrees_range=0.5
 ):
     """
     Return the nearest stations from the WMO database for the given coordinates.
 
     Keyword arguments:
-        lat -- the latitude for which station will be searched
         lon -- the longitude for which station will be searched
+        lat -- the latitude for which station will be searched
         degrees_range -- acceptable range in degrees in all directions (default 0.5)
     """
 
@@ -344,7 +344,7 @@ def download_wmo_climatological_data(
                     lat = get_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
                     lon = get_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
                     nearest_stations = search_for_the_nearest_station(
-                        lat, lon, degrees_range=degrees_range_for_nearby_stations
+                        lon, lat, degrees_range=degrees_range_for_nearby_stations
                     )
                     if nearest_stations.empty:
                         print(

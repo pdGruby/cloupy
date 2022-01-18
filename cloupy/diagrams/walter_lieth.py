@@ -7,8 +7,8 @@ class WalterLieth:
         station_name -- name of the station for which data will be drawn
         years_range -- years range for which data will be drawn (default None)
         dataframe -- data for the drawing (default None)
-        lat -- latitude of the station (default None)
         lon -- longitude of the station (default None)
+        lat -- latitude of the station (default None)
         elevation -- elevation of the station (default None)
 
     ---------------METHODS---------------
@@ -56,14 +56,14 @@ class WalterLieth:
     """
     def __init__(
             self, station_name, years_range=None,
-            dataframe=None, lat=False, lon=False,
+            dataframe=None, lon=False, lat=False,
             elevation=False
     ):
         self.dataframe = dataframe
         self.years_range = years_range
         self.station_name = station_name.upper()
-        self.lat = lat
         self.lon = lon
+        self.lat = lat
         self.elevation = elevation
 
     def draw(
@@ -142,8 +142,8 @@ class WalterLieth:
 
         if language == 'POL':
             asl = 'Wysokość: {} m n.p.m.'
-            lat = 'Szerokość geograficzna: {}'
             lon = 'Długość geograficzna: {}'
+            lat = 'Szerokość geograficzna: {}'
             temp_label = 'Średnia roczna temperatura: {}°C'
             preci_label = 'Roczna suma opadów: {} mm'
             x_ticks_labels = ['S', 'L', 'M', 'K', 'M', 'C', 'L', 'S', 'W', 'P', 'L', 'G']
@@ -162,8 +162,8 @@ class WalterLieth:
             dry_period_legend_label = 'okres suchy'
         else:
             asl = 'Elevation: {} m a.s.l.'
-            lat = 'Latitude: {}'
             lon = 'Longitude: {}'
+            lat = 'Latitude: {}'
             temp_label = 'Average air temperature: {}°C'
             preci_label = 'Annual precipitation: {} mm'
             x_ticks_labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
@@ -189,11 +189,11 @@ class WalterLieth:
         else:
             years = f'{str(min(self.years_range))}-{str(max(self.years_range))}'
 
-        if self.lat:
-            lat = lat.format(self.lat)
-
         if self.lon:
             lon = lon.format(self.lon)
+
+        if self.lat:
+            lat = lat.format(self.lat)
 
         if self.elevation:
             asl = asl.format(self.elevation)
@@ -265,10 +265,10 @@ class WalterLieth:
             fig.suptitle(title, x=0.14, size=16, ha='left', fontweight='bold')
         if self.elevation and coordinates_box:
             fig.text(0.14, 0.933, asl)
-        if self.lat and coordinates_box:
-            fig.text(0.14, 0.91, lat)
         if self.lon and coordinates_box:
-            fig.text(0.14, 0.887, lon)
+            fig.text(0.14, 0.91, lon)
+        if self.lat and coordinates_box:
+            fig.text(0.14, 0.887, lat)
         if years and years_text:
             fig.text(0.88, 0.935, years, size=14, ha='right', fontweight='bold')
         if yearly_means_box:
@@ -537,8 +537,8 @@ class WalterLieth:
                     """)
 
         if return_coordinates:
-            self.lat = round(data['lat'].mean(), 1)
             self.lon = round(data['lon'].mean(), 1)
+            self.lat = round(data['lat'].mean(), 1)
             self.elevation = round(data['elv'].mean())
             data = data.drop(['lat', 'lon', 'elv'], axis=1)
 
@@ -581,8 +581,8 @@ class WalterLieth:
         data = data.drop(['station', 'year'], axis=1)
 
         if return_coordinates:
-            lat = data['lat'].mean()
             lon = data['lon'].mean()
+            lat = data['lat'].mean()
             elv = data['elv'].mean()
 
             self.lat = float(round(lat, 2))
