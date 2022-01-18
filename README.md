@@ -16,9 +16,9 @@ cloupy is a Python package for climatological data downloading, processing and v
 ![license](https://img.shields.io/github/license/pdgruby/cloupy)
 [![DOI](https://zenodo.org/badge/368965287.svg)](https://zenodo.org/badge/latestdoi/368965287)
 
-## Installation
+# Installation
 
-Run the following command on the command line.
+Run the following command on the command line:
 
 **Windows:**
 ```bash
@@ -30,18 +30,94 @@ pip install cloupy
 pip3 install cloupy
 ```
     
-## Usage/Examples
+# Usage/Examples
 
-#### Import cloupy library
+**This is just a demonstration of the cloupy functionality and some (in my opinion the most important) features** of the functions/classes. However, every function and class has many arguments which are not used in this tutorial, so **check the docstrings to see all features**
+
+TUTAJ BĘDZIE TABLE OF CONTENTS DLA USAGE/EXAMPLES
+
+## Data downloading and processing
+
+### Download climatological data from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/)
+Use the `d_imgw_data` function to download the data from the IMGW database. In the code below, the data will be downloaded from the synoptic stations of the IMGW database. In this case, the selected data interval is monthly, the data string starts in 1966 and ends in 2020. The coordinates will be added to the stations in the downloaded data:
 ```python
 import cloupy as cl
+
+data = cl.d_imgw_data(interval='monthly', stations_kind='synop', years_range=range(1966, 2021), return_coordinates=True)
 ```
 
-### MAPS
-
-#### Exemplary interpolation map
+### Download specific climatological elements from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/)
+You can specify which climatological elements from the IMGW database will be downloaded by setting the `keywords` argument of the `d_imgw_data` function. The `keywords` argument must be a single string or a list of strings. If the given string is in a column name, the column will be added to the dataframe that will be returned. In the example below, the returned dataframe will contain the columns whose names contain the given words ('temperatura' means temperature, 'opad' means precipitation):
 
 ```python
+import cloupy as cl
+
+data = cl.d_imgw_data(
+    interval='monthly', stations_kind='synop', years_range=range(1966, 2021), 
+    keywords=['temperatura', 'opad'] # the function is not case sensitive (try: ['tEmPeRaTURA', 'oPad'])
+)
+```
+
+### Useful functions for working with the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/)
+See available file formats from the IMGW database for the given arguments:
+```python
+import cloupy as cl
+
+cl.i_imgw_get_file_formats(interval='monthly', stations_kind='climat', file_format_index='all')
+```
+
+See column names in the given file format, see column names in all file formats, search for a keyword in all file formats:
+```python
+# column names in the 's_m_d' file format (monthly interval, synoptic station, the first file format from the available file formats)
+colnames_in_sdt = cl.i_imgw_search_keywords_in_columns(keywords='', file_format='s_m_d')
+
+# column names in all file formats (if the 'file_format' argument is None, then search in every file format)
+colnames_in_all = cl.i_imgw_search_keywords_in_columns(keywords='', file_format=None)
+
+# search for a keyword in all file formats
+keywords_in_all = cl.i_imgw_search_keywords_in_columns(keywords='temperatura', file_format=None)
+```
+
+### Download climatological data from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere)
+You can download data from the WMO database for a single station or for an entire country. If you would like to download the data for a single station, pass the station name (usually the city where the station is located) to the `station_name` argument. If you would like to download the data for an entire country, pass the country name prefixed with `cou` to the `station_name` argument (e.g. 'couGERMANY'). There are 5 elements that can be downloaded: mean air temperature ('mean'), precipitation ('preci'), minimum air temperature ('min_temp'), maximum air temperature ('max_temp') and sea level pressure ('sl_press'). To specify which element you would like to download, pass a single string or a list of strings to the `elements_to_scrape` argument:
+```python
+import cloupy as cl
+
+single_station = cl.d_wmo_data(station_name='POZNAN', elements_to_scrape=['temp', 'preci', 'sl_press'])
+entire_country = cl.d_wmo_data(station_name='couUnited Arab Emirates', elements_to_scrape='temp', return_coordinates=True)
+```
+
+### Useful functions for working with the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere)
+You can see all available station and country with the `cl.i_wmo_get_stations()` function:
+```python
+import cloupy as cl
+
+info_df = cl.i_wmo_get_stations()
+```
+
+You can search for the nearest stations to the specified points with the `cl.i_wmo_search_near_stattion` function:
+```python
+import cloupy as cl
+
+close_to_london = cl.i_wmo_search_near_station(lon=0, lat=51)
+higher_acceptable_distance = cl.i_wmo_search_near_station(lon=0, lat=51, degrees_range=3)
+```
+
+### Check data continuity
+With the `cl.check_data_continuity` function you can remove all stations with not satisfying data continuity. The function will group a dataframe by unique values, count them for every single station and remove all stations which have too less number of records:
+```python
+import cloupy as cl
+
+df = df = cl.d_imgw_data(interval='monthly', stations_kind='synop', years_range=range(1966, 2021))
+df = cl.check_data_continuity(df=df, main_column=0, precision=1)
+```
+In the example above, the `check_data_continuity` groups the dataframe by the unique values in the first column (0 is the index of the dataframe columns), counts the number of records for each station, takes the highest number of records (high_records) and removes stations with the number of records less than the high_records. The `precision` argument is set to 1, which means that the required number of records to keep a station is equal to 1 * high_records (if high_records is 1000, then the station must have 1000 records to be kept). If the `precision` argument was 0.5, then the required number of records to keep a station would be equal to 0.5 * high_records (if high_records is 1000, then the station must have at least 500 records to be kept).
+
+## Maps
+
+### Exemplary interpolation map
+```python
+import cloupy as cl
 import numpy as np
 
 imap = cl.m_InterpolationMap(country='POLAND')
@@ -72,44 +148,47 @@ imap.draw(
     ],
     cbar_ticks=[5, 6, 7, 8, 9, 10],
     cbar_title='Air temperature [°C]',
-    title='Mean air temperature spatial layout in Poland\n(1966-2020)',
+    title='Fig. N. Spatial layout of the mean temperature in Poland\n(1966-2020)',
     title_ha='center',
     title_x_position=0.5,
     save='air_temperature_poland.png'
 )
 ```
 <p align="center">
-  <img src="https://i.ibb.co/6HYT54z/air-temperature-poland.png" />
+  <img src="https://i.ibb.co/f2cdDn9/air-temperature-poland.png"/>
 </p>
 
-#### The same exemplary map, but without setting the map style and data filtering
+### The same exemplary map, but without setting the map style and data filtering
+
 **Note that** in the above code the most of the arguments are not necessary and are only optional for setting the map style - the code for drawing may be significantly shorter. However, in this case the map style may not be satisfying and not filtered data may affect negatively the interpolation result:
 
 ```python
+import cloupy as cl
+
 # The map based on the same dataset, but without data filtering and style setting
 imap = cl.m_InterpolationMap(country='POLAND')
 imap.d_imgw_data(years_range=range(1966, 2021), column_with_values='temp')
-imap.draw(save='raw_map.png')
+imap.draw(save='ugly_map.png')
 
-# The 'save' argument does not have to be specified - the map will be displayed in your app with
-# lower DPI value, so the quality of the image may be poor. When the map is being saved, the DPI
-# value is higher, so the image quality is much better. Different DPIs are used for streamline the 
-# workflow - lower DPI makes the map creation process much faster, so it is used to preview the map
+# The 'save' argument does not have to be specified either - the map will be displayed in your app with
+# a lower DPI value, so the quality of the image may be poor. When the map is being saved, the DPI
+# value is higher, so the image quality is much better. Different DPIs are used to enhance the 
+# work - lower DPI makes the map creation process much faster, so it is used to preview the map
 ```
 
 <p align="center">
-  <img src="https://i.ibb.co/wWqv2QM/comp.png"/>
+  <img src="https://i.ibb.co/XjGvVhm/lev-data-comp.png"/>
 </p>
 
-**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, no data was filtered** (alpine stations were still in the dataset and the stations with poor data string were also in the dataset), but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method. Red spots in the bottom parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is slightly distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels which would result in the white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`.
+**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearence of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`.
 
-Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check dataset and specify the interpolation levels.**
+Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check the dataset and specify the interpolation levels.**
 
-#### Zooming the map into the particular spot and the difference between default style and retro style
+### Zoom a map to a specific location, show the difference between default style and retro style
 
-Sometimes you may want to exaggerate a specific region of the country and it is possible by passing the `zoom_in` argument to the `imap.draw()` method. This argument is also handy when you work with the country that has overseas territories (eg. France) and you would like to show only the specific part of the country. 
+Sometimes you may want to highlight a specific region of a country and it is possible by passing the `zoom_in` argument to the `imap.draw()` method. This argument is also handy when you are working with a country that has overseas territories (eg. France) and would like to show only a specific part of the country. 
 
-The `zoom_in` argument accepts a list of tuples, in which the first tuple stores the x-values to which the view will be adjusted and the second tuple stores the y-values to which the view will be adjusted, eg. `zoom_in=[(16, 18), (50, 51)]` will zoom into the region of Poland that is located between 16 and 18 degree of the east longitude and between 50 and 51 degree of the north latitude.
+The `zoom_in` argument accepts a list of tuples where the first tuple holds the x-values to which the view will be adjusted, and the second tuple holds the y-values to which the view will be adjusted, eg. `zoom_in=[(16, 18), (50, 51)]` will zoom into the region of Poland that is located between 16 and 18 degree of the east longitude and between 50 and 51 degree of the north latitude.
 
 The exemplary maps of France with the `zoom_in` argument in the default and retro styles:
 
@@ -118,12 +197,12 @@ import cloupy as cl
 import numpy as np
 import matplotlib.pyplot as plt
 
-# create the interpolation map object and prepare the data
+# create the interpolation map class and prepare the data
 imap=cl.m_InterpolationMap('FRANCE')
 imap.d_wmo_data('couFRANCE', 'temp', check_continuity=True)
 imap.dataframe = imap.dataframe[imap.dataframe.iloc[:, 0] > 9]  # remove alpine stations
 
-# set style, modify the map, draw
+# set the style, modify the map, draw
 styles = ['default', 'retro']
 for style in styles:
     
@@ -179,19 +258,18 @@ In this case, if the `zoom_in` argument was not specified, the maps would be com
   <img src="https://i.ibb.co/txDRqDR/france-mean-temperature-layout-no-zoom-in.png"/>
 </p>
 
-#### Drawing the map from the manually provided data, choosing non-default shapefile for drawing borders of the country, plotting additional shapes from the additional shapefile
-The country borders does not have to be drawn from the default cloupy' shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_InterpolationMap()` class.
+### Draw a map from the manually provided data, select a non-default shapefile to draw borders of the country, plot additional shapes from an additional shapefile
+The country borders do not have to be drawn from the default cloupy shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_InterpolationMap()` class.
 
-What is more, it is also possible to draw additional shapes (eg. states, voivodeships, rivers, lakes) by passing a dictionary to the `add_shapes` argument of the `imap.draw()` method. The dictionary' keys must be shapes' paths and the dictionary' values must be style setting/coordinates system setting arguments. The value of the dictionary must be a single `str` in which arguments are separated by commas, eg.:
+What is more, it is also possible to draw additional shapes (e.g. states, voivodeships, rivers, lakes) by passing a dictionary to the `add_shapes` argument of the `imap.draw()` method. The dictionary keys must be shapes' paths and the dictionary values must be style/coordinates system set arguments. The dictionary values must be a single `str` in which arguments are separated by commas, e.g.:
 ```python
-# the exemplary dict
 add_shapes={
     'path/to/the/shapefile': 'crs=epsg:4326, linestyle=solid, linewidth=0.5',
     'path/to/another/shapefile': 'crs=epsg:2180,color=red,fill_color=blue'
 }
 ```
 
-The data for the map can be provided manually by passing a `pandas.DataFrame()` object to the `dataframe` argument of the `cl.m_InterpolationMap()`:
+The data for a map can be provided manually by passing a `pandas.DataFrame()` object to the `dataframe` argument of the `cl.m_InterpolationMap()`:
 ```python
 import cloupy as cl
 
@@ -206,7 +284,7 @@ df = df.groupby('Nazwa stacji').mean() # calc the mean values for the stations
 df = df[df.iloc[:, 0] > 5] # remove alpine stations which deviates significantly from the rest
 ```
 
-When the dataframe satisfies the required data structure for the interpolation map, it can be passed to the `cl.m_InterpolationMap()` class. So, if you want to provide the data manually, draw non-default borders and additional shapes, the code will look as below:
+When the dataframe meets the required data structure (see `cl.m_InterpolationMaps` docs for more detailed information) for the interpolation map, it can be passed to the `cl.m_InterpolationMap()` class. So, if you want to provide the data manually, draw non-default borders and additional shapes, the code will look like this:
 ```python
 import numpy as np
 
@@ -237,7 +315,7 @@ imap.draw(
 
 For the above map, the shapefiles were downloaded from the **[GADM website](https://gadm.org/download_country.html)** under **[GADM license](https://gadm.org/license.html)**. 
 
-#### Import the data for drawing the interpolation map from the global dataframe and draw the map for multiple countries. Zoom into the specific area without changing the extrapolation points 
+### Import the data for drawing the interpolation map from the global dataframe and draw multi-country map. Zoom to a specific area without changing the extrapolation points 
 
 ```python
 import cloupy as cl
@@ -264,7 +342,7 @@ imap.import_global_df(
     continuity_precision=0.2
 ) 
 
-# in this case, there is no need to remove alpine stations (they are significantly relevant)
+# in this case, there is no need to remove the alpine stations (they are significantly relevant)
 imap.draw(
     levels=np.arange(-5, 20.5, 0.5),
     cmap='coolwarm',
@@ -275,7 +353,7 @@ imap.draw(
   <img src="https://i.ibb.co/p121MZD/multiple-countries.png" />
 </p>
 
-If you wished to take a closer look at the situation on the Italian-Swiss border, you would use the `zoom_in` argument of the `imap.draw()` method. Probably you could notice some slight differences in colors layout between the map before zooming and the map after zooming. The differences are the result of different extrapolation points which are always in the corners of the plot (when you zoom into a specific area, it means that you are changing the corner points of the plot which affects the extrapolation result). **You can force the `imap.draw()` method to extrapolate to the points of the original plot (before zooming) by setting the `extrapolation_into_zoomed_area` argument to False:** 
+If you wished to take a closer look at the situation on the Italian-Swiss border, you could use the `zoom_in` argument of the `imap.draw()` method. You may notice some slight differences in the colors layout between the map before zooming in and the map after zooming in. The differences result from different extrapolation points, which are always in the corners of the plot (when you zoom into a specific area, it means that you change the corner points of the plot, which affects the extrapolation result). **You can force the `imap.draw()` method to extrapolate the values to the points of the original plot (before zooming) by setting the `extrapolation_into_zoomed_area` argument to False:** 
 
 ```python
 # draw maps (1 = True, 0 = False)
@@ -317,15 +395,9 @@ plt.savefig('multpile_countries_extr_into_comp.png',
 
 As you can see, the slight differences are noticeable in the color layout. The `extrapolation_into_zoomed_area` argument must be set to True if the `zoom_in` argument is used for zooming into a specific part of the country that has overseas territories (like in the example of France above). If the `extrapolation_into_zoomed_area` argument was set to False in the case of France, the method would extrapolate values to the corners of the original plot (the plot before zooming, so the interpolation result in the European France would be completely distorted). In the case of Italy and Switzerland, some slight differences are noticeable, but these differences are still acceptable. However, **if you want to zoom into a specific part of the map with preserving the original color/contours layout, you can set the `extrapolation_into_zoomed_area` argument to False.**
 
-### GRAPHS
+## Graphs
 
-#### Download climatological data for a single station and for the whole country from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere)
-```python
-single_station = cl.d_wmo_data(station_name='TOKYO', elements_to_scrape=['temp', 'preci'])
-whole_country = cl.d_wmo_data(station_name='couJAPAN', elements_to_scrape=['temp', 'preci'])
-```
-
-#### Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram
+### Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram
 ```python
 wl = cl.g_WalterLieth(station_name='POZNAŃ')
 wl.d_imgw_data(years_range=range(1966, 2020))
@@ -336,7 +408,7 @@ wl.draw()
   <img src="https://i.ibb.co/JdR4rV5/poznan.png" />
 </p>
 
-#### Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe
+### Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe
 ```python
 global_df = cl.d_imgw_data(
     interval='monthly', 
@@ -354,7 +426,7 @@ wl.draw()
   <img src="https://i.ibb.co/NYVgSCP/war.png" />
 </p>
 
-#### The graph style that better fits a scientific article
+### The graph style that better fits a scientific article
 ```python
 cl.choose_diagStyle('retro')
 wl.draw()
@@ -363,7 +435,7 @@ wl.draw()
   <img src="https://i.ibb.co/XjyWQ6j/war-retro.png" />
 </p>
 
-#### Select which graph elements are to be drawn
+### Select which graph elements are to be drawn
 
 As you can see, the graph for POZNAŃ displays information about the coordinates, while the graphs for WARSZAWA do not. The coordinates for POZNAŃ are automatically imported when the `wl.d_imgw_data()` method is used. However, when we import data from the global dataframe for WARSZAWA, the `wl.import_global_df()` method does not add coordinates automatically and the coordinates have to be added manually when the `cl.g_WalterLieth()` object is being created. In our case, for the graph for WARSZAWA it would be: 
 
@@ -378,7 +450,7 @@ Now the `wl.draw()` method will display the coordinates box. So, **if the `cl.g_
 wl.draw(title_text=False, yearly_means_box=False, freeze_rectangles=False)
 ```
 
-#### Provide drawing data manually
+### Provide drawing data manually
 
 cloupy graphs can be drawn from the data provided manually. Every graph has its required data structure which must be preserved in the `pandas.DataFrame()` object. For a Walter-Lieth graph, the `pandas.DataFrame()` object must contain 5 or 6 columns, depending on the data interval (5 for a monthly interval, 6 for a daily interval). Data can be passed to the `dataframe` argument in the `cl.g_WalterLieth()` object. For example, the process might look like this:
 
@@ -399,13 +471,13 @@ wl.draw()
 
 **More detailed information on the required data structure is available in the graphs classes docstrings.**
 
-## Recap of the drawing process
+# Recap of the drawing process
 **cloupy drawing system is easy and can be summarized as follows:**
 - create a graph/map class, provide data for further processing and drawing (follow required data structure)
 - optionally, use the graph/map class methods to download and process data
 - use the `draw()` method to specify the graph/map style
 
-## Brief Documentation (the most important functions and classes)
+# Brief Documentation (the most important functions and classes)
 
 **DATA PROCESSING FUNCTIONS/CLASSES**
 
@@ -437,13 +509,12 @@ wl.draw()
 
 **More detailed documentation for every function, class and method is available in the cloupy's Python files**
 
-## Future Features
+# Future Features
 
 - more climatological data processing functions (e.g. completing missing data)
 - more climatological graphs
-- **drawing maps (e.g. interpolation maps)**
 
-## Dependencies
+# Dependencies
 **Packages/libraries**:
 - [Pandas](https://pandas.pydata.org) version: 1.1.4; 1.3.4 or higher
 - [Matplotlib](https://matplotlib.org) version: 3.3.2; 3.4.3 or higher
@@ -458,7 +529,8 @@ wl.draw()
 **OS**: Windows; Linux
 
 All of the above versions of packages/Python have been tested. **Note that** cloupy should also be compatible with the versions between mentioned (e.g. cloupy should work fine on any Pandas version between 1.1.4 and 1.3.4; any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries**. At this moment, Python versions after 3.9.6 do not compile with some of the required packages, so **Python 3.9.6 is recommended for using cloupy**.
-## Running Tests
+
+# Running Tests
 
 To run tests, run the following command from the root directory:
 
@@ -484,19 +556,19 @@ python -m pytest test\test_integration
 python -m pytest -k "not downloading"
 ```
 
-## Support
+# Support
 
 For support, please contact me via email: kamil.grala32466@gmail.com
 
 If you want to report a bug, see `CONTRIBUTING.md`
 
 
-## License
+# License
 
 cloupy is licensed under [MIT](https://choosealicense.com/licenses/mit/).
 
 
-## Author
+# Author
 
 [@Kamil Grala](https://github.com/pdGruby)
 
