@@ -1,13 +1,13 @@
 class MapInterpolation:
     """
-    Create a MapInterpolation object in which data for drawing an interpolation
+    Create a MapInterpolation class where the data for drawing an interpolation
     map can be downloaded, modified, manually provided.
 
     Keyword arguments:
         country -- a country or a list of countries for which the shapefile will
-    be drawn. Alternatively, if you pass 'EUROPE' value, all european countries
+    be drawn. Alternatively, if you pass the 'EUROPE' value, all European countries
     will be drawn on the map (default None)
-        dataframe -- data for the interpolation (default None)
+        dataframe -- data for interpolation (default None)
         shapefile_path -- a path to the non-default shapefile from which boundaries
     will be drawn (default None)
         epsg_crs -- the imported shapefile's coordinates system (default None).
@@ -40,17 +40,18 @@ class MapInterpolation:
                 'latitude': [54.2, 54.4, 54.2, 50.1, 53.4, 52.2, 51.1]
                             })
 
-    The exemplary data is an air temperature and comes from a couple of synoptic
+    The exemplary data is the air temperature and comes from a couple of synoptic
     stations from Poland.
     --------------------------------------------
 
     ---------------NOTE THAT---------------
-    You can choose country boundaries from the default shapefile by setting the
+    You can select country boundaries from the default shapefile by setting the
     'country' argument. The default shapefile comes from the Natural Earth Data
     website (https://www.naturalearthdata.com/about/terms-of-use/), which shares
     many shapefiles for free use. However, the 'shapefile_path' and 'epsg_crs'
-    arguments allow you to choose non-default boundaries from your PC. If you
-    specify non-default shapefile, the 'country' argument does not change anything.
+    arguments allow you to select non-default boundaries from your PC. If you
+    specify the non-default shapefile, the 'country' argument does not change
+    anything.
     ---------------------------------------
     """
     def __init__(
@@ -80,11 +81,11 @@ class MapInterpolation:
         data. To see the available colormaps, see: https://matplotlib.org/stable
         /tutorials/colors/colormaps.html (default for default style 'jet';
         default for retro style 'Greys_r')
-            fill_contours -- if interpolated contours are to be filled with the
-        choosen colormap (default True)
-            show_contours -- if interpolated contours are to be shown (default
+            fill_contours -- if the interpolated contours are to be filled with
+        the selected colormap (default True)
+            show_contours -- if the interpolated contours are to be shown (default
         False)
-            show_clabels -- if interpolated contours are to be labeled (default
+            show_clabels -- if the interpolated contours are to be labeled (default
         False)
             show_cbar -- if a colorbar for the interpolated data is to be shown
         (default True)
@@ -92,7 +93,7 @@ class MapInterpolation:
         False)
             show_frame -- if the frame of the axis is to be shown (default True)
             show_coordinates -- if the coordinates are to be shown (default True)
-            show_ticks -- if the x and y ticks are to be shown (default True)
+            show_ticks -- if the x and y-ticks are to be shown (default True)
             add_shape -- if additional shapes are to be drawn. The argument takes
         a dictionary in which keys are the paths to the additional shapefile and
         values are style/coordinates system settings - the value must be a single
