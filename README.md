@@ -34,11 +34,50 @@ pip3 install cloupy
 
 **This is just a demonstration of the cloupy functionality and some (in my opinion the most important) features** of the functions/classes. However, every function and class has many arguments which are not used in this tutorial, so **check the docstrings to see all features**
 
-TUTAJ BĘDZIE TABLE OF CONTENTS DLA USAGE/EXAMPLES
+#### Table of contents for the Usage/Examples paragraph
+1. [Data downloading and processing](#data_downloading)
 
-## Data downloading and processing
+    a. [Download climatological data from the IMGW database](#data_downloading_imgw)
+    
+    b. [Download specific climatological elements from the IMGW database](#data_downloading_specific_elements_imgw)
+    
+    c. [Useful functions for working with the IMGW database](#data_downloading_useful_imgw)
+    
+    d. [Download climatological data from the WMO database](#data_downloading_wmo)
+    
+    e. [Useful functions for working with the WMO database](#data_downloading_useful_wmo)
+    
+    f. [Check data continuity](#data_processing_check_continuity)
 
-### Download climatological data from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/)
+2. [Maps](#maps_drawing)
+    
+    a. [Exemplary interpolation map](#maps_exemplary)
+    
+    b. [The same exemplary map, but without setting the map style and data filtering](#maps_exemplary_no_levels_no_data_filtering)
+    
+    c. [Zoom a map to a specific location, show the difference between default style and retro style](#maps_zooming_and_styles)
+    
+    d. [Draw a map from the manually provided data, select a non-default shapefile to draw borders of the country, plot additional shapes from an additional shapefile](#maps_manually_data_and_nondefault_shapes)
+    
+    e. [Import the data for drawing the interpolation map from the global dataframe and draw multi-country map. Zoom to a specific area without changing the extrapolation points](#maps_multicountry)
+    
+3. [Graphs](#graphs_drawing)
+    
+    a. [Download climatological data for the station in Poznań (WMO ID: 12330) from the IMGW and draw a Walter-Lieth diagram](#graphs_imgw)
+    
+    b. [Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe](#graphs_global_dataframe)
+    
+    c. [The graph style that better fits a scientific article](#graphs_styles)
+    
+    d. [Select which graph elements are to be drawn](#graphs_selecting_elements)
+    
+    e. [Provide drawing data manually](#graphs_manually_data)
+    
+**See also [recap of the drawing process](#drawing_process_recap) and [brief documentation](#brief_documentation)**
+    
+## Data downloading and processing <a name="data_downloading"></a>
+
+### Download climatological data from the [IMGW database](https://s://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) <a name="data_downloading_imgw"></a>
 Use the `d_imgw_data` function to download the data from the IMGW database. In the code below, the data will be downloaded from the synoptic stations of the IMGW database. In this case, the selected data interval is monthly, the data string starts in 1966 and ends in 2020. The coordinates will be added to the stations in the downloaded data:
 ```python
 import cloupy as cl
@@ -46,7 +85,7 @@ import cloupy as cl
 data = cl.d_imgw_data(interval='monthly', stations_kind='synop', years_range=range(1966, 2021), return_coordinates=True)
 ```
 
-### Download specific climatological elements from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/)
+### Download specific climatological elements from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) <a name="data_downloading_specific_elements_imgw"></a>
 You can specify which climatological elements from the IMGW database will be downloaded by setting the `keywords` argument of the `d_imgw_data` function. The `keywords` argument must be a single string or a list of strings. If the given string is in a column name, the column will be added to the dataframe that will be returned. In the example below, the returned dataframe will contain the columns whose names contain the given words ('temperatura' means temperature, 'opad' means precipitation):
 
 ```python
@@ -58,7 +97,7 @@ data = cl.d_imgw_data(
 )
 ```
 
-### Useful functions for working with the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/)
+### Useful functions for working with the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) <a name="data_downloading_useful_imgw"></a>
 See available file formats from the IMGW database for the given arguments:
 ```python
 import cloupy as cl
@@ -78,7 +117,7 @@ colnames_in_all = cl.i_imgw_search_keywords_in_columns(keywords='', file_format=
 keywords_in_all = cl.i_imgw_search_keywords_in_columns(keywords='temperatura', file_format=None)
 ```
 
-### Download climatological data from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere)
+### Download climatological data from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere) <a name="data_downloading_wmo"></a>
 You can download data from the WMO database for a single station or for an entire country. If you would like to download the data for a single station, pass the station name (usually the city where the station is located) to the `station_name` argument. If you would like to download the data for an entire country, pass the country name prefixed with `cou` to the `station_name` argument (e.g. 'couGERMANY'). There are 5 elements that can be downloaded: mean air temperature ('mean'), precipitation ('preci'), minimum air temperature ('min_temp'), maximum air temperature ('max_temp') and sea level pressure ('sl_press'). To specify which element you would like to download, pass a single string or a list of strings to the `elements_to_scrape` argument:
 ```python
 import cloupy as cl
@@ -87,7 +126,7 @@ single_station = cl.d_wmo_data(station_name='POZNAN', elements_to_scrape=['temp'
 entire_country = cl.d_wmo_data(station_name='couUnited Arab Emirates', elements_to_scrape='temp', return_coordinates=True)
 ```
 
-### Useful functions for working with the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere)
+### Useful functions for working with the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere) <a name="data_downloading_useful_wmo"></a>
 You can see all available station and country with the `cl.i_wmo_get_stations()` function:
 ```python
 import cloupy as cl
@@ -103,7 +142,7 @@ close_to_london = cl.i_wmo_search_near_station(lon=0, lat=51)
 higher_acceptable_distance = cl.i_wmo_search_near_station(lon=0, lat=51, degrees_range=3)
 ```
 
-### Check data continuity
+### Check data continuity <a name="data_processing_check_continuity"></a>
 With the `cl.check_data_continuity` function you can remove all stations with not satisfying data continuity. The function will group a dataframe by unique values, count them for every single station and remove all stations which have too less number of records:
 ```python
 import cloupy as cl
@@ -113,9 +152,9 @@ df = cl.check_data_continuity(df=df, main_column=0, precision=1)
 ```
 In the example above, the `check_data_continuity` groups the dataframe by the unique values in the first column (0 is the index of the dataframe columns), counts the number of records for each station, takes the highest number of records (high_records) and removes stations with the number of records less than the high_records. The `precision` argument is set to 1, which means that the required number of records to keep a station is equal to 1 * high_records (if high_records is 1000, then the station must have 1000 records to be kept). If the `precision` argument was 0.5, then the required number of records to keep a station would be equal to 0.5 * high_records (if high_records is 1000, then the station must have at least 500 records to be kept).
 
-## Maps
+## Maps <a name="maps_drawing"></a>
 
-### Exemplary interpolation map
+### Exemplary interpolation map <a name="maps_exemplary"></a>
 ```python
 import cloupy as cl
 import numpy as np
@@ -158,7 +197,7 @@ imap.draw(
   <img src="https://i.ibb.co/f2cdDn9/air-temperature-poland.png"/>
 </p>
 
-### The same exemplary map, but without setting the map style and data filtering
+### The same exemplary map, but without setting the map style and data filtering <a name="maps_exemplary_no_levels_no_data_filtering"></a>
 
 **Note that** in the above code the most of the arguments are not necessary and are only optional for setting the map style - the code for drawing may be significantly shorter. However, in this case the map style may not be satisfying and not filtered data may affect negatively the interpolation result:
 
@@ -184,7 +223,7 @@ imap.draw(save='ugly_map.png')
 
 Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check the dataset and specify the interpolation levels.**
 
-### Zoom a map to a specific location, show the difference between default style and retro style
+### Zoom a map to a specific location, show the difference between default style and retro style <a name="maps_zooming_and_styles"></a>
 
 Sometimes you may want to highlight a specific region of a country and it is possible by passing the `zoom_in` argument to the `imap.draw()` method. This argument is also handy when you are working with a country that has overseas territories (eg. France) and would like to show only a specific part of the country. 
 
@@ -258,7 +297,7 @@ In this case, if the `zoom_in` argument was not specified, the maps would be com
   <img src="https://i.ibb.co/txDRqDR/france-mean-temperature-layout-no-zoom-in.png"/>
 </p>
 
-### Draw a map from the manually provided data, select a non-default shapefile to draw borders of the country, plot additional shapes from an additional shapefile
+### Draw a map from the manually provided data, select a non-default shapefile to draw borders of the country, plot additional shapes from an additional shapefile <a name="maps_manually_data_and_nondefault_shapes"></a>
 The country borders do not have to be drawn from the default cloupy shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_InterpolationMap()` class.
 
 What is more, it is also possible to draw additional shapes (e.g. states, voivodeships, rivers, lakes) by passing a dictionary to the `add_shapes` argument of the `imap.draw()` method. The dictionary keys must be shapes' paths and the dictionary values must be style/coordinates system set arguments. The dictionary values must be a single `str` in which arguments are separated by commas, e.g.:
@@ -315,8 +354,7 @@ imap.draw(
 
 For the above map, the shapefiles were downloaded from the **[GADM website](https://gadm.org/download_country.html)** under **[GADM license](https://gadm.org/license.html)**. 
 
-### Import the data for drawing the interpolation map from the global dataframe and draw multi-country map. Zoom to a specific area without changing the extrapolation points 
-
+### Import the data for drawing the interpolation map from the global dataframe and draw multi-country map. Zoom to a specific area without changing the extrapolation points <a name="maps_multicountry"></a>
 ```python
 import cloupy as cl
 import pandas as pd
@@ -395,10 +433,12 @@ plt.savefig('multpile_countries_extr_into_comp.png',
 
 As you can see, the slight differences are noticeable in the color layout. The `extrapolation_into_zoomed_area` argument must be set to True if the `zoom_in` argument is used for zooming into a specific part of the country that has overseas territories (like in the example of France above). If the `extrapolation_into_zoomed_area` argument was set to False in the case of France, the method would extrapolate values to the corners of the original plot (the plot before zooming, so the interpolation result in the European France would be completely distorted). In the case of Italy and Switzerland, some slight differences are noticeable, but these differences are still acceptable. However, **if you want to zoom into a specific part of the map with preserving the original color/contours layout, you can set the `extrapolation_into_zoomed_area` argument to False.**
 
-## Graphs
+## Graphs <a name="graphs_drawing"></a>
 
-### Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram
+### Download climatological data for the station in Poznań (WMO ID: 12330) from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) and draw a Walter-Lieth diagram <a name="graphs_imgw"></a>
 ```python
+import cloupy as cl
+
 wl = cl.g_WalterLieth(station_name='POZNAŃ')
 wl.d_imgw_data(years_range=range(1966, 2020))
 wl.draw()
@@ -408,8 +448,10 @@ wl.draw()
   <img src="https://i.ibb.co/JdR4rV5/poznan.png" />
 </p>
 
-### Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe
+### Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe <a name="graphs_global_dataframe"></a>
 ```python
+import cloupy as cl
+
 global_df = cl.d_imgw_data(
     interval='monthly', 
     stations_kind='synop', 
@@ -426,7 +468,7 @@ wl.draw()
   <img src="https://i.ibb.co/NYVgSCP/war.png" />
 </p>
 
-### The graph style that better fits a scientific article
+### The graph style that better fits a scientific article <a name="graphs_styles"></a>
 ```python
 cl.choose_diagStyle('retro')
 wl.draw()
@@ -435,7 +477,7 @@ wl.draw()
   <img src="https://i.ibb.co/XjyWQ6j/war-retro.png" />
 </p>
 
-### Select which graph elements are to be drawn
+### Select which graph elements are to be drawn <a name="graphs_selecting_elements"></a>
 
 As you can see, the graph for POZNAŃ displays information about the coordinates, while the graphs for WARSZAWA do not. The coordinates for POZNAŃ are automatically imported when the `wl.d_imgw_data()` method is used. However, when we import data from the global dataframe for WARSZAWA, the `wl.import_global_df()` method does not add coordinates automatically and the coordinates have to be added manually when the `cl.g_WalterLieth()` object is being created. In our case, for the graph for WARSZAWA it would be: 
 
@@ -450,7 +492,7 @@ Now the `wl.draw()` method will display the coordinates box. So, **if the `cl.g_
 wl.draw(title_text=False, yearly_means_box=False, freeze_rectangles=False)
 ```
 
-### Provide drawing data manually
+### Provide drawing data manually <a name="graphs_manually_data"></a>
 
 cloupy graphs can be drawn from the data provided manually. Every graph has its required data structure which must be preserved in the `pandas.DataFrame()` object. For a Walter-Lieth graph, the `pandas.DataFrame()` object must contain 5 or 6 columns, depending on the data interval (5 for a monthly interval, 6 for a daily interval). Data can be passed to the `dataframe` argument in the `cl.g_WalterLieth()` object. For example, the process might look like this:
 
@@ -471,13 +513,13 @@ wl.draw()
 
 **More detailed information on the required data structure is available in the graphs classes docstrings.**
 
-# Recap of the drawing process
+# Recap of the drawing process <a name="drawing_process_recap"></a>
 **cloupy drawing system is easy and can be summarized as follows:**
 - create a graph/map class, provide data for further processing and drawing (follow required data structure)
 - optionally, use the graph/map class methods to download and process data
 - use the `draw()` method to specify the graph/map style
 
-# Brief Documentation (the most important functions and classes)
+# Brief Documentation (the most important functions and classes) <a name="brief_documentation"></a>
 
 **DATA PROCESSING FUNCTIONS/CLASSES**
 
