@@ -3,7 +3,7 @@ Functions for IMGW database analysis.
 
 get_meteorological_data(interval, stations_kind, years_range, file_format_index=0,
                         file_format=None,   specific_columns=None, keywords=None,
-                        merge_splitted_stations=True, optimize_memory_usage=False)
+                        merge_split_stations=True, optimize_memory_usage=False)
 
 get_file_formats(interval, stations_kind, file_format_index)
 get_column_names(file_format)
@@ -556,7 +556,7 @@ def concatenate_data(
 def download_imgw_climatological_data(
         interval, stations_kind, years_range,
         file_format_index=0, file_format=None, specific_columns=None,
-        keywords=None, merge_splitted_stations=True, optimize_memory_usage=False,
+        keywords=None, merge_split_stations=True, optimize_memory_usage=False,
         return_coordinates=False
 ):
     """
@@ -577,7 +577,7 @@ def download_imgw_climatological_data(
     to merge. If None, take all columns (default None)
         keywords -- words which must be in the column name if the column is to be
     merged. If None, do not filter the column names (default None)
-        merge_splitted_stations -- merge stations which are the same but have
+        merge_split_stations -- merge stations which are the same but have
     different names (default True)
         optimize_memory_usage -- reduce pd.DataFrame memory usage (default False)
         return_coordinates -- add columns with latitude, longitude and elevation
@@ -607,13 +607,13 @@ def download_imgw_climatological_data(
         elif type(file_format) == list:
             file_formats = [format_ for format_ in file_format]
         else:
-            raise ValueError("Invalid input for the 'file_format' argument. Use a signle str or a list of strs.")
+            raise ValueError("Invalid input for the 'file_format' argument. Use a single str or a list of strs.")
     else:
         file_formats = get_file_formats(interval, stations_kind, file_format_index)
 
     df = concatenate_data(downloaded_files_names, file_formats, specific_columns,
                           keywords, optimize_memory_usage, years_range,
-                          merge_splitted_stations)
+                          merge_split_stations)
 
     if keywords is not None:
         keywords_in_columns = df[1]

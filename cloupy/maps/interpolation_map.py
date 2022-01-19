@@ -15,7 +15,7 @@ class MapInterpolation:
     (in the 'shapefile_path' argument). If the 'shapefile_path' argument is
     specified and the 'epsg_crs' argument is None, the boundaries will be drawn
     for the EPSG:4326 coordinates system. If it is not valid coordinates system,
-    the coordinates on the map may be bizzare
+    the coordinates on the map may be bizarre
 
     ---------------METHODS---------------
     draw()
@@ -217,7 +217,7 @@ class MapInterpolation:
         when saving and when displaying the map (300 DPI is used for saving the
         map, 150 DPI is used for displaying the map in an application). Different
         DPIs are used for streamline the workflow - lower DPI makes the map
-        creation process much faster so it is used to preview the map.
+        creation process much faster, so it is used to preview the map.
         ---------------------------------------
         """
         from cloupy.maps.draw_shapes import get_shapes_for_plotting
@@ -452,7 +452,7 @@ class MapInterpolation:
          Download data for a drawing from the IMGW database.
 
         Keyword arguments
-            years_range -- years range (eg. range(2010, 2021))
+            years_range -- years range (e.g. range(2010, 2021))
             column_with_values -- the column index where the values for interpolation
         are located (single integer)
             interval -- the data interval ('monthly', 'daily', 'prompt') (default
@@ -467,7 +467,7 @@ class MapInterpolation:
         stations in the dataframe must have the same number of records as the station
         that has the longest data continuity. If the value is 0.5, then individual
         stations in the dataframe must have at least 50% of the number of records
-        of the station that has the longest data continuity (eg. if the largest
+        of the station that has the longest data continuity (e.g. if the largest
         number of records is 100, then at least 50 records are required) (default
         0.8)
         """
@@ -523,7 +523,7 @@ class MapInterpolation:
         Download data for a drawing from the WMO database.
 
         Keywords arguments:
-            station_name -- name of the station for which the data will to downloaded.
+            station_name -- name of the station for which the data will be downloaded.
         If 'cou' prefix added to 'station_name' and a country name appears after the
         prefix, the function will search for all stations in the specified country
             element_to_scrape -- which element from the WMO website will be scraped
@@ -538,7 +538,7 @@ class MapInterpolation:
         stations in the dataframe must have the same number of records as the station
         that has the longest data continuity. If the value is 0.5, then individual
         stations in the dataframe must have at least 50% of the number of records
-        of the station that has the longest data continuity (eg. if the largest
+        of the station that has the longest data continuity (e.g. if the largest
         number of records is 100, then at least 50 records are required) (default
         0.3)
 
@@ -551,7 +551,7 @@ class MapInterpolation:
         probably are representative, but the latter one will be dropped if the
         continuity precision is too high. Some stations have also a long data string,
         but many None values, which can also result in incorrect filtering.
-        However, a properly selected 'continuity_precision" argument may be
+        However, a properly selected 'continuity_precision' argument may be
         still be useful, but the data should always be checked manually.
         ---------------------------------------
         """
@@ -600,8 +600,8 @@ class MapInterpolation:
         to be taken (a list of indexes). The first column must be a list of unique
         values for which calculations will be executed (station names), the second
         column must be a list of values which will be interpolated, the third column
-        must be a list of longitudes (x axis) and the fourth column must be a list
-        of latitudes (y axis). Some data requires special data processing, eg.
+        must be a list of longitudes (x-axis) and the fourth column must be a list
+        of latitudes (y-axis). Some data requires special data processing, e.g.
         precipitation, for which a column with year is required. If you want to
         process precipitation data, please insert a column with years into the
         first place (before the unique values)
@@ -615,7 +615,7 @@ class MapInterpolation:
         stations in the dataframe must have the same number of records as the station
         that has the longest data continuity. If the value is 0.5, then individual
         stations in the dataframe must have at least 50% of the number of records
-        of the station that has the longest data continuity (eg. if the largest
+        of the station that has the longest data continuity (e.g. if the largest
         number of records is 100, then at least 50 records are required) (default
         0.3)
 
@@ -687,7 +687,7 @@ class MapInterpolation:
         """
         import os
 
-        to_be_udpated = {
+        to_be_updated = {
             'shapefile_path': shapefile_path,
             'country':  country,
             'epsg_crs': epsg_crs
@@ -705,8 +705,8 @@ class MapInterpolation:
             shapefile_path = str(__file__).replace('interpolation_map.py', f'world{os.sep}ne_50m_admin_0_countries.shp')
             epsg_crs = 'epsg:4326'
 
-            to_be_udpated['shapefile_path'] = shapefile_path
-            to_be_udpated['epsg_crs'] = epsg_crs
+            to_be_updated['shapefile_path'] = shapefile_path
+            to_be_updated['epsg_crs'] = epsg_crs
 
         elif shapefile_path is not None and country is None:
             pass
@@ -725,7 +725,7 @@ class MapInterpolation:
 
         else:
             country = None
-            to_be_udpated['country'] = country
+            to_be_updated['country'] = country
 
         if dataframe is None:
             raise ValueError(
@@ -733,7 +733,7 @@ class MapInterpolation:
                 "the downloading methods"
                              )
 
-        return to_be_udpated
+        return to_be_updated
 
     @staticmethod
     def check_cloupy_graphs_chosen_style():

@@ -35,7 +35,7 @@ class WalterLieth:
     2nd column: months,
     3rd column: average air temperature,
     4th column: sum of precipitation,
-    5th column: absoulte maximum air temperature,
+    5th column: absolute maximum air temperature,
     6th column: absolute minimum air temperature
 
     Exemplary dataframe:
@@ -54,6 +54,7 @@ class WalterLieth:
     can not be drawn.
     ---------------------------------------
     """
+
     def __init__(
             self, station_name, years_range=None,
             dataframe=None, lon=False, lat=False,
@@ -377,7 +378,7 @@ class WalterLieth:
                                    label=dry_period_legend_label)
 
         # cover the fill_between under the 0 line
-        temp_axis.fill_between(x_for_plotting, [0]*14, [y_value_for_closing_bottom_rectangles]*14, color='white')
+        temp_axis.fill_between(x_for_plotting, [0] * 14, [y_value_for_closing_bottom_rectangles] * 14, color='white')
 
         if freeze_rectangles:
             if_freeze = WalterLieth.determine_if_freeze(abs_min_temp)
@@ -457,7 +458,7 @@ class WalterLieth:
         Download data for a drawing from the IMGW database.
 
         Keyword arguments:
-            years_range -- years range (eg. range(2010, 2021))
+            years_range -- years range (e.g. range(2010, 2021))
             interval -- the data interval ('monthly', 'daily', 'prompt') (default
         'monthly')
             stations_kind -- stations kind from the IMGW database ('synop', 'climat',
@@ -626,7 +627,7 @@ class WalterLieth:
                     print(
                         f"""
                         WARNING: no data found for '{element}'. It is not required for drawing, but the box with extreme
-                        temperatures will show None value. The probability of freeze occurence neither can be calculated,
+                        temperatures will show None value. The probability of freeze occurrence neither can be calculated,
                         so the rectangles will be blank. You can tell drawing function not to draw above elements:
                         freeze_rectangles=False, extreme_box=False.
                         """
@@ -688,11 +689,11 @@ class WalterLieth:
         columns_order = [2, 3, 4, 5, 6, 7, 8], where:
         2nd column contains station names (the index in the new dataframe is 0),
         3rd column contains years (the new index is 1),
-        4rd column contains months (the new index is 2),
-        5rd column contains average air temperatures (the new index is 3),
-        6rd column contains average sum of precipitation (the new index is 4),
-        7rd column contains absolute maximum air temperature (the new index is 5),
-        8rd column contains absolute minimum air temperature (the new index is 6)
+        4th column contains months (the new index is 2),
+        5th column contains average air temperatures (the new index is 3),
+        6th column contains average sum of precipitation (the new index is 4),
+        7th column contains absolute maximum air temperature (the new index is 5),
+        8th column contains absolute minimum air temperature (the new index is 6)
 
         So, if you want to filter by station name and check if WalterLieth.years_range
         matches the data in the imported global dataframe, 'station_in_column' and
@@ -702,7 +703,7 @@ class WalterLieth:
 
         After filtering, the method will drop these columns and pass the dataframe
         to WalterLieth.dataframe without the columns in which station names and
-        years were. If the structure of the dataframe after droping the above columns
+        years were. If the structure of the dataframe after dropping the above columns
         matches the required data structure for the WalterLieth class, the graph
         should be drawn correctly (see the WalterLieth class docstring for the
         required data structure)
@@ -839,10 +840,10 @@ class WalterLieth:
             rcParams['axes.prop_cycle'] = (
                     cycler(color=['k' for k in range(0, 6)]) +
                     cycler(linestyle=['-', '--', '-.',
-                                  (0, (1, 5)),
-                                  (0, (3, 1, 1, 1)),
-                                  (0, (3, 10, 1, 10, 1, 10))
-                                  ])
+                                      (0, (1, 5)),
+                                      (0, (3, 1, 1, 1)),
+                                      (0, (3, 10, 1, 10, 1, 10))
+                                      ])
             )
 
         else:

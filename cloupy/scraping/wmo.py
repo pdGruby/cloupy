@@ -289,7 +289,7 @@ def download_wmo_climatological_data(
     monthly.
 
     Keyword arguments:
-        station_name -- name of the station for which the data will to downloaded.
+        station_name -- name of the station for which the data will be downloaded.
     If 'cou' prefix added to 'station_name' and a country name appears after the
     prefix, the function will search for all stations in the specified country
     (e.g. 'couPOLAND' will download data for Poland)

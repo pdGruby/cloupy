@@ -12,7 +12,7 @@ def check_data_continuity(df, main_column, precision):
     dataframe must have the same number of records as the station that has the
     longest data continuity. If the value is 0.5, then individual stations in the
     dataframe must have at least 50% of the number of records of the station that
-    has the longest data continuity (eg. if the largest number of records is 100,
+    has the longest data continuity (e.g. if the largest number of records is 100,
     then at least 50 records are required) (default 0.3)
     """
     if precision < 0 or precision > 1:
