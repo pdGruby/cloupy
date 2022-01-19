@@ -3,7 +3,7 @@
   <img src="https://i.ibb.co/YpN6MVS/logo-update3.png" />
 </p>
 
-cloupy is a Python package for climatological data downloading, processing and visualizing. The main goal of the package is to help its author in writing a BA thesis. The package is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloupy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the library usage.
+cloupy is a Python package for climatological data downloading, processing and visualizing. The main goal of the package is to help its author in writing a BA thesis. The package is well adapted to academic work - used data sources are reliable and graphs are easy to modify. What's more, cloupy is intuitive and really easy to use, so even users who are not related to the climatological environment should have no problems with the package usage.
 
 ![python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
 ![windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
@@ -34,7 +34,7 @@ pip3 install cloupy
 
 **This is just a demonstration of the cloupy functionality and some (in my opinion the most important) features** of the functions/classes. However, every function and class has many arguments which are not used in this tutorial, so **check the docstrings to see all features**
 
-#### Table of contents for the Usage/Examples paragraph
+#### Table of contents
 1. [Data downloading and processing](#data_downloading)
 
     a. [Download climatological data from the IMGW database](#data_downloading_imgw)
@@ -65,13 +65,15 @@ pip3 install cloupy
     
     a. [Download climatological data for the station in Poznań (WMO ID: 12330) from the IMGW and draw a Walter-Lieth diagram](#graphs_imgw)
     
-    b. [Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe](#graphs_global_dataframe)
+    b. [Download climatological data for the station in Harare (WMO ID: 67775) from the WMO database](#graphs_wmo)
     
-    c. [The graph style that better fits a scientific article](#graphs_styles)
+    c. [Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe](#graphs_global_dataframe)
     
-    d. [Select which graph elements are to be drawn](#graphs_selecting_elements)
+    d. [The graph style that better fits a scientific article](#graphs_styles)
     
-    e. [Provide drawing data manually](#graphs_manually_data)
+    e. [Select which graph elements are to be drawn](#graphs_selecting_elements)
+    
+    f. [Provide drawing data manually](#graphs_manually_data)
     
 **See also [recap of the drawing process](#drawing_process_recap) and [brief documentation](#brief_documentation)**
     
@@ -219,7 +221,7 @@ imap.draw(save='ugly_map.png')
   <img src="https://i.ibb.co/XjGvVhm/lev-data-comp.png"/>
 </p>
 
-**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearence of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`.
+**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearence of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`. When the `interpolation_within_levels` is set to True, the white spots are replaced with the lowest or highest color level (depending on whether the values are below the specified levels or above the specified levels).
 
 Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check the dataset and specify the interpolation levels.**
 
@@ -266,7 +268,7 @@ for style in styles:
         cbar_ticks=np.arange(9, 17, 1),
         cbar_title='Air temperature [°C]',
         title=f'Fig. N. Spatial layout of the mean temperature in France\n({style} style)',
-        save=f'france_mean_temperature_layout_{style}.png',
+        save=f'france_mean_temperature_layout_{style}.png'
     )
 
 # merge the maps
@@ -323,7 +325,7 @@ df = df.groupby('Nazwa stacji').mean() # calc the mean values for the stations
 df = df[df.iloc[:, 0] > 5] # remove alpine stations which deviates significantly from the rest
 ```
 
-When the dataframe meets the required data structure (see `cl.m_InterpolationMaps` docs for more detailed information) for the interpolation map, it can be passed to the `cl.m_InterpolationMap()` class. So, if you want to provide the data manually, draw non-default borders and additional shapes, the code will look like this:
+When the dataframe meets the required data structure (see `cl.m_InterpolationMap` docs for more detailed information) for the interpolation map, it can be passed to the `cl.m_InterpolationMap()` class. So, if you want to provide the data manually, draw non-default borders and additional shapes, the code will look like this:
 ```python
 import numpy as np
 
@@ -362,7 +364,6 @@ import numpy as np
 
 countries = ['ITALY', 'SWITZERLAND']
 global_df = pd.DataFrame(columns=['station', 'year', 'month', 'temp', 'lon', 'lat', 'elv'])
-
 for country in countries:
     data_for_country = cl.d_wmo_data(
         station_name='cou' + country, 
@@ -372,7 +373,6 @@ for country in countries:
     global_df = global_df.append(data_for_country)
 
 cl.set_global_df(global_df)
-
 imap = cl.m_InterpolationMap(country=countries)
 imap.import_global_df(
     columns_order=[0, 3, 4, 5],
@@ -384,7 +384,7 @@ imap.import_global_df(
 imap.draw(
     levels=np.arange(-5, 20.5, 0.5),
     cmap='coolwarm',
-    save='multiple_countries.png',
+    save='multiple_countries.png'
 )
 ```
 <p align="center">
@@ -407,7 +407,7 @@ for boolean in [1, 0]:
         title_x_position=0.5,
         title_y_position=0,
         title_bold=True,
-        save=f'multiple_countries_zoomed_in_{boolean}.png',
+        save=f'multiple_countries_zoomed_in_{boolean}.png'
     )
     
 # merge the maps
@@ -445,7 +445,20 @@ wl.draw()
 ```
 
 <p align="center">
-  <img src="https://i.ibb.co/JdR4rV5/poznan.png" />
+  <img src="https://i.ibb.co/gJQVTry/poznan.png" />
+</p>
+
+### Download climatological data for the station in Harare (WMO ID: 67775) from the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere) and draw a Walter-Lieth diagram <a name="graphs_wmo"></a>
+```python
+import cloupy as cl
+
+wl = cl.g_WalterLieth(station_name='HARARE')
+wl.d_wmo_data()
+wl.draw()
+```
+
+<p align="center">
+  <img src="https://i.ibb.co/k4MxwWt/harare.png" />
 </p>
 
 ### Download data, set as global dataframe and draw a Walter-Lieth diagram based on the global dataframe <a name="graphs_global_dataframe"></a>
@@ -465,12 +478,12 @@ wl.draw()
 ```
 
 <p align="center">
-  <img src="https://i.ibb.co/NYVgSCP/war.png" />
+  <img src="https://i.ibb.co/xJnwQWt/warsaw.png" />
 </p>
 
 ### The graph style that better fits a scientific article <a name="graphs_styles"></a>
 ```python
-cl.choose_diagStyle('retro')
+cl.set_diagStyle('retro')
 wl.draw()
 ```
 <p align="center">
@@ -482,7 +495,7 @@ wl.draw()
 As you can see, the graph for POZNAŃ displays information about the coordinates, while the graphs for WARSZAWA do not. The coordinates for POZNAŃ are automatically imported when the `wl.d_imgw_data()` method is used. However, when we import data from the global dataframe for WARSZAWA, the `wl.import_global_df()` method does not add coordinates automatically and the coordinates have to be added manually when the `cl.g_WalterLieth()` object is being created. In our case, for the graph for WARSZAWA it would be: 
 
 ```python
-cl.g_WalterLieth(station_name='WARSZAWA', lat=52.2, lon=21.0, elevation=100)
+wl = cl.g_WalterLieth(station_name='WARSZAWA', lat=52.2, lon=21.0, elevation=100)
 ```
 
 Now the `wl.draw()` method will display the coordinates box. So, **if the `cl.g_WalterLieth()` object does not find the unnecessary data, it will just simply not display missing values**. What is more, **you can manually decide which elements on the graph are to be drawn**.
@@ -497,7 +510,9 @@ wl.draw(title_text=False, yearly_means_box=False, freeze_rectangles=False)
 cloupy graphs can be drawn from the data provided manually. Every graph has its required data structure which must be preserved in the `pandas.DataFrame()` object. For a Walter-Lieth graph, the `pandas.DataFrame()` object must contain 5 or 6 columns, depending on the data interval (5 for a monthly interval, 6 for a daily interval). Data can be passed to the `dataframe` argument in the `cl.g_WalterLieth()` object. For example, the process might look like this:
 
 ```python
+import cloupy as cl
 import pandas as pd
+
 data = pd.DataFrame(
     {
         'months': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -523,31 +538,31 @@ wl.draw()
 
 **DATA PROCESSING FUNCTIONS/CLASSES**
 
-- `set_global_df(...)` -> set global data frame from which data can be imported in any time.
-- `read_global_df(...)` -> return the global data frame as pandas.DataFrame.
-- `DataFrame(...)` -> create pandas.DataFrame object.
+- `check_data_continuity` -> check data continuity and return a dataframe with the filtered values
+- `set_global_df(...)` -> set global data frame from which data can be imported in any time
+- `read_global_df(...)` -> return the global data frame as pandas.DataFrame
 
 **DATA SCRAPING FUNCTIONS**
 
--  `d_imgw_data(...)` -> download IMGW data files from the IMGW database and return it as one merged pd.DataFrame.
+-  `d_imgw_data(...)` -> download IMGW data files from the IMGW database and return it as one merged pd.DataFrame
 -  `i_imgw_get_file_formats(...)` -> return the available file formats for the given 'interval' and 'stations_kind' in the IMGW database (different file formats contain different data)
 -  `i_imgw_serach_keywords_in_columns(...)` -> search for the given keywords in the column names and return a dictionary with the file formats in which the keywords were found
-- `d_wmo_data(...)` -> download climatological data for specified station/stations from the WMO website.
-- `i_wmo_get_stations(...)` -> return pandas.DataFrame with WMO stations information (WMO ids, coordinates, etc.).
-- `i_wmo_search_near_station(...)` -> return the nearest stations from WMO database for the given coordinates.
+- `d_wmo_data(...)` -> download climatological data for specified station/stations from the WMO website
+- `i_wmo_get_stations(...)` -> return pandas.DataFrame with WMO stations information (WMO ids, coordinates, etc.)
+- `i_wmo_search_near_station(...)` -> return the nearest stations from WMO database for the given coordinates
 
 
 **DATA VISUALIZATION FUNCTIONS**
 
-- `set_diagStyle(...)` -> choose global style for diagrams.
-- `change_diagStyle_params(...)` -> change global parameters for drawing diagrams.
-- `save_graph(...)` -> save created graph (this is the function 'savefig' from the matplotlib library).
+- `set_diagStyle(...)` -> choose global style for diagrams
+- `change_diagStyle_params(...)` -> change global parameters for drawing diagrams
 
 **DATA VISUALIZATION CLASSES**
 
 **Note that** every class for drawing diagrams contains some of the above functions as its methods (for data scraping and processing)
 
-- `g_WalterLieth(...)` -> create a WalterLieth object where data for drawing a Walter-Lieth diagram can be downloaded, modified, manually provided.
+- `m_MapInterpolation(...)` -> create a MapInterpolation class where the data for drawing an interpolation map can be downloaded, modified, manually provided
+- `g_WalterLieth(...)` -> create a WalterLieth object where the data for drawing a Walter-Lieth diagram can be downloaded, modified, manually provided
 
 **More detailed documentation for every function, class and method is available in the cloupy's Python files**
 
