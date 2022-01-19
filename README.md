@@ -575,19 +575,24 @@ wl.draw()
 
 # Dependencies
 **Packages/libraries**:
-- [Pandas](https://pandas.pydata.org) version: 1.1.4; 1.3.4 or higher
+- [Pandas](https://pandas.pydata.org) version: 1.1.4; 1.3.5 or higher
 - [Matplotlib](https://matplotlib.org) version: 3.3.2; 3.4.3 or higher
 - [Requests](https://requests.readthedocs.io) version: 2.24.0; 2.26.0 or higher
 - [bs4](https://beautiful-soup-4.readthedocs.io/en/latest/) version: 4.9.3 or higher
+- [pyshp](https://pypi.org/project/pyshp/) version: 2.1.3
+- [pyproj](https://pyproj4.github.io/pyproj/stable/) version: 3.2.1 or higher
+- [scipy](https://scipy.org) version: 1.7.2 or higher
 - [Numpy](https://www.numpy.org) version: 1.19.4; 1.21.4 or higher
+- [Pillow](https://pillow.readthedocs.io/en/stable/installation.html) version: 8.4.0 or higher
+- [cycler](https://pypi.org/project/cycler/) version: 0.11.0
 - [Pytest](https://docs.pytest.org/en/latest/) version: 6.2.5 or higher (only for running tests)
 - [Mock](http://mock.readthedocs.org/en/latest/) version: 4.0.3 or higher (only for running tests)
 
-**Python version**: 3.8.2; 3.9.6
+**Python version**: 3.8.2; 3.9.6, 3.10.2
 
 **OS**: Windows; Linux
 
-All the above versions of packages/Python have been tested. **Note that** cloupy should also be compatible with the versions between mentioned (e.g. cloupy should work fine on any Pandas' version between 1.1.4 and 1.3.4; any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries**. At this moment, Python versions after 3.9.6 do not compile with some of the required packages, so **Python 3.9.6 is recommended for using cloupy**
+All the above versions of packages/Python have been tested. **Note that** cloupy should also be compatible with the versions between mentioned (e.g. cloupy should work fine on any Pandas' version between 1.1.4 and 1.3.5; any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries and Python**.
 
 # Running Tests
 
