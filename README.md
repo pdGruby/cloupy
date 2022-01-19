@@ -80,7 +80,7 @@ pip3 install cloupy
 ## Data downloading and processing <a name="data_downloading"></a>
 
 ### Download climatological data from the [IMGW database](https://s://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) <a name="data_downloading_imgw"></a>
-Use the `d_imgw_data` function to download the data from the IMGW database. In the code below, the data will be downloaded from the synoptic stations of the IMGW database. In this case, the selected data interval is monthly, the data string starts in 1966 and ends in 2020. The coordinates will be added to the stations in the downloaded data:
+Use the `d_imgw_data()` function to download the data from the IMGW database. In the code below, the data will be downloaded from the synoptic stations of the IMGW database. In this case, the selected data interval is monthly, the data string starts in 1966 and ends in 2020. The coordinates will be added to the stations in the downloaded data:
 ```python
 import cloupy as cl
 
@@ -88,7 +88,7 @@ data = cl.d_imgw_data(interval='monthly', stations_kind='synop', years_range=ran
 ```
 
 ### Download specific climatological elements from the [IMGW database](https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/) <a name="data_downloading_specific_elements_imgw"></a>
-You can specify which climatological elements from the IMGW database will be downloaded by setting the `keywords` argument of the `d_imgw_data` function. The `keywords` argument must be a single string or a list of strings. If the given string is in a column name, the column will be added to the dataframe that will be returned. In the example below, the returned dataframe will contain the columns whose names contain the given words ('temperatura' means temperature, 'opad' means precipitation):
+You can specify which climatological elements from the IMGW database will be downloaded by setting the `keywords` argument of the `d_imgw_data()` function. The `keywords` argument must be a single string or a list of strings. If the given string is in a column name, the column will be added to the dataframe that will be returned. In the example below, the returned dataframe will contain the columns whose names contain the given words ('temperatura' means temperature, 'opad' means precipitation):
 
 ```python
 import cloupy as cl
@@ -129,14 +129,14 @@ entire_country = cl.d_wmo_data(station_name='couUnited Arab Emirates', elements_
 ```
 
 ### Useful functions for working with the [WMO database](http://climexp.knmi.nl/start.cgi?id=someone@somewhere) <a name="data_downloading_useful_wmo"></a>
-You can see all available station and country with the `cl.i_wmo_get_stations()` function:
+You can see all available station and country names with the `cl.i_wmo_get_stations()` function:
 ```python
 import cloupy as cl
 
 info_df = cl.i_wmo_get_stations()
 ```
 
-You can search for the nearest stations to the specified points with the `cl.i_wmo_search_near_stattion` function:
+You can search for the nearest stations to the specified points with the `cl.i_wmo_search_near_station()` function:
 ```python
 import cloupy as cl
 
@@ -145,14 +145,14 @@ higher_acceptable_distance = cl.i_wmo_search_near_station(lon=0, lat=51, degrees
 ```
 
 ### Check data continuity <a name="data_processing_check_continuity"></a>
-With the `cl.check_data_continuity` function you can remove all stations with not satisfying data continuity. The function will group a dataframe by unique values, count them for every single station and remove all stations which have too less number of records:
+With the `cl.check_data_continuity()` function you can remove all stations that do not have satisfactory data continuity. The function will group a dataframe by unique values, count number of records for every single station and remove all stations that have too few number of records:
 ```python
 import cloupy as cl
 
 df = df = cl.d_imgw_data(interval='monthly', stations_kind='synop', years_range=range(1966, 2021))
 df = cl.check_data_continuity(df=df, main_column=0, precision=1)
 ```
-In the example above, the `check_data_continuity` groups the dataframe by the unique values in the first column (0 is the index of the dataframe columns), counts the number of records for each station, takes the highest number of records (high_records) and removes stations with the number of records less than the high_records. The `precision` argument is set to 1, which means that the required number of records to keep a station is equal to 1 * high_records (if high_records is 1000, then the station must have 1000 records to be kept). If the `precision` argument was 0.5, then the required number of records to keep a station would be equal to 0.5 * high_records (if high_records is 1000, then the station must have at least 500 records to be kept).
+In the example above, the `check_data_continuity()` groups the dataframe by the unique values in the first column (0 is the index of the dataframe columns), counts the number of records for each station, takes the highest number of records (high_records) and removes stations with the number of records less than the high_records. The `precision` argument is set to 1, which means that the required number of records to keep a station is equal to 1 * high_records (if high_records is 1000, then the station must have 1000 records to be kept). If the `precision` argument was 0.5, then the required number of records to keep a station would be equal to 0.5 * high_records (if high_records is 1000, then the station must have at least 500 records to be kept).
 
 ## Maps <a name="maps_drawing"></a>
 
@@ -161,7 +161,7 @@ In the example above, the `check_data_continuity` groups the dataframe by the un
 import cloupy as cl
 import numpy as np
 
-imap = cl.m_InterpolationMap(country='POLAND')
+imap = cl.m_MapInterpolation(country='POLAND')
 
 imap.d_imgw_data(
     years_range=range(1966, 2021), 
@@ -201,13 +201,13 @@ imap.draw(
 
 ### The same exemplary map, but without setting the map style and data filtering <a name="maps_exemplary_no_levels_no_data_filtering"></a>
 
-**Note that** in the above code the most of the arguments are not necessary and are only optional for setting the map style - the code for drawing may be significantly shorter. However, in this case the map style may not be satisfying and not filtered data may affect negatively the interpolation result:
+**Note that** in the above code the most of the arguments are not necessary and are only optional for setting the map style - the code for drawing may be significantly shorter. However, in this case the map style may not be satisfactory and not filtered data may affect negatively the interpolation result:
 
 ```python
 import cloupy as cl
 
 # The map based on the same dataset, but without data filtering and style setting
-imap = cl.m_InterpolationMap(country='POLAND')
+imap = cl.m_MapInterpolation(country='POLAND')
 imap.d_imgw_data(years_range=range(1966, 2021), column_with_values='temp')
 imap.draw(save='ugly_map.png')
 
@@ -239,7 +239,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # create the interpolation map class and prepare the data
-imap=cl.m_InterpolationMap('FRANCE')
+imap=cl.m_MapInterpolation('FRANCE')
 imap.d_wmo_data('couFRANCE', 'temp', check_continuity=True)
 imap.dataframe = imap.dataframe[imap.dataframe.iloc[:, 0] > 9]  # remove alpine stations
 
@@ -300,7 +300,7 @@ In this case, if the `zoom_in` argument was not specified, the maps would be com
 </p>
 
 ### Draw a map from the manually provided data, select a non-default shapefile to draw borders of the country, plot additional shapes from an additional shapefile <a name="maps_manually_data_and_nondefault_shapes"></a>
-The country borders do not have to be drawn from the default cloupy shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_InterpolationMap()` class.
+The country borders do not have to be drawn from the default cloupy shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_MapInterpolation()` class.
 
 What is more, it is also possible to draw additional shapes (e.g. states, voivodeships, rivers, lakes) by passing a dictionary to the `add_shapes` argument of the `imap.draw()` method. The dictionary keys must be shapes' paths and the dictionary values must be style/coordinates system set arguments. The dictionary values must be a single `str` in which arguments are separated by commas, e.g.:
 ```python
@@ -310,7 +310,7 @@ add_shapes={
 }
 ```
 
-The data for a map can be provided manually by passing a `pandas.DataFrame()` object to the `dataframe` argument of the `cl.m_InterpolationMap()`:
+The data for a map can be provided manually by passing a `pandas.DataFrame()` object to the `dataframe` argument of the `cl.m_MapInterpolation()`:
 ```python
 import cloupy as cl
 
@@ -325,11 +325,11 @@ df = df.groupby('Nazwa stacji').mean() # calc the mean values for the stations
 df = df[df.iloc[:, 0] > 5] # remove alpine stations which deviates significantly from the rest
 ```
 
-When the dataframe meets the required data structure (see `cl.m_InterpolationMap` docs for more detailed information) for the interpolation map, it can be passed to the `cl.m_InterpolationMap()` class. So, if you want to provide the data manually, draw non-default borders and additional shapes, the code will look like this:
+When the dataframe meets the required data structure (see `cl.m_MapInterpolation` docs for more detailed information) for the interpolation map, it can be passed to the `cl.m_MapInterpolation()` class. So, if you want to provide the data manually, draw non-default borders and additional shapes, the code will look like this:
 ```python
 import numpy as np
 
-imap = cl.m_InterpolationMap(
+imap = cl.m_MapInterpolation(
     shapefile_path='path/to/shapefile', # specify the path to your non-default shapefile
     epsg_crs='epsg:4326', # specify the shapefile coordinates system
     dataframe=df # pass manually the dataframe
@@ -373,7 +373,7 @@ for country in countries:
     global_df = global_df.append(data_for_country)
 
 cl.set_global_df(global_df)
-imap = cl.m_InterpolationMap(country=countries)
+imap = cl.m_MapInterpolation(country=countries)
 imap.import_global_df(
     columns_order=[0, 3, 4, 5],
     check_continuity=True,
