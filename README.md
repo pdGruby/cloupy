@@ -152,7 +152,7 @@ import cloupy as cl
 df = cl.d_imgw_data(interval='monthly', stations_kind='synop', years_range=range(1966, 2021))
 df = cl.check_data_continuity(df=df, main_column=0, precision=1)
 ```
-In the example above, the `check_data_continuity()` groups the dataframe by the unique values in the first column (0 is the index of the dataframe columns), counts the number of records for each station, takes the highest number of records (high_records) and removes stations with the number of records less than the high_records. The `precision` argument is set to 1, which means that the required number of records to keep a station is equal to 1 * high_records (if high_records is 1000, then the station must have 1000 records to be kept). If the `precision` argument was 0.5, then the required number of records to keep a station would be equal to 0.5 * high_records (if high_records is 1000, then the station must have at least 500 records to be kept).
+In the example above, the `check_data_continuity()` groups the dataframe by the unique values in the first column (0 is the index of the dataframe columns), counts the number of records for each station, takes the highest number of records (high_records) and removes stations with the number of records less than the high_records. The `precision` argument is set to 1, which means that the required number of records to keep a station is equal to 1 * high_records (if high_records is 1000, then the station must have 1000 records to be kept). If the `precision` argument was 0.5, then the required number of records to keep a station would be equal to 0.5 * high_records (if high_records is 1000, then the station must have at least 500 records to be kept)
 
 ## Maps <a name="maps_drawing"></a>
 
@@ -221,15 +221,15 @@ imap.draw(save='ugly_map.png')
   <img src="https://i.ibb.co/XjGvVhm/lev-data-comp.png"/>
 </p>
 
-**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearance of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`. When the `interpolation_within_levels` is set to True, the white spots are replaced with the lowest or highest color level (depending on whether the values are below the specified levels or above the specified levels).
+**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearance of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`. When the `interpolation_within_levels` is set to True, the white spots are replaced with the lowest or highest color level (depending on whether the values are below the specified levels or above the specified levels)
 
-Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check the dataset and specify the interpolation levels.**
+Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check the dataset and specify the interpolation levels**
 
 ### Zoom a map to a specific location, show the difference between default style and retro style <a name="maps_zooming_and_styles"></a>
 
-Sometimes you may want to highlight a specific region of a country and it is possible by passing the `zoom_in` argument to the `imap.draw()` method. This argument is also handy when you are working with a country that has overseas territories (e.g. France) and would like to show only a specific part of the country. 
+Sometimes you may want to highlight a specific region of a country and it is possible by passing the `zoom_in` argument to the `imap.draw()` method. This argument is also handy when you are working with a country that has overseas territories (e.g. France) and would like to show only a specific part of the country 
 
-The `zoom_in` argument accepts a list of tuples where the first tuple holds the x-values to which the view will be adjusted, and the second tuple holds the y-values to which the view will be adjusted, e.g. `zoom_in=[(16, 18), (50, 51)]` will zoom into the region of Poland that is located between 16 and 18 degree of the east longitude and between 50 and 51 degree of the north latitude.
+The `zoom_in` argument accepts a list of tuples where the first tuple holds the x-values to which the view will be adjusted, and the second tuple holds the y-values to which the view will be adjusted, e.g. `zoom_in=[(16, 18), (50, 51)]` will zoom into the region of Poland that is located between 16 and 18 degree of the east longitude and between 50 and 51 degree of the north latitude
 
 The exemplary maps of France with the `zoom_in` argument in the default and retro styles:
 
@@ -300,7 +300,7 @@ In this case, if the `zoom_in` argument was not specified, the maps would be com
 </p>
 
 ### Draw a map from the manually provided data, select a non-default shapefile to draw borders of the country, plot additional shapes from an additional shapefile <a name="maps_manually_data_and_nondefault_shapes"></a>
-The country borders do not have to be drawn from the default cloupy shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_MapInterpolation()` class.
+The country borders do not have to be drawn from the default cloupy shapefile - you can provide your own non-default shapefile by passing its path to the `shapefile_path` argument of the `cl.m_MapInterpolation()` class
 
 What is more, it is also possible to draw additional shapes (e.g. states, voivodeships, rivers, lakes) by passing a dictionary to the `add_shapes` argument of the `imap.draw()` method. The dictionary keys must be shapes' paths and the dictionary values must be style/coordinates system set arguments. The dictionary values must be a single `str` in which arguments are separated by commas, e.g.:
 ```python
@@ -431,7 +431,7 @@ plt.savefig('multpile_countries_extr_into_comp.png',
   <img src="https://i.ibb.co/Htw7pZX/multpile-countries-extr-into-comp.png" />
 </p>
 
-As you can see, the slight differences are noticeable in the color layout. The `extrapolation_into_zoomed_area` argument must be set to True if the `zoom_in` argument is used for zooming into a specific part of the country that has overseas territories (like in the example of France above). If the `extrapolation_into_zoomed_area` argument was set to False in the case of France, the method would extrapolate values to the corners of the original plot (the plot before zooming, so the interpolation result in the European France would be completely distorted). In the case of Italy and Switzerland, some slight differences are noticeable, but these differences are still acceptable. However, **if you want to zoom into a specific part of the map with preserving the original color/contours layout, you can set the `extrapolation_into_zoomed_area` argument to False.**
+As you can see, the slight differences are noticeable in the color layout. The `extrapolation_into_zoomed_area` argument must be set to True if the `zoom_in` argument is used for zooming into a specific part of the country that has overseas territories (like in the example of France above). If the `extrapolation_into_zoomed_area` argument was set to False in the case of France, the method would extrapolate values to the corners of the original plot (the plot before zooming, so the interpolation result in the European France would be completely distorted). In the case of Italy and Switzerland, some slight differences are noticeable, but these differences are still acceptable. However, **if you want to zoom into a specific part of the map with preserving the original color/contours layout, you can set the `extrapolation_into_zoomed_area` argument to False**
 
 ## Graphs <a name="graphs_drawing"></a>
 
@@ -498,7 +498,7 @@ As you can see, the graph for POZNAŃ displays information about the coordinates
 wl = cl.g_WalterLieth(station_name='WARSZAWA', lat=52.2, lon=21.0, elevation=100)
 ```
 
-Now the `wl.draw()` method will display the coordinates box. So, **if the `cl.g_WalterLieth()` object does not find the unnecessary data, it will just simply not display missing values**. What is more, **you can manually decide which elements on the graph are to be drawn**.
+Now the `wl.draw()` method will display the coordinates box. So, **if the `cl.g_WalterLieth()` object does not find the unnecessary data, it will just simply not display missing values**. What is more, **you can manually decide which elements on the graph are to be drawn**
 
 **The `wl.draw()` method takes several arguments that let you decide which element on the graph will be displayed**. For example, if you do not want to display the title (which actually is the station name), the yearly means box and the bottom freeze rectangles, you have to pass the following arguments to the `wl.draw()` method:
 ```python
@@ -526,7 +526,7 @@ wl = cl.g_WalterLieth(station_name='TEST', dataframe=data)
 wl.draw()
 ```
 
-**More detailed information on the required data structure is available in the graphs classes docstrings.**
+**More detailed information on the required data structure is available in the graphs classes docstrings**
 
 # Recap of the drawing process <a name="drawing_process_recap"></a>
 **cloupy drawing system is easy and can be summarized as follows:**
@@ -585,7 +585,7 @@ wl.draw()
 
 **OS**: Windows; Linux
 
-All the above versions of packages/Python have been tested. **Note that** cloupy should also be compatible with the versions between mentioned (e.g. cloupy should work fine on any Pandas' version between 1.1.4 and 1.3.4; any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries**. At this moment, Python versions after 3.9.6 do not compile with some of the required packages, so **Python 3.9.6 is recommended for using cloupy**.
+All the above versions of packages/Python have been tested. **Note that** cloupy should also be compatible with the versions between mentioned (e.g. cloupy should work fine on any Pandas' version between 1.1.4 and 1.3.4; any Python version between 3.8.2 and 3.9.6). However, it has not been tested and **it is recommended to use the most recent version of the packages/libraries**. At this moment, Python versions after 3.9.6 do not compile with some of the required packages, so **Python 3.9.6 is recommended for using cloupy**
 
 # Running Tests
 
@@ -606,7 +606,7 @@ python -m pytest test\test_unit
 python -m pytest test\test_integration
 ```
 
-**Note that** the integration testing may take some time (during the process, data downloading functions are being tested, so duration depends on several factors). The process usually takes about 9-10 minutes. 
+**Note that** the integration testing may take some time (during the process, data downloading functions are being tested, so duration depends on several factors). The process usually takes about 9-10 minutes 
 
 **If you want to skip data downloading tests, run the following command:**
 ```bash
