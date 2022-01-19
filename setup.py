@@ -14,7 +14,7 @@ setup(
     author_email='kamil.grala32466@gmail.com',
     url='https://github.com/pdGruby/cloupy',
     license='MIT',
-    packages=find_packages(),
+    packages=['cloupy'],
     install_requires=[
         'pandas>=1.3.3,<=1.3.5',
         'matplotlib>=3.4.3,<=3.5.1',
@@ -33,12 +33,8 @@ setup(
     ],
     package_data={
         'cloupy': [
-            'data_processing/*',
-            'maps/*'
-            'scraping/*',
-            'diagrams/*',
-            'test/test_integration/*',
-            'test/test_unit/*'
+            'maps/world/*',
+            'scraping/*.csv',
         ],
                   },
     include_package_data=True,
