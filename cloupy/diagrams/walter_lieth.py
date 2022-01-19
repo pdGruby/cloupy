@@ -378,7 +378,10 @@ class WalterLieth:
                                    label=dry_period_legend_label)
 
         # cover the fill_between under the 0 line
-        temp_axis.fill_between(x_for_plotting, [0] * 14, [y_value_for_closing_bottom_rectangles] * 14, color='white')
+        if y_value_for_closing_bottom_rectangles is None:
+            temp_axis.fill_between(x_for_plotting, [0] * 14, [temp_axis.get_ylim()[0]] * 14, color='white')
+        else:
+            temp_axis.fill_between(x_for_plotting, [0] * 14, [y_value_for_closing_bottom_rectangles] * 14, color='white')
 
         if freeze_rectangles:
             if_freeze = WalterLieth.determine_if_freeze(abs_min_temp)
