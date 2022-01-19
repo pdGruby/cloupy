@@ -400,7 +400,7 @@ def download_data(urls):
 
     for url in urls:
         if urls.index(url) == 0:
-            print("Starting data download... 0% done")
+            print("Data download started... 0% done")
 
         r = requests.get(url)
         soup = bs(r.content, features="html.parser")
@@ -461,7 +461,7 @@ def concatenate_data(
 
     for file in downloaded_files_names:
         if downloaded_files_names.index(file) == 0:
-            print("Starting data concatenating... 0% done")
+            print("Data concatenating started... 0% done")
 
         for file_format in file_formats:
 
@@ -644,8 +644,9 @@ def download_imgw_climatological_data(
     shutil.rmtree(files_reading_dir_path)
 
     if return_coordinates:
-
         import pandas as pd
+
+        print('Joining coordinates to the dataframe...')
 
         lat = []
         lon = []
@@ -670,5 +671,7 @@ def download_imgw_climatological_data(
         df['lon'] = lon
         df['lat'] = lat
         df['elv'] = elv
+
+        print('Coordinates joined!')
 
     return df

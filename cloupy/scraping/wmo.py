@@ -321,7 +321,7 @@ def download_wmo_climatological_data(
     wmo_ids_list = [wmo_id for station, wmo_id in wmo_ids.items()]
 
     full_df = pd.DataFrame()
-    print('Starting downloading data. It may take a while.')
+    print('Data download started. It may take a while.')
     for station, wmo_id in wmo_ids.items():
         data = []
         for element in elements_to_scrape:
