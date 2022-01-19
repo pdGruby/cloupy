@@ -1,4 +1,4 @@
-cff-version: 1.0.0
+cff-version: 1.1.0
 message: "If you use cloupy, I would appreciate if you cited cloupy as below."
 authors:
 - family-names: "Grala"
@@ -7,5 +7,5 @@ authors:
 title: "cloupy - Climatological Data Downloading, Processing and Visualizing"
 version: 1.1.0
 doi: 10.5281/zenodo.5655743
-date-released: 2022-01-19
+date-released: 2022-01-20
 url: "https://github.com/pdGruby/cloupy"
