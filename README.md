@@ -221,7 +221,7 @@ imap.draw(save='ugly_map.png')
   <img src="https://i.ibb.co/XjGvVhm/lev-data-comp.png"/>
 </p>
 
-**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 12.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearance of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`. When the `interpolation_within_levels` is set to True, the white spots are replaced with the lowest or highest color level (depending on whether the values are below the specified levels or above the specified levels)
+**In the figure on the left, no levels were specified and no data was filtered. In the figure on the right, the data was not filtered** (alpine stations were still in the dataset, stations with poor data continuity were also in the dataset), **but the levels were specified by passing `levels=np.arange(5, 10.5, 0.5)` to the `imap.draw()` method.** The red spots in the lower parts of the map are the result of the alpine stations in the dataset - due to the significantly deviated values, the interpolation effect is somewhat distorted. The values inside the red spots are much higher than 12°C, so they are not within the specified levels, which would result in the appearance of white spots. However, to the `imap.draw()` method another argument was passed to force the interpolation process to interpolate within the given levels - `interpolation_within_levels=True`. When the `interpolation_within_levels` is set to True, the white spots are replaced with the lowest or highest color level (depending on whether the values are below the specified levels or above the specified levels)
 
 Data filtering is not always necessary, but specifying manually levels is almost always necessary! Nevertheless, to get high-quality interpolation effect, **it is recommended to always check the dataset and specify the interpolation levels**
 
@@ -394,6 +394,8 @@ imap.draw(
 If you wished to take a closer look at the situation on the Italian-Swiss border, you could use the `zoom_in` argument of the `imap.draw()` method. You may notice some slight differences in the colors' layout between the map before zooming in and the map after zooming in. The differences result from different extrapolation points, which are always in the corners of the plot (when you zoom into a specific area, it means that you change the corner points of the plot, which affects the extrapolation result). **You can force the `imap.draw()` method to extrapolate the values to the points of the original plot (before zooming) by setting the `extrapolation_into_zoomed_area` argument to False:** 
 
 ```python
+import matplotlib.pyplot as plt
+
 # draw maps (1 = True, 0 = False)
 for boolean in [1, 0]:
     imap.draw(
