@@ -10,10 +10,10 @@ class MapInterpolation:
         dataframe -- data for interpolation (default None)
         shapefile_path -- a path to the non-default shapefile from which boundaries
     will be drawn (default None)
-        epsg_crs -- the imported shapefile's coordinates system (default None).
+        crs -- the imported shapefile's coordinates system (default None).
     This argument is required when specifying a path to the non-default shapefile
     (in the 'shapefile_path' argument). If the 'shapefile_path' argument is
-    specified and the 'epsg_crs' argument is None, the boundaries will be drawn
+    specified and the 'crs' argument is None, the boundaries will be drawn
     for the EPSG:4326 coordinates system. If it is not valid coordinates system,
     the coordinates on the map may be bizarre
 
@@ -48,7 +48,7 @@ class MapInterpolation:
     You can select country boundaries from the default shapefile by setting the
     'country' argument. The default shapefile comes from the Natural Earth Data
     website (https://www.naturalearthdata.com/about/terms-of-use/), which shares
-    many shapefiles for free use. However, the 'shapefile_path' and 'epsg_crs'
+    many shapefiles for free use. However, the 'shapefile_path' and 'crs'
     arguments allow you to select non-default boundaries from your PC. If you
     specify the non-default shapefile, the 'country' argument does not change
     anything.
@@ -56,12 +56,12 @@ class MapInterpolation:
     """
     def __init__(
             self, country=None, dataframe=None,
-            shapefile_path=None, epsg_crs=None,
+            shapefile_path=None, crs=None,
     ):
         self.country = country
         self.dataframe = dataframe
         self.shapefile_path = shapefile_path
-        self.epsg_crs = epsg_crs
+        self.crs = crs
 
     def draw(
             self, levels=None, cmap='jet',
@@ -226,11 +226,11 @@ class MapInterpolation:
         from PIL import Image
 
         attrs_to_be_updated = MapInterpolation.check_if_valid_args_and_update_class_attrs(
-            self.shapefile_path, self.country, self.epsg_crs, self.dataframe
+            self.shapefile_path, self.country, self.crs, self.dataframe
         )
         self.shapefile_path = attrs_to_be_updated['shapefile_path']
         self.country = attrs_to_be_updated['country']
-        self.epsg_crs = attrs_to_be_updated['epsg_crs']
+        self.crs = attrs_to_be_updated['crs']
 
         properties = {
             'title': None,
@@ -316,7 +316,7 @@ class MapInterpolation:
         fig, ax = plt.subplots(figsize=properties['figsize'], facecolor='white')
         shapes_for_plotting = get_shapes_for_plotting(
             ax, self.shapefile_path,
-            self.epsg_crs, country=self.country,
+            self.crs, country=self.country,
         )
 
         # get extreme shape points and create an invisible box on which points for extrapolation will be placed
@@ -679,7 +679,7 @@ class MapInterpolation:
     
     @staticmethod
     def check_if_valid_args_and_update_class_attrs(
-            shapefile_path, country, epsg_crs, dataframe
+            shapefile_path, country, crs, dataframe
     ):
         """
         Check that the input values do not conflict with each other and return a
@@ -690,7 +690,7 @@ class MapInterpolation:
         to_be_updated = {
             'shapefile_path': shapefile_path,
             'country':  country,
-            'epsg_crs': epsg_crs
+            'crs': crs
         }
 
         if shapefile_path is None and country is None:
@@ -698,15 +698,15 @@ class MapInterpolation:
                 "Specify which countries are to be drawn (by passing a string with the country name or a list of strings "
                 "with the country names). Alternatively, you can specify your non-default shapefile for which boundaries "
                 "will be drawn (by passing the shapefile's path to the 'shapefile_path' argument and passing the "
-                "shapefile's coordinates system to the 'epsg_crs' argument."
+                "shapefile's coordinates system to the 'crs' argument."
             )
 
         elif shapefile_path is None and country is not None:
             shapefile_path = str(__file__).replace('interpolation_map.py', f'world{os.sep}ne_50m_admin_0_countries.shp')
-            epsg_crs = 'epsg:4326'
+            crs = 'epsg:4326'
 
             to_be_updated['shapefile_path'] = shapefile_path
-            to_be_updated['epsg_crs'] = epsg_crs
+            to_be_updated['crs'] = crs
 
         elif shapefile_path is not None and country is None:
             pass

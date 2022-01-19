@@ -331,7 +331,7 @@ import numpy as np
 
 imap = cl.m_MapInterpolation(
     shapefile_path='path/to/shapefile', # specify the path to your non-default shapefile
-    epsg_crs='epsg:4326', # specify the shapefile coordinates system
+    crs='epsg:4326', # specify the shapefile coordinates system
     dataframe=df # pass manually the dataframe
 )
 
