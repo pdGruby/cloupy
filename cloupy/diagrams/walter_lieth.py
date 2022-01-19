@@ -4,12 +4,12 @@ class WalterLieth:
     can be downloaded, modified, manually provided.
 
     Keyword arguments:
-    station_name -- name of the station for which data will be drawn
-    years_range -- years range for which data will be drawn (default None)
-    dataframe -- data for the drawing (default None)
-    lat -- latitude of the station (default None)
-    lon -- longitude of the station (default None)
-    elevation -- elevation of the station (default None)
+        station_name -- name of the station for which data will be drawn
+        years_range -- years range for which data will be drawn (default None)
+        dataframe -- data for the drawing (default None)
+        lon -- longitude of the station (default None)
+        lat -- latitude of the station (default None)
+        elevation -- elevation of the station (default None)
 
     ---------------METHODS---------------
     draw()
@@ -35,7 +35,7 @@ class WalterLieth:
     2nd column: months,
     3rd column: average air temperature,
     4th column: sum of precipitation,
-    5th column: absoulte maximum air temperature,
+    5th column: absolute maximum air temperature,
     6th column: absolute minimum air temperature
 
     Exemplary dataframe:
@@ -57,24 +57,24 @@ class WalterLieth:
 
     def __init__(
             self, station_name, years_range=None,
-            dataframe=None, lat=False, lon=False,
+            dataframe=None, lon=False, lat=False,
             elevation=False
     ):
         self.dataframe = dataframe
         self.years_range = years_range
         self.station_name = station_name.upper()
-        self.lat = lat
         self.lon = lon
+        self.lat = lat
         self.elevation = elevation
 
     def draw(
             self, figsize=(7.74, 7.74), language=None,
             freeze_rectangles=True, title_text=True, years_text=True,
             coordinates_box=True, yearly_means_box=True, extremes_box=True,
-            legend_box=True
+            legend_box=True, save=None
     ):
         """
-        Specify which elements have to be drawn and draw Walter-Lieth diagram.
+        Specify which elements have to be drawn and draw a Walter-Lieth diagram.
 
         Keyword arguments:
             figsize -- figure size (default (7.74, 7.74))
@@ -91,11 +91,13 @@ class WalterLieth:
             extremes_box -- if box with extreme temperatures has to be drawn
         (default True)
             legend_box -- if legend has to be drawn (default True)
+            save -- if the Walter-Lieth graph is to be saved. A string in which
+        file name must be passed, for example: 'walter_lieth.png'. Note that
+        other picture formats can also be passed, e.g. 'walter_lieth.jpg' (default
+        None)
         """
-
         import matplotlib.pyplot as plt
         from mpl_toolkits.axes_grid1 import make_axes_locatable
-        from matplotlib import rcParams
 
         if self.dataframe is None or self.dataframe.empty:
             raise AttributeError(
@@ -104,9 +106,7 @@ class WalterLieth:
                 WalterLieth.d_imgw_data, WalterLieth.d_wmo_data, WalterLieth.import_global_df
                 """)
 
-        ls_prop_cycle = rcParams['axes.prop_cycle'].by_key()['linestyle']
-        color_prop_cycle = rcParams['axes.prop_cycle'].by_key()['color']
-        if WalterLieth.check_cloudy_graphs_chosen_style(ls_prop_cycle, color_prop_cycle) == 'retro':
+        if WalterLieth.check_cloupy_graphs_chosen_style() == 'retro':
             temp_linecolor = 'k'
             temp_linestyle = '-.'
 
@@ -146,8 +146,8 @@ class WalterLieth:
 
         if language == 'POL':
             asl = 'Wysokość: {} m n.p.m.'
-            lat = 'Szerokość geograficzna: {}'
             lon = 'Długość geograficzna: {}'
+            lat = 'Szerokość geograficzna: {}'
             temp_label = 'Średnia roczna temperatura: {}°C'
             preci_label = 'Roczna suma opadów: {} mm'
             x_ticks_labels = ['S', 'L', 'M', 'K', 'M', 'C', 'L', 'S', 'W', 'P', 'L', 'G']
@@ -166,8 +166,8 @@ class WalterLieth:
             dry_period_legend_label = 'okres suchy'
         else:
             asl = 'Elevation: {} m a.s.l.'
-            lat = 'Latitude: {}'
             lon = 'Longitude: {}'
+            lat = 'Latitude: {}'
             temp_label = 'Average air temperature: {}°C'
             preci_label = 'Annual precipitation: {} mm'
             x_ticks_labels = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
@@ -193,11 +193,11 @@ class WalterLieth:
         else:
             years = f'{str(min(self.years_range))}-{str(max(self.years_range))}'
 
-        if self.lat:
-            lat = lat.format(self.lat)
-
         if self.lon:
             lon = lon.format(self.lon)
+
+        if self.lat:
+            lat = lat.format(self.lat)
 
         if self.elevation:
             asl = asl.format(self.elevation)
@@ -269,10 +269,10 @@ class WalterLieth:
             fig.suptitle(title, x=0.14, size=16, ha='left', fontweight='bold')
         if self.elevation and coordinates_box:
             fig.text(0.14, 0.933, asl)
-        if self.lat and coordinates_box:
-            fig.text(0.14, 0.91, lat)
         if self.lon and coordinates_box:
-            fig.text(0.14, 0.887, lon)
+            fig.text(0.14, 0.91, lon)
+        if self.lat and coordinates_box:
+            fig.text(0.14, 0.887, lat)
         if years and years_text:
             fig.text(0.88, 0.935, years, size=14, ha='right', fontweight='bold')
         if yearly_means_box:
@@ -356,8 +356,7 @@ class WalterLieth:
                      False, False]
             for index in range(period[0], period[1] + 1):
                 where[index] = True
-            temp_axis.fill_between(x_for_plotting, [p / 2 for p in precipitation],
-                                   [temp if temp > 0 else 0 for temp in mean_temperature],
+            temp_axis.fill_between(x_for_plotting, [p / 2 for p in precipitation], mean_temperature,
                                    where=where, interpolate=True, hatch=wet_period_hatch,
                                    color='none', edgecolor=wet_period_hatch_color, linewidth=0.0,
                                    label=humid_period_legend_label)
@@ -377,6 +376,12 @@ class WalterLieth:
                                    where=where, interpolate=True, hatch=dry_period_hatch,
                                    color='none', edgecolor=dry_period_hatch_color, linewidth=0.0,
                                    label=dry_period_legend_label)
+
+        # cover the fill_between under the 0 line
+        if y_value_for_closing_bottom_rectangles is None:
+            temp_axis.fill_between(x_for_plotting, [0] * 14, [temp_axis.get_ylim()[0]] * 14, color='white')
+        else:
+            temp_axis.fill_between(x_for_plotting, [0] * 14, [y_value_for_closing_bottom_rectangles] * 14, color='white')
 
         if freeze_rectangles:
             if_freeze = WalterLieth.determine_if_freeze(abs_min_temp)
@@ -444,6 +449,9 @@ class WalterLieth:
 
             fig.legend(handles, labels, loc='lower center', ncol=NCOL, bbox_to_anchor=(0.52, 0))
 
+            if save is not None:
+                plt.savefig(save)
+
     def d_imgw_data(
             self, years_range, interval='monthly',
             stations_kind='synop', filter_station=True, check_years=True,
@@ -453,7 +461,7 @@ class WalterLieth:
         Download data for a drawing from the IMGW database.
 
         Keyword arguments:
-            years_range -- years range (eg. range(2010, 2021))
+            years_range -- years range (e.g. range(2010, 2021))
             interval -- the data interval ('monthly', 'daily', 'prompt') (default
         'monthly')
             stations_kind -- stations kind from the IMGW database ('synop', 'climat',
@@ -539,8 +547,8 @@ class WalterLieth:
                     """)
 
         if return_coordinates:
-            self.lat = round(data['lat'].mean(), 1)
             self.lon = round(data['lon'].mean(), 1)
+            self.lat = round(data['lat'].mean(), 1)
             self.elevation = round(data['elv'].mean())
             data = data.drop(['lat', 'lon', 'elv'], axis=1)
 
@@ -583,8 +591,8 @@ class WalterLieth:
         data = data.drop(['station', 'year'], axis=1)
 
         if return_coordinates:
-            lat = data['lat'].mean()
             lon = data['lon'].mean()
+            lat = data['lat'].mean()
             elv = data['elv'].mean()
 
             self.lat = float(round(lat, 2))
@@ -622,7 +630,7 @@ class WalterLieth:
                     print(
                         f"""
                         WARNING: no data found for '{element}'. It is not required for drawing, but the box with extreme
-                        temperatures will show None value. The probability of freeze occurence neither can be calculated,
+                        temperatures will show None value. The probability of freeze occurrence neither can be calculated,
                         so the rectangles will be blank. You can tell drawing function not to draw above elements:
                         freeze_rectangles=False, extreme_box=False.
                         """
@@ -676,7 +684,7 @@ class WalterLieth:
         or check if the years range in the imported data matches WalterLieth.years_range,
         you also have to pass proper columns from the global dataframe to the
         'columns_order' argument. When you do that, you have to set the indexes of
-        the columns in which the years or the station name are located ('station_in_column'
+        the columns in which the years or the station names are located ('station_in_column'
         and 'years_in_column' arguments). Remember that these indexes must be for
         a new dataframe which originates after the data filtering by 'columns_order'.
 
@@ -684,11 +692,11 @@ class WalterLieth:
         columns_order = [2, 3, 4, 5, 6, 7, 8], where:
         2nd column contains station names (the index in the new dataframe is 0),
         3rd column contains years (the new index is 1),
-        4rd column contains months (the new index is 2),
-        5rd column contains average air temperatures (the new index is 3),
-        6rd column contains average sum of precipitation (the new index is 4),
-        7rd column contains absolute maximum air temperature (the new index is 5),
-        8rd column contains absolute minimum air temperature (the new index is 6)
+        4th column contains months (the new index is 2),
+        5th column contains average air temperatures (the new index is 3),
+        6th column contains average sum of precipitation (the new index is 4),
+        7th column contains absolute maximum air temperature (the new index is 5),
+        8th column contains absolute minimum air temperature (the new index is 6)
 
         So, if you want to filter by station name and check if WalterLieth.years_range
         matches the data in the imported global dataframe, 'station_in_column' and
@@ -698,7 +706,7 @@ class WalterLieth:
 
         After filtering, the method will drop these columns and pass the dataframe
         to WalterLieth.dataframe without the columns in which station names and
-        years were. If the structure of the dataframe after droping the above columns
+        years were. If the structure of the dataframe after dropping the above columns
         matches the required data structure for the WalterLieth class, the graph
         should be drawn correctly (see the WalterLieth class docstring for the
         required data structure)
@@ -815,17 +823,36 @@ class WalterLieth:
         self.dataframe = df_for_object
 
     @staticmethod
-    def check_cloudy_graphs_chosen_style(
-            ls_prop_cycle, color_prop_cycle
-    ):
+    def check_cloupy_graphs_chosen_style():
         """Return which style has been set globally for cloupy"""
+        from matplotlib import rcParams
+        from cycler import cycler
+        import os
 
-        if ls_prop_cycle.count('-') == 10:
-            return 'default'
-        elif ls_prop_cycle.count('-') == 1 and color_prop_cycle.count('k') == 6:
-            return 'retro'
+        with open(str(__file__).replace(f'diagrams{os.sep}walter_lieth.py', 'current_diagStyle.txt'), 'r') as f:
+            style = f.readline()
+
+        if style == 'default':
+            rcParams['axes.prop_cycle'] = (
+                    cycler(color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+                                  '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']) +
+                    cycler(linestyle=['-' for solid in range(0, 10)])
+            )
+
+        elif style == 'retro':
+            rcParams['axes.prop_cycle'] = (
+                    cycler(color=['k' for k in range(0, 6)]) +
+                    cycler(linestyle=['-', '--', '-.',
+                                      (0, (1, 5)),
+                                      (0, (3, 1, 1, 1)),
+                                      (0, (3, 10, 1, 10, 1, 10))
+                                      ])
+            )
+
         else:
-            return 'customized'
+            raise ValueError("Invalid style value in the 'current_diagStyle.txt file!'")
+
+        return style
 
     @staticmethod
     def get_max_twm_and_min_tcm(

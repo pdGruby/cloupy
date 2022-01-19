@@ -14,6 +14,6 @@ Describe what the output should be.
 ## Actual output:
 Describe or show invalid output.
 
-## Why do I think it is problematic? Why should the output be different than it is?
+## Why do I think it is problematic? Why should the output be different from it is?
 Describe your point of view (optional if more detailed description is needed)
 ```

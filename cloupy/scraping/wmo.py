@@ -35,10 +35,15 @@ def get_wmoid_or_coord(
 
     import pandas as pd
 
-    station_name = str(station_name)
-    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
+    if not isinstance(station_name, str) and not isinstance(station_name, int):
+        raise ValueError(
+            f"The 'station_name' argument must be a single string or a single int (given type: {type(station_name)})"
+        )
 
+    wmo_ids_path = str(__file__).replace('wmo.py', 'wmo_ids_and_coords.csv')
+    station_name = str(station_name)
     station_name = station_name.upper()
+
     ids_coords = pd.read_csv(wmo_ids_path, dtype={3: 'object'}, sep=';', index_col=0)
     if station_name.startswith('COU'):
         data = ids_coords[ids_coords['country'].str.contains(station_name.replace('COU', ''))]
@@ -240,14 +245,14 @@ def transpose_table(table):
 
 
 def search_for_the_nearest_station(
-        lat, lon, degrees_range=0.5
+        lon, lat, degrees_range=0.5
 ):
     """
     Return the nearest stations from the WMO database for the given coordinates.
 
     Keyword arguments:
-        lat -- the latitude for which station will be searched
         lon -- the longitude for which station will be searched
+        lat -- the latitude for which station will be searched
         degrees_range -- acceptable range in degrees in all directions (default 0.5)
     """
 
@@ -284,7 +289,7 @@ def download_wmo_climatological_data(
     monthly.
 
     Keyword arguments:
-        station_name -- name of the station for which the data will to downloaded.
+        station_name -- name of the station for which the data will be downloaded.
     If 'cou' prefix added to 'station_name' and a country name appears after the
     prefix, the function will search for all stations in the specified country
     (e.g. 'couPOLAND' will download data for Poland)
@@ -316,7 +321,7 @@ def download_wmo_climatological_data(
     wmo_ids_list = [wmo_id for station, wmo_id in wmo_ids.items()]
 
     full_df = pd.DataFrame()
-    print('Starting downloading data. It may take a while.')
+    print('Data download started. It may take a while.')
     for station, wmo_id in wmo_ids.items():
         data = []
         for element in elements_to_scrape:
@@ -339,7 +344,7 @@ def download_wmo_climatological_data(
                     lat = get_wmoid_or_coord(wmo_id, 'lat', station_name_is_wmo_id=True)[station]
                     lon = get_wmoid_or_coord(wmo_id, 'lon', station_name_is_wmo_id=True)[station]
                     nearest_stations = search_for_the_nearest_station(
-                        lat, lon, degrees_range=degrees_range_for_nearby_stations
+                        lon, lat, degrees_range=degrees_range_for_nearby_stations
                     )
                     if nearest_stations.empty:
                         print(
@@ -411,8 +416,8 @@ def download_wmo_climatological_data(
             lon_series = [lon] * len(concatenated_df.index)
             elv_series = [elv] * len(concatenated_df.index)
 
-            concatenated_df['lat'] = lat_series
             concatenated_df['lon'] = lon_series
+            concatenated_df['lat'] = lat_series
             concatenated_df['elv'] = elv_series
 
         full_df = full_df.append(concatenated_df)
@@ -426,7 +431,7 @@ def download_wmo_climatological_data(
                     filtered_columns_order.append(element)
 
             if return_coordinates:
-                filtered_columns_order += ['lat', 'lon', 'elv']
+                filtered_columns_order += ['lon', 'lat', 'elv']
             full_df = full_df[filtered_columns_order]
 
     print('Data downloaded.')

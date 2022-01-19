@@ -4,3 +4,11 @@
 **__pycache__/
 *.pyc
 global_df.csv
+*.ipynb
+*.png
+/_shape/
+/germany.csv
+venv/
+/test_france.csv
+current_diagStyle.txt
+mapy/

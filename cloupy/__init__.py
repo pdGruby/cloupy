@@ -3,11 +3,11 @@ Enjoy easy data scraping from websites and its processing. What's more, enjoy
 even easier data visualization!
 
 -----DATA PROCESSING FUNCTIONS/CLASSES----
+    check_data_continuity -- check data continuity and return a dataframe with the
+filtered values
     set_global_df() -- set a global dataframe from which data can be imported at
 any time and place
     read_global_df() -- return the global data frame as pandas.DataFrame
-
-    DataFrame() - create pandas.DataFrame object
 -------------------------------------------
 
 ---------DATA SCRAPING FUNCTIONS--------
@@ -28,28 +28,26 @@ for the given coordinates
 ----------------------------------------
 
 -------DATA VISUALIZATION FUNCTIONS------
-    choose_diagStyle() -- choose a global style for diagrams
+    set_diagStyle() -- choose a global style for diagrams
     change_diagStyle_params() -- change global parameters for drawing diagrams
-
-    save_graph() -- save created graph (it is the function 'savefig' from the
-    matplotlib library)
 -----------------------------------------
 
 --------DATA VISUALIZATION CLASSES-------
 # Note that every class for drawing diagrams contains some of the above functions
 as its methods (for data scraping and processing)
 
+    m_MapInterpolation() -- create a MapInterpolation class where the data for
+drawing an interpolation map can be downloaded, modified, manually provided
     g_WalterLieth() -- create a WalterLieth object in which data for drawing a
 Walter-Lieth diagram can be downloaded, modified, manually provided
 -----------------------------------------
 """
-
-
 import pandas as pd
 import os
-from cycler import cycler
 from matplotlib.pyplot import *
 from matplotlib import rcParams
+
+from cloupy.data_processing.check_data_continuity import check_data_continuity as check_data_continuity
 
 from cloupy.scraping.imgw import download_imgw_climatological_data as d_imgw_data
 from cloupy.scraping.imgw import get_file_formats as i_imgw_get_file_formats
@@ -60,9 +58,9 @@ from cloupy.scraping.wmo import get_wmo_stations_info as i_wmo_get_stations
 from cloupy.scraping.wmo import search_for_the_nearest_station as i_wmo_search_near_station
 
 from cloupy.diagrams.walter_lieth import WalterLieth as g_WalterLieth
+from cloupy.maps.interpolation_map import MapInterpolation as m_MapInterpolation
 
 from pandas import DataFrame as DataFrame
-from matplotlib.pyplot import savefig as save_graph
 
 try:  # delete global data frame from the previous session
     path_ = str(__file__).replace('__init__.py', '')
@@ -74,40 +72,25 @@ except FileNotFoundError:
 
 #  dictionaries of styles for drawing
 default_style = {
-    'font.family': 'Calibri',
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['Dejavu Sans', 'Tahoma', 'Lucida Grande', 'Verdana'],
     'axes.titleweight': 'bold',
     'axes.labelweight': 'bold',
-    'figure.figsize': (6, 6 / 1.618),
     'axes.edgecolor': 'black',
     'axes.labelsize': 10,
-    'axes.prop_cycle':
-        (
-                cycler(color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-                              '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']) +
-                cycler(linestyle=['-' for solid in range(0, 10)])
-        )
 }
 
 retro_style = {
     'font.family': 'Times New Roman',
     'axes.titleweight': 'bold',
     'axes.labelweight': 'light',
-    'figure.figsize': (6, 6 / 1.618),
     'axes.edgecolor': 'black',
     'axes.labelsize': 12,
-    'axes.prop_cycle':
-        (
-                cycler(color=['k' for k in range(0, 6)]) +
-                cycler(linestyle=['-', '--', '-.',
-                                  (0, (1, 5)),
-                                  (0, (3, 1, 1, 1)),
-                                  (0, (3, 10, 1, 10, 1, 10))
-                                  ]
-                       )
-        )
 }
 
 #  set default style for cloudy
+with open(str(__file__).replace('__init__.py', '') + os.sep + 'current_diagStyle.txt', 'w+') as f:
+    f.write('default')
 diagStyle = rcParams
 diagStyle['savefig.dpi'] = 300
 diagStyle['savefig.bbox'] = 'tight'
@@ -136,7 +119,7 @@ def change_diagStyle_params(diagStyle_dict):
         diagStyle[changed_param] = changed_value
 
 
-def choose_diagStyle(diag_style='default'):
+def set_diagStyle(diag_style='default'):
     """
     Choose a global style for diagrams.
 
@@ -147,9 +130,15 @@ def choose_diagStyle(diag_style='default'):
     if diag_style == 'default':
         for default_param, default_value in default_style.items():
             diagStyle[default_param] = default_value
+        with open(str(__file__).replace('__init__.py', '') + os.sep + 'current_diagStyle.txt', 'w+') as file:
+            file.write('default')
+
     elif diag_style == 'retro':
         for retro_param, retro_value in retro_style.items():
             diagStyle[retro_param] = retro_value
+        with open(str(__file__).replace('__init__.py', '') + os.sep + 'current_diagStyle.txt', 'w+') as file:
+            file.write('retro')
+
     else:
         raise ValueError(
             "Invalid 'diag_style' argument. Available arguments: 'default', 'retro'"

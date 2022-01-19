@@ -3,7 +3,7 @@ Functions for IMGW database analysis.
 
 get_meteorological_data(interval, stations_kind, years_range, file_format_index=0,
                         file_format=None,   specific_columns=None, keywords=None,
-                        merge_splitted_stations=True, optimize_memory_usage=False)
+                        merge_split_stations=True, optimize_memory_usage=False)
 
 get_file_formats(interval, stations_kind, file_format_index)
 get_column_names(file_format)
@@ -262,12 +262,12 @@ def search_for_keywords_in_columns(
     every file will be taken and the function will show you exactly where the
     keywords were found (default None)
     """
+    if type(keywords) == str:
+        keywords = [keywords]
 
     if file_format is None:
         intervals = ['monthly', 'daily', 'prompt']
         stations_kinds = ['synop', 'climat', 'fall']
-        if type(keywords) == str:
-            keywords = [keywords]
 
         found_file_formats = {}
         for interval in intervals:
@@ -400,7 +400,7 @@ def download_data(urls):
 
     for url in urls:
         if urls.index(url) == 0:
-            print("Starting data download... 0% done")
+            print("Data download started... 0% done")
 
         r = requests.get(url)
         soup = bs(r.content, features="html.parser")
@@ -452,13 +452,16 @@ def concatenate_data(
     if isinstance(file_formats, str):
         file_formats = [file_formats]
 
+    if isinstance(keywords, str):
+        keywords = [keywords]
+
     df = pd.DataFrame()
     keywords_in_columns = []
     files_reading_dir_path = str(__file__).replace('imgw.py', 'files_reading_folder')
 
     for file in downloaded_files_names:
         if downloaded_files_names.index(file) == 0:
-            print("Starting data concatenating... 0% done")
+            print("Data concatenating started... 0% done")
 
         for file_format in file_formats:
 
@@ -553,7 +556,7 @@ def concatenate_data(
 def download_imgw_climatological_data(
         interval, stations_kind, years_range,
         file_format_index=0, file_format=None, specific_columns=None,
-        keywords=None, merge_splitted_stations=True, optimize_memory_usage=False,
+        keywords=None, merge_split_stations=True, optimize_memory_usage=False,
         return_coordinates=False
 ):
     """
@@ -574,7 +577,7 @@ def download_imgw_climatological_data(
     to merge. If None, take all columns (default None)
         keywords -- words which must be in the column name if the column is to be
     merged. If None, do not filter the column names (default None)
-        merge_splitted_stations -- merge stations which are the same but have
+        merge_split_stations -- merge stations which are the same but have
     different names (default True)
         optimize_memory_usage -- reduce pd.DataFrame memory usage (default False)
         return_coordinates -- add columns with latitude, longitude and elevation
@@ -604,13 +607,13 @@ def download_imgw_climatological_data(
         elif type(file_format) == list:
             file_formats = [format_ for format_ in file_format]
         else:
-            raise ValueError("Invalid input for the 'file_format' argument. Use a signle str or a list of strs.")
+            raise ValueError("Invalid input for the 'file_format' argument. Use a single str or a list of strs.")
     else:
         file_formats = get_file_formats(interval, stations_kind, file_format_index)
 
     df = concatenate_data(downloaded_files_names, file_formats, specific_columns,
                           keywords, optimize_memory_usage, years_range,
-                          merge_splitted_stations)
+                          merge_split_stations)
 
     if keywords is not None:
         keywords_in_columns = df[1]
@@ -641,8 +644,9 @@ def download_imgw_climatological_data(
     shutil.rmtree(files_reading_dir_path)
 
     if return_coordinates:
-
         import pandas as pd
+
+        print('Joining coordinates to the dataframe...')
 
         lat = []
         lon = []
@@ -660,12 +664,14 @@ def download_imgw_climatological_data(
                 elv.append(None)
                 continue
 
-            lat.append(coordinates[0])
             lon.append(coordinates[1])
+            lat.append(coordinates[0])
             elv.append(coordinates[2])
 
-        df['lat'] = lat
         df['lon'] = lon
+        df['lat'] = lat
         df['elv'] = elv
+
+        print('Coordinates joined!')
 
     return df
