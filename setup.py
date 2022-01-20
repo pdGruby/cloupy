@@ -33,8 +33,13 @@ setup(
     ],
     package_data={
         'cloupy': [
+            'data_processing/*',
+            'maps/*',
             'maps/world/*',
-            'scraping/*.csv',
+            'scraping/*',
+            'diagrams/*',
+            'test/test_integration/*',
+            'test/test_unit/*',
         ],
                   },
     include_package_data=True,
