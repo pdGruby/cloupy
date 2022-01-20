@@ -14,7 +14,7 @@ cloupy is a Python package for climatological data downloading, processing and v
 ![last_commit](https://img.shields.io/github/last-commit/pdgruby/cloupy) 
 
 ![license](https://img.shields.io/github/license/pdgruby/cloupy)
-[![DOI](https://zenodo.org/badge/368965287.svg)](https://zenodo.org/badge/latestdoi/368965287)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5879964.svg)](https://doi.org/10.5281/zenodo.5879964)
 
 # Installation
 
