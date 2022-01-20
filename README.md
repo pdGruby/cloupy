@@ -548,7 +548,7 @@ wl.draw()
 
 -  `d_imgw_data(...)` -> download IMGW data files from the IMGW database and return it as one merged pd.DataFrame
 -  `i_imgw_get_file_formats(...)` -> return the available file formats for the given 'interval' and 'stations_kind' in the IMGW database (different file formats contain different data)
--  `i_imgw_serach_keywords_in_columns(...)` -> search for the given keywords in the column names and return a dictionary with the file formats in which the keywords were found
+-  `i_imgw_search_keywords_in_columns(...)` -> search for the given keywords in the column names and return a dictionary with the file formats in which the keywords were found
 - `d_wmo_data(...)` -> download climatological data for specified station/stations from the WMO website
 - `i_wmo_get_stations(...)` -> return pandas.DataFrame with WMO stations information (WMO ids, coordinates, etc.)
 - `i_wmo_search_near_station(...)` -> return the nearest stations from WMO database for the given coordinates
