@@ -6,6 +6,6 @@ authors:
   orcid: "https://orcid.org/0000-0003-4973-6759"
 title: "cloupy - Climatological Data Downloading, Processing and Visualizing"
 version: 1.1.0
-doi: 10.5281/zenodo.5655743
+doi: 10.5281/zenodo.5879964
 date-released: 2022-01-20
 url: "https://github.com/pdGruby/cloupy"
