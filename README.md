@@ -9,7 +9,7 @@ cloupy is a Python package for climatological data downloading, processing and v
 ![windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
-![downloads](https://img.shields.io/github/downloads/pdgruby/cloupy/total)
+![downloads](https://static.pepy.tech/personalized-badge/cloupy?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)
 ![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![last_commit](https://img.shields.io/github/last-commit/pdgruby/cloupy) 
 
