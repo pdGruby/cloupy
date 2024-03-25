@@ -1,3 +1,27 @@
+Metadata-Version: 2.1
+Name: cloupy
+Version: 2.0.0
+Summary: The package allows to download, process and visualize climatological data from reliable sources
+Home-page: https://github.com/pdGruby/cloupy
+Author: Kamil Grala
+Author-email: kamil.grala32466@gmail.com
+License: MIT
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Operating System :: Microsoft :: Windows :: Windows 10
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: Framework :: Matplotlib
+Classifier: Topic :: Scientific/Engineering :: GIS
+Classifier: Topic :: Scientific/Engineering :: Atmospheric Science
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+
 # The cloupy package is NO LONGER SUPPORTED. 
 
 Due to unmaintainable code and numerous outdated functionalities, **development and maintenance of the cloupy package 

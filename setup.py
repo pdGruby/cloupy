@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.1.0'
+VERSION = '2.0.0'
 DESCRIPTION = 'The package allows to download, process and visualize climatological data from reliable sources'
 README = open('README.md', 'r', encoding='utf8').read()
 
