@@ -1,4 +1,18 @@
-#
+# The cloupy package is NO LONGER SUPPORTED. 
+
+Due to unmaintainable code and numerous outdated functionalities, **development and maintenance of the cloupy package 
+have been discontinued.** 
+
+**If you installed the cloupy package to create interpolation maps, there is a much better tool available:**
+`https://pypi.org/project/geokrige/`. [This section](https://geokrige.readthedocs.io/latest/using_geokrige_with_geopandas/) 
+of the documentation may be especially helpful.
+
+Significant changes have been made to the data sources from which the cloupy package downloads data, rendering cloupy 
+tools potentially dysfunctional. 
+
+The only components that are relatively up-to-date are the Walter-Lieth diagrams.
+
+
 <p align="center">
   <img src="https://i.ibb.co/YpN6MVS/logo-update3.png" />
 </p>
@@ -9,8 +23,8 @@ cloupy is a Python package for climatological data downloading, processing and v
 ![windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
 ![ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
 
-![downloads](https://img.shields.io/github/downloads/pdgruby/cloupy/total)
-![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
+![downloads](https://static.pepy.tech/personalized-badge/cloupy?period=total&units=international_system&left_color=grey&right_color=green&left_text=Downloads)
+![maintained](https://img.shields.io/badge/Maintained%3F-no-red.svg)
 ![last_commit](https://img.shields.io/github/last-commit/pdgruby/cloupy) 
 
 ![license](https://img.shields.io/github/license/pdgruby/cloupy)

@@ -46,6 +46,7 @@ import pandas as pd
 import os
 from matplotlib.pyplot import *
 from matplotlib import rcParams
+import warnings
 
 from cloupy.data_processing.check_data_continuity import check_data_continuity as check_data_continuity
 
@@ -61,6 +62,13 @@ from cloupy.diagrams.walter_lieth import WalterLieth as g_WalterLieth
 from cloupy.maps.interpolation_map import MapInterpolation as m_MapInterpolation
 
 from pandas import DataFrame as DataFrame
+
+warnings.warn('The cloupy package is NO LONGER SUPPORTED. Due to unmaintainable code and numerous outdated '
+              'functionalities, development and maintenance of the cloupy package have been discontinued. If you '
+              'installed the cloupy package to create interpolation maps, there is a much better tool available: '
+              'https://pypi.org/project/geokrige/. Significant changes have been made to the data sources from which '
+              'the cloupy package downloads data, rendering cloupy tools potentially dysfunctional. The only '
+              'components that are relatively up-to-date are the Walter-Lieth diagrams.')
 
 try:  # delete global data frame from the previous session
     path_ = str(__file__).replace('__init__.py', '')
